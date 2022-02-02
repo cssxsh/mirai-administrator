@@ -17,16 +17,26 @@ public object MiraiAdministrator : SimpleListenerHost() {
     private val logger = MiraiAdminPlugin.logger
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
-        // TODO
+        when (exception) {
+            is CancellationException -> {
+                // ...
+            }
+            is ExceptionInEventHandlerException -> {
+                logger.warning({ "MiraiAdministrator with ${exception.event}" }, exception.cause)
+            }
+            else -> {
+                logger.warning({ "MiraiAdministrator" }, exception)
+            }
+        }
     }
 
     // region Approver
 
     @EventHandler
-    public suspend fun MemberJoinRequestEvent.handle() {
+    internal suspend fun MemberJoinRequestEvent.handle() {
         for (approver in ComparableService<MemberApprover>()) {
             try {
-                when (val status = approver.approve(this)) {
+                when (val status = approver.approve(event = this)) {
                     ApproveStatus.Accept -> accept()
                     is ApproveStatus.Reject -> reject(blackList = status.black, message = status.message)
                     ApproveStatus.Ignore -> continue
@@ -40,10 +50,10 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     @EventHandler
-    public suspend fun MemberJoinEvent.handle() {
+    internal suspend fun MemberJoinEvent.handle() {
         for (approver in ComparableService<MemberApprover>()) {
             try {
-                when (val status = approver.approve(this)) {
+                when (val status = approver.approve(event = this)) {
                     ApproveStatus.Accept -> Unit
                     is ApproveStatus.Reject -> member.kick(message = status.message, block = status.black)
                     ApproveStatus.Ignore -> continue
@@ -57,10 +67,10 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     @EventHandler
-    public suspend fun NewFriendRequestEvent.handle() {
+    internal suspend fun NewFriendRequestEvent.handle() {
         for (approver in ComparableService<FriendApprover>()) {
             try {
-                when (val status = approver.approve(this)) {
+                when (val status = approver.approve(event = this)) {
                     ApproveStatus.Accept -> accept()
                     is ApproveStatus.Reject -> reject(blackList = status.black)
                     ApproveStatus.Ignore -> continue
@@ -74,10 +84,10 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     @EventHandler
-    public suspend fun FriendAddEvent.handle() {
+    internal suspend fun FriendAddEvent.handle() {
         for (approver in ComparableService<FriendApprover>()) {
             try {
-                when (val status = approver.approve(this)) {
+                when (val status = approver.approve(event = this)) {
                     ApproveStatus.Accept -> Unit
                     is ApproveStatus.Reject -> {
                         friend.sendMessage(status.message)
@@ -94,10 +104,10 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     @EventHandler
-    public suspend fun BotInvitedJoinGroupRequestEvent.handle() {
+    internal suspend fun BotInvitedJoinGroupRequestEvent.handle() {
         for (approver in ComparableService<GroupApprover>()) {
             try {
-                when (val status = approver.approve(this)) {
+                when (val status = approver.approve(event = this)) {
                     ApproveStatus.Accept -> accept()
                     is ApproveStatus.Reject -> {
                         invitor?.sendMessage(status.message)
@@ -117,7 +127,10 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     // region Timer
 
-    private fun <C : ContactOrBot> TimerService<C>.start(contact: C) {
+    /**
+     * 启动一个定时器服务
+     */
+    public fun <C : ContactOrBot> TimerService<C>.start(contact: C) {
         launch(SupervisorJob()) {
             while (isActive && contact.isActive) {
                 val moment = moment(contact) ?: break
@@ -133,7 +146,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     try {
                         run(contact)
                     } catch (cause: Throwable) {
-                        TODO()
+                        logger.error ({ "${this@start} run fail" }, cause)
                     }
                 }
             }
@@ -141,7 +154,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     @EventHandler
-    public fun BotOnlineEvent.mark() {
+    internal fun BotOnlineEvent.mark() {
         for (timer in ComparableService<BotTimer>()) {
             timer.start(bot)
         }
@@ -158,7 +171,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     @EventHandler
-    public fun FriendAddEvent.mark() {
+    internal fun FriendAddEvent.mark() {
         for (timer in ComparableService<FriendTimer>()) {
             for (friend in bot.friends) {
                 timer.start(friend)
@@ -167,10 +180,30 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     @EventHandler
-    public fun BotInvitedJoinGroupRequestEvent.mark() {
+    internal fun BotInvitedJoinGroupRequestEvent.mark() {
         for (timer in ComparableService<GroupTimer>()) {
             for (group in bot.groups) {
                 timer.start(group)
+            }
+        }
+    }
+
+    // endregion
+
+    // region Censor
+
+    @EventHandler
+    internal suspend fun GroupMemberEvent.mark() {
+        for (censor in ComparableService<ContentCensor>()) {
+            if (censor.handle(message = this)) continue else break
+        }
+    }
+
+    @EventHandler
+    internal suspend fun NudgeEvent.mark() {
+        if (subject is Group) {
+            for (censor in ComparableService<ContentCensor>()) {
+                if (censor.handle(nudge = this)) continue else break
             }
         }
     }
