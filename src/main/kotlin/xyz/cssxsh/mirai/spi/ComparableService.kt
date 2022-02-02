@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.spi
 
 import java.util.*
+import kotlin.collections.*
 
 public sealed interface ComparableService : Comparable<ComparableService> {
 
@@ -15,11 +16,14 @@ public sealed interface ComparableService : Comparable<ComparableService> {
 
     public companion object Loader {
 
+        private val cache: MutableMap<Class<*>, ServiceLoader<*>> = WeakHashMap()
+
         public inline operator fun <reified S : ComparableService> invoke(): List<S> = registered(S::class.java)
 
         public fun <S : ComparableService> registered(clazz: Class<S>): List<S> {
             @Suppress("UNCHECKED_CAST")
-            return (ServiceLoader.load(clazz, clazz.classLoader) as ServiceLoader<S>).sortedDescending()
+            return (cache.getOrPut(clazz) { ServiceLoader.load(clazz, clazz.classLoader) } as ServiceLoader<S>)
+                .sortedDescending()
         }
     }
 }
