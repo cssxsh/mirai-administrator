@@ -193,9 +193,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
     // region Censor
 
     @EventHandler
-    internal suspend fun GroupMemberEvent.mark() {
+    internal suspend fun GroupMessageEvent.mark() {
         for (censor in ComparableService<ContentCensor>()) {
-            if (censor.handle(message = this)) continue else break
+            if (censor.handle(event = this)) continue else break
         }
     }
 
@@ -203,7 +203,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     internal suspend fun NudgeEvent.mark() {
         if (subject is Group) {
             for (censor in ComparableService<ContentCensor>()) {
-                if (censor.handle(nudge = this)) continue else break
+                if (censor.handle(event = this)) continue else break
             }
         }
     }
