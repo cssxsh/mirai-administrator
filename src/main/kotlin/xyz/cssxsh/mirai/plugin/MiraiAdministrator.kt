@@ -222,9 +222,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
             run(contact = from).onCompletion { cause ->
                 if (cause != null) {
                     logger.error({ "${from.render()} timer run failure with $id" }, cause)
-                } else {
-                    logger.info { "${from.render()} timer run success with $id" }
                 }
+            }.collect { receipt ->
+                logger.info { "${from.render()} timer ${receipt.target.render()} success with $id" }
             }
         }
     }
