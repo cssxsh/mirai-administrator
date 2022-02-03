@@ -4,9 +4,9 @@ import net.mamoe.mirai.contact.*
 import java.time.*
 
 /**
- * 定时运行的服务
+ * 定时的服务, [run] 返回消息
  */
-public sealed interface TimerService<C : ContactOrBot> {
+public sealed interface TimerService<C : ContactOrBot, R> : ComparableService {
 
     /**
      * 运行的时间，为 null 时停止定时器
@@ -16,5 +16,5 @@ public sealed interface TimerService<C : ContactOrBot> {
     /**
      * 运行定时器
      */
-    public suspend fun run(contact: C)
+    public suspend fun run(contact: C): R
 }

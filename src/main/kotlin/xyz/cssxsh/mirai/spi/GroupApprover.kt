@@ -10,5 +10,5 @@ public interface GroupApprover : ComparableService {
     /**
      * 加群请求事件审批
      */
-    public suspend fun approve(event: BotInvitedJoinGroupRequestEvent): ApproveStatus
+    public suspend fun approve(event: BotInvitedJoinGroupRequestEvent): ApproveResult
 }

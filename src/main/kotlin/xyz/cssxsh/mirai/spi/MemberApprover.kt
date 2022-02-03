@@ -10,11 +10,11 @@ public interface MemberApprover : ComparableService {
     /**
      * 群成员请求事件审批
      */
-    public suspend fun approve(event: MemberJoinRequestEvent): ApproveStatus
+    public suspend fun approve(event: MemberJoinRequestEvent): ApproveResult
 
     /**
-     * 群成员事件审批
+     * 群成员加入事件审批
      */
-    public suspend fun approve(event: MemberJoinEvent): ApproveStatus
+    public suspend fun approve(event: MemberJoinEvent): ApproveResult
 
 }

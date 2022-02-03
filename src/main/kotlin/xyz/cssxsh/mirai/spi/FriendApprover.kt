@@ -10,10 +10,10 @@ public interface FriendApprover : ComparableService {
     /**
      * 好友请求事件审批
      */
-    public suspend fun approve(event: NewFriendRequestEvent): ApproveStatus
+    public suspend fun approve(event: NewFriendRequestEvent): ApproveResult
 
     /**
-     * 好友事件件审批
+     * 好友添加事件审批
      */
-    public suspend fun approve(event: FriendAddEvent): ApproveStatus
+    public suspend fun approve(event: FriendAddEvent): ApproveResult
 }

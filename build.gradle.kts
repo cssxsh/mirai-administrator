@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.0.0-RC1"
+version = "1.0.0-RC2"
 
 mavenCentralPublish {
     useCentralS01()
@@ -25,6 +25,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly("net.mamoe:mirai-core:2.10.0")
     compileOnly("net.mamoe:mirai-core-utils:2.10.0-RC2")
 
     testImplementation(kotlin("test", "1.6.0"))

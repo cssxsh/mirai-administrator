@@ -1,6 +1,12 @@
 package xyz.cssxsh.mirai.plugin
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.onCompletion
+import net.mamoe.mirai.*
+import net.mamoe.mirai.console.permission.*
+import net.mamoe.mirai.console.permission.PermissionService.Companion.cancel
+import net.mamoe.mirai.console.permission.PermissionService.Companion.permit
+import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
@@ -13,8 +19,6 @@ import kotlin.coroutines.*
  * 事件监听及定时器
  */
 public object MiraiAdministrator : SimpleListenerHost() {
-
-    private val logger = MiraiAdminPlugin.logger
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
         when (exception) {
@@ -37,9 +41,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
         for (approver in ComparableService<MemberApprover>()) {
             try {
                 when (val status = approver.approve(event = this)) {
-                    ApproveStatus.Accept -> accept()
-                    is ApproveStatus.Reject -> reject(blackList = status.black, message = status.message)
-                    ApproveStatus.Ignore -> continue
+                    ApproveResult.Accept -> accept()
+                    is ApproveResult.Reject -> reject(blackList = status.black, message = status.message)
+                    ApproveResult.Ignore -> continue
                 }
                 break
             } catch (cause: Throwable) {
@@ -54,9 +58,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
         for (approver in ComparableService<MemberApprover>()) {
             try {
                 when (val status = approver.approve(event = this)) {
-                    ApproveStatus.Accept -> Unit
-                    is ApproveStatus.Reject -> member.kick(message = status.message, block = status.black)
-                    ApproveStatus.Ignore -> continue
+                    ApproveResult.Accept -> Unit
+                    is ApproveResult.Reject -> member.kick(message = status.message, block = status.black)
+                    ApproveResult.Ignore -> continue
                 }
                 break
             } catch (cause: Throwable) {
@@ -71,9 +75,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
         for (approver in ComparableService<FriendApprover>()) {
             try {
                 when (val status = approver.approve(event = this)) {
-                    ApproveStatus.Accept -> accept()
-                    is ApproveStatus.Reject -> reject(blackList = status.black)
-                    ApproveStatus.Ignore -> continue
+                    ApproveResult.Accept -> accept()
+                    is ApproveResult.Reject -> reject(blackList = status.black)
+                    ApproveResult.Ignore -> continue
                 }
                 break
             } catch (cause: Throwable) {
@@ -88,12 +92,12 @@ public object MiraiAdministrator : SimpleListenerHost() {
         for (approver in ComparableService<FriendApprover>()) {
             try {
                 when (val status = approver.approve(event = this)) {
-                    ApproveStatus.Accept -> Unit
-                    is ApproveStatus.Reject -> {
-                        friend.sendMessage(status.message)
+                    ApproveResult.Accept -> Unit
+                    is ApproveResult.Reject -> {
+                        friend.sendMessage(message = status.message)
                         friend.delete()
                     }
-                    ApproveStatus.Ignore -> continue
+                    ApproveResult.Ignore -> continue
                 }
                 break
             } catch (cause: Throwable) {
@@ -108,12 +112,12 @@ public object MiraiAdministrator : SimpleListenerHost() {
         for (approver in ComparableService<GroupApprover>()) {
             try {
                 when (val status = approver.approve(event = this)) {
-                    ApproveStatus.Accept -> accept()
-                    is ApproveStatus.Reject -> {
-                        invitor?.sendMessage(status.message)
+                    ApproveResult.Accept -> accept()
+                    is ApproveResult.Reject -> {
+                        invitor?.sendMessage(message = status.message)
                         ignore()
                     }
-                    ApproveStatus.Ignore -> continue
+                    ApproveResult.Ignore -> continue
                 }
                 break
             } catch (cause: Throwable) {
@@ -128,26 +132,98 @@ public object MiraiAdministrator : SimpleListenerHost() {
     // region Timer
 
     /**
-     * 启动一个定时器服务
+     * 延时到 [moment]
      */
-    public fun <C : ContactOrBot> TimerService<C>.start(contact: C) {
-        launch(SupervisorJob()) {
-            while (isActive && contact.isActive) {
-                val moment = moment(contact) ?: break
-                val now = LocalTime.now()
-                val wait: Int = if (moment > now) {
-                    moment.toSecondOfDay() - now.toSecondOfDay()
-                } else {
-                    24 * 60 * 60 + moment.toSecondOfDay() - now.toSecondOfDay()
-                }
-                delay(wait * 1000L)
-                if (contact.isActive.not()) break
-                launch(SupervisorJob()) {
-                    try {
-                        run(contact)
-                    } catch (cause: Throwable) {
-                        logger.error ({ "${this@start} run fail" }, cause)
+    private suspend fun delay(moment: LocalTime) {
+        val now = LocalTime.now()
+        val second: Int = if (moment > now) {
+            moment.toSecondOfDay() - now.toSecondOfDay()
+        } else {
+            24 * 60 * 60 + moment.toSecondOfDay() - now.toSecondOfDay()
+        }
+        delay(second * 1000L)
+    }
+
+    /**
+     * 启动一个群定时服务
+     */
+    private fun GroupTimerService<*>.start(target: Group): Job = launch(SupervisorJob()) {
+        while (isActive && target.isActive) {
+            delay(moment = moment(target) ?: break)
+            if (target.isActive.not() || target.botPermission < MemberPermission.ADMINISTRATOR) break
+
+            when (this@start) {
+                is GroupAllowTimer -> launch(SupervisorJob()) {
+                    for ((id, permit) in run(target)) {
+                        try {
+                            if (permit) {
+                                AbstractPermitteeId.AnyMember(target.id).permit(permissionId = id)
+                            } else {
+                                AbstractPermitteeId.AnyMember(target.id).cancel(permissionId = id, false)
+                            }
+                        } catch (cause: Throwable) {
+                            logger.error({ "$id set failure with $id" }, cause)
+                        }
                     }
+                }
+                is GroupCurfewTimer -> launch(SupervisorJob()) {
+                    try {
+                        target.settings.isMuteAll = run(target)
+                    } catch (cause: Throwable) {
+                        logger.error({ "${target.render()} mute set failure with $id" }, cause)
+                    }
+                }
+                is MemberCleaner -> launch(SupervisorJob()) {
+                    for ((member, reason) in run(target)) {
+                        try {
+                            member.kick(message = reason)
+                        } catch (cause: Throwable) {
+                            logger.error({ "${member.render()} clean failure with $id" }, cause)
+                        }
+                    }
+                }
+                is MemberNickCensor -> launch(SupervisorJob()) {
+                    val censor = run(target)
+                    for (member in target.members) {
+                        try {
+                            member.nameCard = censor(member) ?: continue
+                        } catch (cause: Throwable) {
+                            logger.error({ "${target.render()} nick set failure with $id" }, cause)
+                        }
+                    }
+                }
+                is MemberTitleCensor -> launch(SupervisorJob()) {
+                    val censor = run(target)
+                    for (member in target.members) {
+                        try {
+                            member.specialTitle = censor(member) ?: continue
+                        } catch (cause: Throwable) {
+                            logger.error({ "${target.render()} title set failure with $id" }, cause)
+                        }
+                    }
+                }
+            }.invokeOnCompletion { cause ->
+                if (cause != null) {
+                    logger.error({ "${target.render()} timer run failure with $id" }, cause)
+                } else {
+                    logger.info { "${target.render()} timer run success with $id" }
+                }
+            }
+        }
+    }
+
+    /**
+     * 启动一个定时消息服务
+     */
+    private fun BotTimingMessage.start(from: Bot): Job = launch(SupervisorJob()) {
+        while (isActive && from.isActive) {
+            delay(moment = moment(from) ?: break)
+
+            run(contact = from).onCompletion { cause ->
+                if (cause != null) {
+                    logger.error({ "${from.render()} timer run failure with $id" }, cause)
+                } else {
+                    logger.info { "${from.render()} timer run success with $id" }
                 }
             }
         }
@@ -155,36 +231,22 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     @EventHandler
     internal fun BotOnlineEvent.mark() {
-        for (timer in ComparableService<BotTimer>()) {
-            timer.start(bot)
-        }
-        for (timer in ComparableService<GroupTimer>()) {
+        for (timer in ComparableService<GroupTimerService<*>>()) {
             for (group in bot.groups) {
-                timer.start(group)
+                timer.start(target = group)
             }
         }
-        for (timer in ComparableService<FriendTimer>()) {
-            for (friend in bot.friends) {
-                timer.start(friend)
-            }
+        for (timer in ComparableService<BotTimingMessage>()) {
+            timer.start(from = bot)
         }
     }
 
     @EventHandler
-    internal fun FriendAddEvent.mark() {
-        for (timer in ComparableService<FriendTimer>()) {
-            for (friend in bot.friends) {
-                timer.start(friend)
-            }
-        }
-    }
-
-    @EventHandler
-    internal fun BotInvitedJoinGroupRequestEvent.mark() {
-        for (timer in ComparableService<GroupTimer>()) {
-            for (group in bot.groups) {
-                timer.start(group)
-            }
+    internal fun BotGroupPermissionChangeEvent.mark() {
+        if (origin > new) return
+        logger.info { "机器人权限提升，相关群定时器开始运作" }
+        for (timer in ComparableService<GroupTimerService<*>>()) {
+            timer.start(target = group)
         }
     }
 
@@ -194,8 +256,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     @EventHandler
     internal suspend fun GroupMessageEvent.mark() {
+        if (group.botAsMember.permission <= sender.permission) return
         for (censor in ComparableService<ContentCensor>()) {
-            if (censor.handle(event = this)) continue else break
+            if (censor.handle(event = this)) break else continue
         }
     }
 
@@ -203,7 +266,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     internal suspend fun NudgeEvent.mark() {
         if (subject is Group) {
             for (censor in ComparableService<ContentCensor>()) {
-                if (censor.handle(event = this)) continue else break
+                if (censor.handle(event = this)) break else continue
             }
         }
     }

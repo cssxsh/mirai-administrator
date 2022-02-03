@@ -10,20 +10,30 @@ public sealed interface ComparableService : Comparable<ComparableService> {
      */
     public val level: Int get() = 0
 
-    public override fun compareTo(other: ComparableService): Int = level.compareTo(other.level)
+    /**
+     * 用来查找服务
+     */
+    public val id: String
 
-    public override fun toString(): String
+    public override fun compareTo(other: ComparableService): Int = level.compareTo(other.level)
 
     public companion object Loader {
 
-        private val cache: MutableMap<Class<*>, ServiceLoader<*>> = WeakHashMap()
+        public val loader: ServiceLoader<ComparableService> by lazy {
+            ServiceLoader.load(ComparableService::class.java, ComparableService::class.java.classLoader)
+        }
 
-        public inline operator fun <reified S : ComparableService> invoke(): List<S> = registered(S::class.java)
+        public val instances: MutableSet<ComparableService> = HashSet()
 
-        public fun <S : ComparableService> registered(clazz: Class<S>): List<S> {
-            @Suppress("UNCHECKED_CAST")
-            return (cache.getOrPut(clazz) { ServiceLoader.load(clazz, clazz.classLoader) } as ServiceLoader<S>)
-                .sortedDescending()
+        public inline operator fun <reified S> invoke(): List<S> = registered(S::class.java)
+
+        public inline operator fun <reified S: ComparableService> get(id: String): S = get(S::class.java, id)
+
+        public fun <S> registered(clazz: Class<S>): List<S> = (instances + loader).filterIsInstance(clazz)
+
+        public fun <S : ComparableService> get(clazz: Class<S>, id: String): S {
+            return registered(clazz).find { it.id == id }
+                ?: throw NoSuchElementException("${clazz.simpleName} No Such $id")
         }
     }
 }
