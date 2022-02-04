@@ -1,5 +1,7 @@
 package xyz.cssxsh.mirai.plugin
 
+import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.plugin.jvm.*
@@ -13,6 +15,8 @@ import xyz.cssxsh.mirai.spi.*
 internal inline val logger get() = MiraiAdminPlugin.logger
 
 internal fun Bot.owner() = getFriendOrFail(AdminSetting.owner)
+
+internal val http by lazy { HttpClient(OkHttp) }
 
 internal fun AbstractJvmPlugin.registerPermission(name: String, description: String): Permission {
     return PermissionService.INSTANCE.register(permissionId(name), description, parentPermission)
@@ -60,6 +64,9 @@ internal fun ComparableService.Loader.reload() {
     instances.add(MiraiAutoApprover)
     instances.add(MiraiOnlineMessage)
     instances.add(MiraiStatusMessage)
+    if (invoke<MessageSourceHandler>().isEmpty()) {
+        instances.add(MiraiMessageRecorder)
+    }
 }
 
 internal fun ComparableService.Loader.render(): String = buildString {

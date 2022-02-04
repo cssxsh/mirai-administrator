@@ -35,6 +35,11 @@ public object MiraiAdminPlugin : KotlinPlugin(
         logger.info { ComparableService.render() }
 
         MiraiAdministrator.registerTo(globalEventChannel())
+
+        if (ComparableService<MessageSourceHandler>().isEmpty()) {
+            MiraiMessageRecorder.registerTo(globalEventChannel())
+        }
+
         AdminContactCommand.register()
         AdminFriendCommand.register()
         AdminGroupCommand.register()
@@ -47,5 +52,6 @@ public object MiraiAdminPlugin : KotlinPlugin(
         AdminGroupCommand.unregister()
         AdminRegisteredCommand.unregister()
         MiraiAdministrator.cancelAll()
+        MiraiMessageRecorder.cancelAll()
     }
 }

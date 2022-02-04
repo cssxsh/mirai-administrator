@@ -1,7 +1,5 @@
 package xyz.cssxsh.mirai.plugin
 
-import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.flow.*
 import net.mamoe.mirai.*
@@ -22,8 +20,6 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
     internal val permission by lazy {
         MiraiAdminPlugin.registerPermission("online.include", "发送上线通知")
     }
-
-    private val http = HttpClient(OkHttp)
 
     private val cache: MutableMap<Bot, LocalTime> = WeakHashMap()
 
