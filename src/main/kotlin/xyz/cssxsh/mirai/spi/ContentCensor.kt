@@ -8,7 +8,7 @@ import net.mamoe.mirai.event.events.*
 public interface ContentCensor : ComparableService {
 
     /**
-     * 审批群消息事件，
+     * 审批群消息事件, 内部可以完成禁言，撤销等操作。
      * @return 返回 true 表示触发审计
      */
     public suspend fun handle(event: GroupMessageEvent): Boolean

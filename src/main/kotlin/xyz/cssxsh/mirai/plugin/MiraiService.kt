@@ -64,6 +64,7 @@ internal fun ComparableService.Loader.reload() {
     instances.add(MiraiAutoApprover)
     instances.add(MiraiOnlineMessage)
     instances.add(MiraiStatusMessage)
+    instances.add(MiraiContentCensor)
     if (invoke<MessageSourceHandler>().isEmpty()) {
         instances.add(MiraiMessageRecorder)
     }

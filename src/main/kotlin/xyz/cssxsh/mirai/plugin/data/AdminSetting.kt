@@ -4,7 +4,7 @@ import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.mirai.plugin.*
 
 public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"),
-    MiraiAutoApproverConfig, MiraiOnlineMessageConfig, MiraiStatusMessageConfig {
+    MiraiAutoApproverConfig, MiraiOnlineMessageConfig, MiraiStatusMessageConfig, MiraiContentCensorConfig {
 
     internal const val OWNER_DEFAULT = 12345L
 
@@ -36,10 +36,6 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"),
     @ValueDescription("自动发送机器人状态到所有者的间隔，单位为分钟，为零时不开启此项功能")
     public override val sendStatusInterval: Long by value(60L)
 
-    @ValueName("auto_download_message")
-    @ValueDescription("自动保存特殊消息内容，比如闪照")
-    public val autoDownloadMessage: Boolean by value(false)
-
     @ValueName("online_message_type")
     @ValueDescription("自动保存特殊消息内容，比如闪照")
     public override val onlineMessageType: MiraiOnlineMessageConfig.Type by value(MiraiOnlineMessageConfig.Type.XML)
@@ -47,4 +43,16 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"),
     @ValueName("duration")
     @ValueDescription("逐个发送消息延时，单位秒")
     public override val duration: Long by value(10L)
+
+    @ValueName("censor_regex")
+    @ValueDescription("消息审查，正则表达式")
+    override val censorRegex: String by value("")
+
+    @ValueName("censor_types")
+    @ValueDescription("消息审查，类型")
+    override val censorTypes: Set<MiraiContentType> by value()
+
+    @ValueName("censor_mute")
+    @ValueDescription("消息审查，禁言时间 单位秒")
+    override val censorMute: Int by value(0)
 }
