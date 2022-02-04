@@ -87,9 +87,9 @@ public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"
         }
     }
 
-    public operator fun minusAssign(event: MemberJoinRequestEvent) {
-        groups.compute(event.bot.id) { _, list ->
-            list.orEmpty().filterNot { it.groupId == event.groupId && it.invitor == event.invitorId }
+    public operator fun minusAssign(event: MemberJoinEvent) {
+        members.compute(event.bot.id) { _, list ->
+            list.orEmpty().filterNot { it.groupId == event.groupId && it.requester == event.member.id }
         }
     }
 }

@@ -8,27 +8,41 @@ import xyz.cssxsh.mirai.plugin.command.*
 import xyz.cssxsh.mirai.plugin.data.*
 import xyz.cssxsh.mirai.spi.*
 
-public object MiraiAutoApprover : MemberApprover, FriendApprover, GroupApprover,
+public object MiraiAutoApprover : FriendApprover, GroupApprover, MemberApprover,
     MiraiAutoApproverConfig by AdminSetting {
 
     override suspend fun approve(event: NewFriendRequestEvent): ApproveResult {
+        AdminRequestEventData += event
         event.bot.owner().sendMessage(message = event.render(accept = autoFriendAccept))
         return if (autoFriendAccept) ApproveResult.Accept else ApproveResult.Ignore
     }
 
-    override suspend fun approve(event: MemberJoinRequestEvent): ApproveResult {
-        event.bot.owner().sendMessage(message = event.render(accept = autoGroupAccept))
-        return if (autoMemberAccept) ApproveResult.Accept else ApproveResult.Ignore
-    }
-
     override suspend fun approve(event: BotInvitedJoinGroupRequestEvent): ApproveResult {
+        AdminRequestEventData += event
         event.bot.owner().sendMessage(message = event.render(accept = autoGroupAccept))
         return if (autoGroupAccept) ApproveResult.Accept else ApproveResult.Ignore
     }
 
-    override suspend fun approve(event: FriendAddEvent): ApproveResult = ApproveResult.Ignore
+    override suspend fun approve(event: MemberJoinRequestEvent): ApproveResult {
+        AdminRequestEventData += event
+        event.bot.owner().sendMessage(message = event.render(accept = autoGroupAccept))
+        return if (autoMemberAccept) ApproveResult.Accept else ApproveResult.Ignore
+    }
 
-    override suspend fun approve(event: MemberJoinEvent): ApproveResult = ApproveResult.Ignore
+    override suspend fun approve(event: FriendAddEvent): ApproveResult {
+        AdminRequestEventData -= event
+        return ApproveResult.Ignore
+    }
+
+    override suspend fun approve(event: BotJoinGroupEvent): ApproveResult {
+        AdminRequestEventData -= event
+        return ApproveResult.Ignore
+    }
+
+    override suspend fun approve(event: MemberJoinEvent): ApproveResult {
+        AdminRequestEventData -= event
+        return ApproveResult.Ignore
+    }
 
     public suspend fun handle(event: MessageEvent) {
         AdminContactCommand.runCatching {

@@ -127,6 +127,29 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
+    @EventHandler
+    internal suspend fun BotJoinGroupEvent.handle() {
+        for (approver in ComparableService<GroupApprover>()) {
+            try {
+                when (val status = approver.approve(event = this)) {
+                    ApproveResult.Accept -> Unit
+                    is ApproveResult.Reject -> {
+                        @OptIn(MiraiExperimentalApi::class)
+                        if (this is BotJoinGroupEvent.Invite) {
+                            invitor.sendMessage(message = status.message)
+                        }
+                        group.quit()
+                    }
+                    ApproveResult.Ignore -> continue
+                }
+                break
+            } catch (cause: Throwable) {
+                logger.warning({ "$approver 审核 $this 失败" }, cause)
+                continue
+            }
+        }
+    }
+
     // endregion
 
     // region Timer
@@ -241,22 +264,13 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
-    @EventHandler
-    internal fun BotGroupPermissionChangeEvent.mark() {
-        if (origin > new) return
-        logger.info { "机器人权限提升，相关群定时器开始运作" }
-        for (timer in ComparableService<GroupTimerService<*>>()) {
-            timer.start(target = group)
-        }
-    }
-
     // endregion
 
     // region Censor
 
     @EventHandler
     internal suspend fun GroupMessageEvent.mark() {
-        if (group.botAsMember.permission <= sender.permission) return
+        if (group.botPermission <= sender.permission) return
         for (censor in ComparableService<ContentCensor>()) {
             if (censor.handle(event = this)) break else continue
         }
