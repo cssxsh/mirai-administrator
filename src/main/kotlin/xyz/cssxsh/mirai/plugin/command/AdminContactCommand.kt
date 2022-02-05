@@ -33,7 +33,12 @@ public object AdminContactCommand : CompositeCommand(
 
     @SubCommand
     @Description("处理请求")
-    public suspend fun CommandSender.handle(id: Long, accept: Boolean = true, black: Boolean = false, message: String = "") {
+    public suspend fun CommandSender.handle(
+        id: Long,
+        accept: Boolean = true,
+        black: Boolean = false,
+        message: String = ""
+    ) {
         val result = try {
             val request = requireNotNull(AdminRequestEventData.handle(id, accept, black, message)) { "找不到事件" }
             "请求已处理 $request"
@@ -49,9 +54,9 @@ public object AdminContactCommand : CompositeCommand(
     @Description("申请列表")
     public suspend fun CommandSender.request() {
         val message = try {
-            AdminRequestEventData.detail()
-        } catch (e: Throwable) {
-            logger.warning({ "出现错误" }, e)
+            AdminRequestEventData.render()
+        } catch (cause: Throwable) {
+            logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
 

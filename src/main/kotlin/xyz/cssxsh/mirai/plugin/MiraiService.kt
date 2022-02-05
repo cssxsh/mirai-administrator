@@ -6,7 +6,6 @@ import net.mamoe.mirai.*
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.util.ContactUtils.render
-import net.mamoe.mirai.data.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 import xyz.cssxsh.mirai.plugin.data.*
@@ -45,11 +44,15 @@ internal fun BotInvitedJoinGroupRequestEvent.render(accept: Boolean): Message = 
     if (accept) appendLine("已自动同意")
 }
 
-internal fun Sequence<Map.Entry<Long, List<RequestEventData>>>.detail(): String = buildString {
-    for ((qq, list) in this@detail) {
+internal fun AdminRequestEventData.render(): String = buildString {
+    for ((qq, list) in this@render) {
         if (list.isEmpty()) continue
-        val bot = Bot.getInstance(qq)
-        appendLine("--- ${bot.render()} ---")
+        val bot = try {
+            Bot.getInstance(qq).render()
+        } catch (_: Throwable) {
+            "$qq"
+        }
+        appendLine("--- $bot ---")
         for (request in list) {
             appendLine(request)
         }
@@ -73,6 +76,6 @@ internal fun ComparableService.Loader.reload() {
 internal fun ComparableService.Loader.render(): String = buildString {
     appendLine("ComparableService Registered: ")
     for (subclass in ComparableService::class.sealedSubclasses) {
-        appendLine("${subclass.simpleName}: ${registered(subclass.java).joinToString { "${it.id}:${it.level}" }}")
+        appendLine("${subclass.simpleName}: ${registered(subclass.java).joinToString { "${it.id}(${it.level})" }}")
     }
 }

@@ -1,16 +1,20 @@
 package xyz.cssxsh.mirai.plugin
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.*
 import net.mamoe.mirai.*
+import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.permission.PermissionService.Companion.cancel
+import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.console.permission.PermissionService.Companion.permit
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
+import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
+import xyz.cssxsh.mirai.plugin.command.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
 import kotlin.coroutines.*
@@ -150,6 +154,23 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
+    @EventHandler// XXX: AdminContactCommand ...
+    internal suspend fun MessageEvent.approve() {
+        if (toCommandSender().hasPermission(AdminContactCommand.permission).not()) return
+        val original = (message.findIsInstance<QuoteReply>() ?: return)
+            .source.originalMessage
+            .contentToString()
+        val id = ("""(?<=with <)\d+""".toRegex().find(original)?.value ?: return).toLong()
+        val accept = MiraiAutoApprover.replyAccept.toRegex() in message.contentToString()
+        val black = MiraiAutoApprover.replyBlack.toRegex() in message.contentToString()
+
+        AdminContactCommand.runCatching {
+            toCommandSender().handle(id = id, accept = accept, black = black, message = original)
+        }.onFailure { cause ->
+            logger.error({ "handle contact request failure." }, cause)
+        }
+    }
+
     // endregion
 
     // region Timer
@@ -261,6 +282,14 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
         for (timer in ComparableService<BotTimingMessage>()) {
             timer.start(from = bot)
+        }
+    }
+
+    @EventHandler
+    internal fun BotGroupPermissionChangeEvent.mark() {
+        if (group.botPermission < MemberPermission.ADMINISTRATOR) return
+        for (timer in ComparableService<GroupTimerService<*>>()) {
+            timer.start(target = group)
         }
     }
 

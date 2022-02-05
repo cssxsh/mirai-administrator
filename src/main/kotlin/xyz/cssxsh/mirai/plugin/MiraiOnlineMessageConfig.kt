@@ -4,7 +4,9 @@ public interface MiraiOnlineMessageConfig {
 
     public val duration: Long
 
-    public val onlineMessageType: Type
+    public val type: Type
 
-    public enum class Type { XML, PLAIN }
+    public val custom: String
+
+    public enum class Type { XML, PLAIN, CUSTOM }
 }

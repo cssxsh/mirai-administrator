@@ -11,6 +11,8 @@ import xyz.cssxsh.mirai.spi.*
 import java.time.*
 
 public object MiraiStatusMessage : BotTimingMessage, MiraiStatusMessageConfig by AdminSetting {
+    override val level: Int = 0
+    override val id: String = "status"
 
     override fun moment(contact: Bot): LocalTime? {
         return if (sendStatusInterval > 0) LocalTime.now().plusMinutes(sendStatusInterval) else null
@@ -25,6 +27,4 @@ public object MiraiStatusMessage : BotTimingMessage, MiraiStatusMessageConfig by
         // XXX: StatusCommand no return
         return emptyFlow()
     }
-
-    override val id: String = "status"
 }

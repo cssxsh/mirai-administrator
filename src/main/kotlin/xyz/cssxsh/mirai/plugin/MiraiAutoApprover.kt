@@ -1,15 +1,13 @@
 package xyz.cssxsh.mirai.plugin
 
-import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
 import net.mamoe.mirai.event.events.*
-import net.mamoe.mirai.message.data.*
-import net.mamoe.mirai.utils.*
-import xyz.cssxsh.mirai.plugin.command.*
 import xyz.cssxsh.mirai.plugin.data.*
 import xyz.cssxsh.mirai.spi.*
 
 public object MiraiAutoApprover : FriendApprover, GroupApprover, MemberApprover,
-    MiraiAutoApproverConfig by AdminSetting {
+    MiraiAutoApproverConfig by AdminAutoApproverConfig {
+    override val level: Int = 0
+    override val id: String = "default"
 
     override suspend fun approve(event: NewFriendRequestEvent): ApproveResult {
         AdminRequestEventData += event
@@ -43,21 +41,4 @@ public object MiraiAutoApprover : FriendApprover, GroupApprover, MemberApprover,
         AdminRequestEventData -= event
         return ApproveResult.Ignore
     }
-
-    public suspend fun handle(event: MessageEvent) {
-        AdminContactCommand.runCatching {
-            val original = (event.message.findIsInstance<QuoteReply>() ?: return)
-                .source.originalMessage
-                .contentToString()
-            val id = ("""(?<=<)\d+""".toRegex().find(original)?.value ?: return).toLong()
-            val accept = replyAccept.toRegex() in event.message.contentToString()
-            val black = replyBlack.toRegex() in event.message.contentToString()
-
-            event.toCommandSender().handle(id = id, accept = accept, black = black, message = original)
-        }.onFailure { cause ->
-            logger.error({ "handle contact request failure." }, cause)
-        }
-    }
-
-    override val id: String = "default"
 }

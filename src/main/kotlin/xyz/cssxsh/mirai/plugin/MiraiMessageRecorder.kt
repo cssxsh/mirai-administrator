@@ -10,6 +10,8 @@ import xyz.cssxsh.mirai.spi.*
  * 简陋的内置消息记录器
  */
 internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandler {
+    override val level: Int = 0
+    override val id: String = "default"
 
     private val records: MutableMap<Long, MutableList<MessageSource>> = HashMap()
 
@@ -46,6 +48,4 @@ internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandle
 
         return source
     }
-
-    override val id: String = "default"
 }

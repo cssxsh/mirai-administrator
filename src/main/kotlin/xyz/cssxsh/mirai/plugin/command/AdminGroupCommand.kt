@@ -1,6 +1,6 @@
 package xyz.cssxsh.mirai.plugin.command
 
-import net.mamoe.mirai.Bot
+import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
@@ -34,7 +34,7 @@ public object AdminGroupCommand : CompositeCommand(
 
     @SubCommand
     @Description("群成员")
-    public suspend fun CommandSender.member(group: Group = subject as Group) {
+    public suspend fun CommandSender.member(group: Group) {
         val message = try {
             buildString {
                 for (bot in Bot.instances) {
@@ -53,14 +53,28 @@ public object AdminGroupCommand : CompositeCommand(
     }
 
     @SubCommand
-    @Description("删除群员")
-    public suspend fun CommandSender.quit(member: NormalMember, reason: String = "", block: Boolean = false) {
+    @Description("退出群聊")
+    public suspend fun CommandSender.quit(group: Group) {
         val message = try {
-            member.kick(message = reason, block = block)
-            "删除成功"
+            group.quit()
+            "退出成功"
         } catch (cause: Throwable) {
-            logger.warning({ "删除错误" }, cause)
-            "删除错误"
+            logger.warning({ "退出错误" }, cause)
+            "退出错误"
+        }
+
+        sendMessage(message)
+    }
+
+    @SubCommand
+    @Description("踢出群员")
+    public suspend fun CommandSender.kick(member: NormalMember, reason: String = "", black: Boolean = false) {
+        val message = try {
+            member.kick(message = reason, block = black)
+            "踢出成功"
+        } catch (cause: Throwable) {
+            logger.warning({ "踢出错误" }, cause)
+            "踢出错误"
         }
 
         sendMessage(message)
@@ -68,7 +82,7 @@ public object AdminGroupCommand : CompositeCommand(
 
     @SubCommand
     @Description("群昵称")
-    public suspend fun CommandSender.nick(member: NormalMember, nick: String = "") {
+    public suspend fun CommandSender.nick(member: NormalMember, nick: String) {
         val message = try {
             member.nameCard = nick
             "设置成功"
@@ -82,7 +96,7 @@ public object AdminGroupCommand : CompositeCommand(
 
     @SubCommand
     @Description("群头衔")
-    public suspend fun CommandSender.special(member: NormalMember, title: String = "") {
+    public suspend fun CommandSender.title(member: NormalMember, title: String) {
         val message = try {
             member.specialTitle = title
             "设置成功"

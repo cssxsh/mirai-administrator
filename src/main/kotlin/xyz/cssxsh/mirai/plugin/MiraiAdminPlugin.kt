@@ -13,13 +13,15 @@ public object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.mirai-administrator",
         name = "mirai-administrator",
-        version = "1.0.0-RC2",
+        version = "1.0.0-RC3",
     ) {
         author("cssxsh")
     }
 ) {
 
     override fun onEnable() {
+        AdminAutoApproverConfig.reload()
+        AdminOnlineMessageConfig.reload()
         AdminRequestEventData.reload()
         AdminSetting.reload()
 
@@ -43,14 +45,19 @@ public object MiraiAdminPlugin : KotlinPlugin(
         AdminContactCommand.register()
         AdminFriendCommand.register()
         AdminGroupCommand.register()
+        AdminRecallCommand.register()
         AdminRegisteredCommand.register()
+        AdminSendCommand.register()
     }
 
     override fun onDisable() {
         AdminContactCommand.unregister()
         AdminFriendCommand.unregister()
         AdminGroupCommand.unregister()
+        AdminRecallCommand.unregister()
         AdminRegisteredCommand.unregister()
+        AdminSendCommand.unregister()
+
         MiraiAdministrator.cancelAll()
         MiraiMessageRecorder.cancelAll()
     }

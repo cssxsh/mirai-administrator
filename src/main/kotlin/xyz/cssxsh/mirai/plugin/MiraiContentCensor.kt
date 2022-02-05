@@ -6,6 +6,8 @@ import xyz.cssxsh.mirai.plugin.data.*
 import xyz.cssxsh.mirai.spi.*
 
 public object MiraiContentCensor : ContentCensor, MiraiContentCensorConfig by AdminSetting {
+    override val level: Int = 0
+    override val id: String = "default"
 
     override suspend fun handle(event: GroupMessageEvent): Boolean {
         if (censorTypes.any { event.message.contains(it.key) }) {
@@ -15,7 +17,7 @@ public object MiraiContentCensor : ContentCensor, MiraiContentCensorConfig by Ad
             if (censorMute > 0) event.sender.mute(censorMute)
         }
         if (censorRegex.isEmpty()) return false
-        
+
         if (censorRegex.toRegex() in event.message.contentToString()) {
             event.group.sendMessage("触发消息正则审查")
             event.message.recall()
@@ -27,6 +29,4 @@ public object MiraiContentCensor : ContentCensor, MiraiContentCensorConfig by Ad
     }
 
     override suspend fun handle(event: NudgeEvent): Boolean = false
-
-    override val id: String = "default"
 }
