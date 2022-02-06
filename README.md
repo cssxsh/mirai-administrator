@@ -21,6 +21,10 @@
 本插件提供[服务接口](#服务接口)以供其他插件拓展功能  
 例如使用 [Mirai Content Censor](https://github.com/gnuf0rce/mirai-content-censor) 依靠百度API审查群消息
 
+## MCL 指令安装
+
+`./mcl --update-package xyz.cssxsh.mirai:mirai-administrator --channel stable --type plugin`
+
 # 指令
 
 注意: 使用前请确保可以 [在聊天环境执行指令](https://github.com/project-mirai/chat-command)   
