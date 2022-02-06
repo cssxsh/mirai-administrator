@@ -11,7 +11,14 @@
 * [Permission Command](https://github.com/mamoe/mirai/blob/dev/mirai-console/docs/BuiltInCommands.md#permissioncommand)
 * [Chat Command](https://github.com/project-mirai/chat-command)
 
-本插件提供[服务接口](#服务接口)以供其他插件拓展功能
+本插件实现的功能有:
+
+* 联系人相关 自动审批，指令查看
+* 消息相关 发送消息，撤回消息
+* 群管理相关 群消息审核，自动宵禁，自动清理不发言
+
+本插件提供[服务接口](#服务接口)以供其他插件拓展功能  
+例如使用 [Mirai Content Censor](https://github.com/gnuf0rce/mirai-content-censor) 依靠百度API审查群消息
 
 # 指令
 
@@ -33,7 +40,7 @@
 
 1. `id` 是 事件id 或 好友id 或 群id
 2. `accept` 和 `black` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true` (不区分大小写)
-3. 对 机器人发送的新联系人通知消息 回复 `同意` 或 `不同意` 或 `拉黑` 即可处理，详见配置 [...](#配置)
+3. 对 机器人发送的新联系人通知消息 回复 `同意` 或 `不同意` 或 `拉黑` 即可处理，详见 [联系人审批配置](#联系人审批配置)
 
 ## AdminFriendCommand
 
