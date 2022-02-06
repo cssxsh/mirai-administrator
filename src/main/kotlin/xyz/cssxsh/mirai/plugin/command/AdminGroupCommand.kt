@@ -105,4 +105,23 @@ public object AdminGroupCommand : CompositeCommand(
 
         sendMessage(message)
     }
+
+    @SubCommand
+    @Description("禁言")
+    public suspend fun CommandSender.mute(member: NormalMember, second: Int) {
+        val message = try {
+            if (second > 0) {
+                member.mute(second)
+                "禁言成功"
+            } else {
+                member.unmute()
+                "解除成功"
+            }
+        } catch (cause: Throwable) {
+            logger.warning({ "设置错误" }, cause)
+            "设置错误"
+        }
+
+        sendMessage(message)
+    }
 }
