@@ -8,6 +8,7 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.*
+import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.plugin.*
 
 public object AdminSendCommand : CompositeCommand(
@@ -37,8 +38,13 @@ public object AdminSendCommand : CompositeCommand(
             sendMessage("未指定机器人")
             return
         }
-        for (group in bot.groups) {
-            group.sendMessage(message = read(contact = group) + if (at) AtAll else EmptyMessageChain)
+        try {
+            val message = read(contact = null)
+            for (group in bot.groups) {
+                group.sendMessage(message = message + if (at) AtAll else EmptyMessageChain)
+            }
+        } catch (cause: Throwable) {
+            logger.warning({ "发送给所有好友 处理失败" }, cause)
         }
     }
 
@@ -49,8 +55,13 @@ public object AdminSendCommand : CompositeCommand(
             sendMessage("未指定机器人")
             return
         }
-        for (friend in bot.friends) {
-            friend.sendMessage(message = read(contact = friend))
+        try {
+            val message = read(contact = null)
+            for (friend in bot.friends) {
+                friend.sendMessage(message = message)
+            }
+        } catch (cause: Throwable) {
+            logger.warning({ "发送给所有好友 处理失败" }, cause)
         }
     }
 
