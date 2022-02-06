@@ -21,7 +21,7 @@ public object MiraiMemberCleaner : MemberCleaner, MiraiMemberCleanerConfig by Ad
             if (last > limit) {
                 null
             } else {
-                member to "自 ${member.lastSpeakAt} 起，长时间未发言"
+                member to "自 ${member.lastSpeakAt} 起，${day}天未发言"
             }
         }
     }
