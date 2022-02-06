@@ -77,4 +77,23 @@ public object AdminSendCommand : CompositeCommand(
             }
         )
     }
+
+    @SubCommand
+    @Description("戳一戳指定联系人")
+    public suspend fun CommandSender.nudge(user: User) {
+        val message = try {
+            when (user) {
+                is NormalMember -> user.nudge().sendTo(user.group)
+                is Friend -> user.nudge().sendTo(user)
+                is Stranger -> user.nudge().sendTo(user)
+                else -> throw UnsupportedOperationException("nudge $user")
+            }
+            "发送成功"
+        } catch (cause: Throwable) {
+            logger.warning({ "发送失败" }, cause)
+            "发送失败"
+        }
+
+        sendMessage(message)
+    }
 }
