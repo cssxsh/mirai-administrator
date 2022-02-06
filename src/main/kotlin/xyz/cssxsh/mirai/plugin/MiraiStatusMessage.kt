@@ -22,14 +22,15 @@ public object MiraiStatusMessage : BotTimingMessage, MiraiStatusMessageConfig by
     }
 
     override suspend fun run(contact: Bot): Flow<MessageReceipt<*>> {
-        BuiltInCommands.StatusCommand.runCatching {
-            contact.owner().asCommandSender().handle()
-        }.onFailure { cause ->
-            logger.error({ "send status info failure." }, cause)
-        }.onSuccess {
-            records[contact] = LocalTime.now()
+        return flow {
+            // XXX: StatusCommand no return
+            BuiltInCommands.StatusCommand.runCatching {
+                contact.owner().asCommandSender().handle()
+            }.onFailure { cause ->
+                logger.error({ "send status info failure." }, cause)
+            }.onSuccess {
+                records[contact] = LocalTime.now()
+            }
         }
-        // XXX: StatusCommand no return
-        return emptyFlow()
     }
 }
