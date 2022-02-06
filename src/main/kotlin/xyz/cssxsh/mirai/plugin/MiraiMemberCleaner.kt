@@ -16,13 +16,12 @@ public object MiraiMemberCleaner : MemberCleaner, MiraiMemberCleanerConfig by Ad
     override suspend fun run(contact: Group): List<Pair<NormalMember, String>> {
         val day = last[contact.id] ?: return emptyList()
         return contact.members.mapNotNull { member ->
-            val second = (System.currentTimeMillis() / 1000 - member.lastSpeakTimestamp)
-            val start = LocalDateTime.now().minusSeconds(second)
-            val last = LocalDateTime.now().minusDays(day)
-            if (last > start) {
+            val last = member.lastSpeakAt
+            val limit = LocalDateTime.now().minusDays(day)
+            if (last > limit) {
                 null
             } else {
-                member to "自 $start 起，长时间未发言"
+                member to "自 ${member.lastSpeakAt} 起，长时间未发言"
             }
         }
     }
