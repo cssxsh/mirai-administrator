@@ -176,24 +176,12 @@ public object MiraiAdministrator : SimpleListenerHost() {
     // region Timer
 
     /**
-     * 延时到 [moment]
-     */
-    private suspend fun delay(moment: LocalTime) {
-        val now = LocalTime.now()
-        val second: Int = if (moment > now) {
-            moment.toSecondOfDay() - now.toSecondOfDay()
-        } else {
-            24 * 60 * 60 + moment.toSecondOfDay() - now.toSecondOfDay()
-        }
-        delay(second * 1000L)
-    }
-
-    /**
      * 启动一个群定时服务
      */
     private fun GroupTimerService<*>.start(target: Group): Job = launch(SupervisorJob()) {
         while (isActive && target.isActive) {
-            delay(moment = moment(target) ?: break)
+            // 延时到 [moment]
+            delay(wait(end = moment(target) ?: break))
             if (target.isActive.not() || target.botPermission < MemberPermission.ADMINISTRATOR) break
 
             when (this@start) {
@@ -261,7 +249,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
      */
     private fun BotTimingMessage.start(from: Bot): Job = launch(SupervisorJob()) {
         while (isActive && from.isActive) {
-            delay(moment = moment(from) ?: break)
+            delay(wait(end = moment(from) ?: break))
 
             run(contact = from).onCompletion { cause ->
                 if (cause != null) {

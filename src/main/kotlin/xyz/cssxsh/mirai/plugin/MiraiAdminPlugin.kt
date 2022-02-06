@@ -49,6 +49,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
         AdminRecallCommand.register()
         AdminRegisteredCommand.register()
         AdminSendCommand.register()
+        AdminTimerCommand.register()
     }
 
     override fun onDisable() {
@@ -58,6 +59,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
         AdminRecallCommand.unregister()
         AdminRegisteredCommand.unregister()
         AdminSendCommand.unregister()
+        AdminTimerCommand.unregister()
 
         MiraiAdministrator.cancelAll()
         MiraiMessageRecorder.cancelAll()

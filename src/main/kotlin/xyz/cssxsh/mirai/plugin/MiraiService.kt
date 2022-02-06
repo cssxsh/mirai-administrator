@@ -10,6 +10,7 @@ import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 import xyz.cssxsh.mirai.plugin.data.*
 import xyz.cssxsh.mirai.spi.*
+import java.time.*
 import java.util.*
 
 internal inline val logger get() = MiraiAdminPlugin.logger
@@ -17,6 +18,11 @@ internal inline val logger get() = MiraiAdminPlugin.logger
 internal fun Bot.owner() = getFriendOrFail(AdminSetting.owner)
 
 internal val http by lazy { HttpClient(OkHttp) }
+
+internal fun wait(start: LocalTime = LocalTime.now(), end: LocalTime): Long {
+    val offset = if (end > start) 0 else 24 * 60 * 60
+    return (end.toSecondOfDay() - start.toSecondOfDay() + offset) * 1000L
+}
 
 internal fun AbstractJvmPlugin.registerPermission(name: String, description: String): Permission {
     return PermissionService.INSTANCE.register(permissionId(name), description, parentPermission)

@@ -13,7 +13,7 @@ public object MiraiCurfewTimer : GroupCurfewTimer, MiraiCurfewTimerConfig by Adm
         val now: LocalTime = LocalTime.now()
         val next: LocalTime = now.plusMinutes(check)
         val range: LocalTimeRange = (muted[contact.id] ?: return next)
-        return minOf(range.start, next)
+        return listOf(next, range.start, range.endInclusive).minByOrNull { wait(now, it) }!!
     }
 
     override suspend fun run(contact: Group): Boolean {
