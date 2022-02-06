@@ -4,6 +4,7 @@
 
 [![Release](https://img.shields.io/github/v/release/cssxsh/mirai-administrator)](https://github.com/cssxsh/mirai-administrator/releases)
 ![Downloads](https://img.shields.io/github/downloads/cssxsh/mirai-administrator/total)
+[![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-administrator)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-administrator)
 
 **使用前应该查阅的相关文档或项目**
 
