@@ -32,7 +32,7 @@ public object AdminRegisteredCommand : SimpleCommand(
                     bot named subclass.simpleName!! says {
                         for (service in ComparableService.registered(subclass.java)) {
                             appendLine("Id: ${service.id}")
-                            appendLine("Name: ${service::class.simpleName}")
+                            appendLine("Class: ${service::class.qualifiedName}")
                             appendLine("Level: ${service.level}")
                             appendLine(service.description)
                         }
