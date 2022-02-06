@@ -13,7 +13,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-administrator",
         name = "mirai-administrator",
-        version = "1.0.0",
+        version = "1.0.1",
     ) {
         author("cssxsh")
     }
