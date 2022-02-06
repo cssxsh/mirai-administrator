@@ -11,7 +11,7 @@ import xyz.cssxsh.mirai.spi.*
  */
 internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandler {
     override val level: Int = 0
-    override val id: String = "default"
+    override val id: String = "default-recorder"
 
     private val records: MutableMap<Long, MutableList<MessageSource>> = HashMap()
 

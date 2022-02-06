@@ -19,8 +19,8 @@
 `<...>`中的是指令名  
 `[...]`表示参数，当`[...]`后面带`?`时表示参数可选
 
-本插件指令权限ID 格式为 `xyz.cssxsh.mirai.mirai-administrator:command.*`, `*` 是指令的第一指令名  
-例如 `/send to 12345` 的权限ID为 `xyz.cssxsh.mirai.plugin.debug-helper:command.send`  
+本插件指令权限ID 格式为 `xyz.cssxsh.mirai.plugin.mirai-administrator:command.*`, `*` 是指令的第一指令名  
+例如 `/send to 12345` 的权限ID为 `xyz.cssxsh.mirai.mirai-administrator:command.send`  
 对 机器人发送的**联系人请求**通知消息 回复 `同意` 或 `不同意` 或 `拉黑` 即可处理
 
 ## AdminContactCommand

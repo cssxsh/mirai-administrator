@@ -7,7 +7,7 @@ import xyz.cssxsh.mirai.spi.*
 public object MiraiAutoApprover : FriendApprover, GroupApprover, MemberApprover,
     MiraiAutoApproverConfig by AdminAutoApproverConfig {
     override val level: Int = 0
-    override val id: String = "default"
+    override val id: String = "default-approver"
 
     override suspend fun approve(event: NewFriendRequestEvent): ApproveResult {
         AdminRequestEventData += event

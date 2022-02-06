@@ -7,7 +7,7 @@ import java.time.*
 
 public object MiraiMemberCleaner : MemberCleaner, MiraiMemberCleanerConfig by AdminTimerData {
     override val level: Int = 0
-    override val id: String = "default"
+    override val id: String = "cleaner"
 
     override fun moment(contact: Group): LocalTime {
         return LocalTime.now().plusMinutes(check)

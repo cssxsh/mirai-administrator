@@ -10,6 +10,7 @@ import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 import xyz.cssxsh.mirai.plugin.data.*
 import xyz.cssxsh.mirai.spi.*
+import java.util.*
 
 internal inline val logger get() = MiraiAdminPlugin.logger
 
@@ -63,10 +64,17 @@ internal fun AdminRequestEventData.render(): String = buildString {
 }
 
 internal fun ComparableService.Loader.reload() {
-    loader.reload()
+    for (classLoader in JvmPluginLoader.classLoaders) {
+        instances.addAll(ServiceLoader.load(ComparableService::class.java, classLoader))
+        for (subclass in ComparableService::class.sealedSubclasses) {
+            instances.addAll(ServiceLoader.load(subclass.java, classLoader))
+        }
+    }
     instances.add(MiraiAutoApprover)
     instances.add(MiraiOnlineMessage)
     instances.add(MiraiStatusMessage)
+    instances.add(MiraiMemberCleaner)
+    instances.add(MiraiCurfewTimer)
     instances.add(MiraiContentCensor)
     if (invoke<MessageSourceHandler>().isEmpty()) {
         instances.add(MiraiMessageRecorder)
@@ -74,7 +82,7 @@ internal fun ComparableService.Loader.reload() {
 }
 
 internal fun ComparableService.Loader.render(): String = buildString {
-    appendLine("ComparableService Registered: ")
+    appendLine("ComparableService Registered [${instances.size}]:")
     for (subclass in ComparableService::class.sealedSubclasses) {
         appendLine("${subclass.simpleName}: ${registered(subclass.java).joinToString { "${it.id}(${it.level})" }}")
     }

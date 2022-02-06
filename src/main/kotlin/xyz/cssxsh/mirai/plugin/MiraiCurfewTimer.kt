@@ -7,7 +7,7 @@ import java.time.*
 
 public object MiraiCurfewTimer : GroupCurfewTimer, MiraiCurfewTimerConfig by AdminTimerData {
     override val level: Int = 0
-    override val id: String = "curfew"
+    override val id: String = "curfew-timer"
 
     override fun moment(contact: Group): LocalTime {
         val now: LocalTime = LocalTime.now()

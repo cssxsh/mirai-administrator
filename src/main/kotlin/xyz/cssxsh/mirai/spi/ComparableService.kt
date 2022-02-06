@@ -16,23 +16,19 @@ public sealed interface ComparableService : Comparable<ComparableService> {
     public val id: String
 
     public override fun compareTo(other: ComparableService): Int {
-        return level.compareTo(other.level).takeUnless { it == 0 } ?: id.compareTo(other.id)
+        return - (level.compareTo(other.level).takeUnless { it == 0 } ?: id.compareTo(other.id))
     }
 
     public companion object Loader {
 
-        public val loader: ServiceLoader<ComparableService> by lazy {
-            ServiceLoader.load(ComparableService::class.java, ComparableService::class.java.classLoader)
-        }
-
-        internal val instances: MutableSet<ComparableService> = HashSet()
+        internal val instances: MutableSet<ComparableService> = TreeSet()
 
         public inline operator fun <reified S> invoke(): List<S> = registered(S::class.java)
 
         public inline operator fun <reified S : ComparableService> get(id: String): S = get(S::class.java, id)
 
         public fun <S> registered(clazz: Class<S>): List<S> {
-            return (instances + loader).sortedDescending().filterIsInstance(clazz)
+            return instances.filterIsInstance(clazz)
         }
 
         public fun <S : ComparableService> get(clazz: Class<S>, id: String): S {

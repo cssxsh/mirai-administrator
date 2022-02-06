@@ -307,10 +307,10 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     @EventHandler
     internal suspend fun NudgeEvent.mark() {
-        if (subject is Group) {
-            for (censor in ComparableService<ContentCensor>()) {
-                if (censor.handle(event = this)) break else continue
-            }
+        if (subject !is Group) return
+        if ((subject as Group).botPermission <= (from as Member).permission) return
+        for (censor in ComparableService<ContentCensor>()) {
+            if (censor.handle(event = this)) break else continue
         }
     }
 

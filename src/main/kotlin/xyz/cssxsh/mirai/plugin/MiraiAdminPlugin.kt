@@ -11,9 +11,9 @@ import xyz.cssxsh.mirai.spi.*
 
 public object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
-        id = "xyz.cssxsh.mirai.mirai-administrator",
+        id = "xyz.cssxsh.mirai.plugin.mirai-administrator",
         name = "mirai-administrator",
-        version = "1.0.0-RC3",
+        version = "1.0.0",
     ) {
         author("cssxsh")
     }
@@ -23,9 +23,10 @@ public object MiraiAdminPlugin : KotlinPlugin(
         AdminAutoApproverConfig.reload()
         AdminOnlineMessageConfig.reload()
         AdminRequestEventData.reload()
+        AdminTimerData.reload()
         AdminSetting.reload()
 
-        if (AdminSetting.owner == AdminSetting.OWNER_DEFAULT) {
+        if (AdminSetting.owner != AdminSetting.OWNER_DEFAULT) {
             logger.info { "机器人所有者 ${AdminSetting.owner}" }
         } else {
             throw IllegalArgumentException("机器人所有者 未设置")

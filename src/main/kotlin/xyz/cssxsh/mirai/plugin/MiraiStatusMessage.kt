@@ -9,13 +9,16 @@ import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.plugin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
+import java.util.*
 
 public object MiraiStatusMessage : BotTimingMessage, MiraiStatusMessageConfig by AdminSetting {
     override val level: Int = 0
     override val id: String = "status"
+    private val records: WeakHashMap<Bot, LocalTime> = WeakHashMap()
 
     override fun moment(contact: Bot): LocalTime? {
-        return if (sendStatusInterval > 0) LocalTime.now().plusMinutes(sendStatusInterval) else null
+        if (sendStatusInterval <= 0) return null
+        return records[contact]?.plusMinutes(sendStatusInterval) ?: LocalTime.now()
     }
 
     override suspend fun run(contact: Bot): Flow<MessageReceipt<*>> {
@@ -23,6 +26,8 @@ public object MiraiStatusMessage : BotTimingMessage, MiraiStatusMessageConfig by
             contact.owner().asCommandSender().handle()
         }.onFailure { cause ->
             logger.error({ "send status info failure." }, cause)
+        }.onSuccess {
+            records[contact] = LocalTime.now()
         }
         // XXX: StatusCommand no return
         return emptyFlow()

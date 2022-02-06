@@ -7,7 +7,7 @@ import xyz.cssxsh.mirai.spi.*
 
 public object MiraiContentCensor : ContentCensor, MiraiContentCensorConfig by AdminSetting {
     override val level: Int = 0
-    override val id: String = "default"
+    override val id: String = "default-censor"
 
     override suspend fun handle(event: GroupMessageEvent): Boolean {
         if (censorTypes.any { event.message.contains(it.key) }) {
