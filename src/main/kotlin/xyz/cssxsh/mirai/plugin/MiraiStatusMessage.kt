@@ -18,7 +18,7 @@ public object MiraiStatusMessage : BotTimingMessage, MiraiStatusMessageConfig by
 
     override fun moment(contact: Bot): LocalTime? {
         if (sendStatusInterval <= 0) return null
-        return records[contact]?.plusMinutes(sendStatusInterval) ?: LocalTime.now()
+        return records[contact]?.plusMinutes(sendStatusInterval) ?: LocalTime.now().plusSeconds(3)
     }
 
     override suspend fun run(contact: Bot): Flow<MessageReceipt<*>> {

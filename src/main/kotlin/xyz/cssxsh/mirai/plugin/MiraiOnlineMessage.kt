@@ -28,9 +28,9 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
     private val cache: MutableMap<Bot, LocalTime> = WeakHashMap()
 
     override fun moment(contact: Bot): LocalTime? {
-        return if (cache[contact] == null) {
+        return if (contact !in cache) {
             cache[contact] = LocalTime.now()
-            LocalTime.now()
+            LocalTime.now().plusSeconds(3)
         } else {
             null
         }
