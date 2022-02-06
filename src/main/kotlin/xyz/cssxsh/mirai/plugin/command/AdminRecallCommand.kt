@@ -23,7 +23,7 @@ public object AdminRecallCommand : SimpleCommand(
                 source.recall()
                 "${contact?.render() ?: source.fromId} 的消息撤回成功"
             } else {
-                "${contact?.render()?.orEmpty()} 未找到消息"
+                "${contact?.render().orEmpty()} 未找到消息"
             }
         } catch (cause: Throwable) {
             logger.warning({ "出现错误" }, cause)

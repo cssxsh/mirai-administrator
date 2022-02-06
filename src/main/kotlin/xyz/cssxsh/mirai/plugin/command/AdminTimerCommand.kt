@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.plugin.command
 
 import net.mamoe.mirai.console.command.*
+import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import xyz.cssxsh.mirai.plugin.*
 import xyz.cssxsh.mirai.plugin.data.*
@@ -21,26 +22,36 @@ public object AdminTimerCommand : CompositeCommand(
 
     @SubCommand
     @Description("宵禁")
-    public suspend fun CommandSender.mute(group: Group, start: LocalTime, end: LocalTime) {
+    public suspend fun CommandSender.mute(start: LocalTime, end: LocalTime, group: Group? = subject as? Group) {
+        if (group == null) {
+            sendMessage("未指定群")
+            return
+        }
+
         if (start != end) {
             val range = LocalTimeRange(start, end)
             AdminTimerData.muted[group.id] = range
-            sendMessage("宵禁 $range 将生效")
+            sendMessage("${group.render()} 宵禁 $range 将生效")
         } else {
             val range = AdminTimerData.muted.remove(group.id)
-            sendMessage("宵禁 $range 被取消")
+            sendMessage("${group.render()} 宵禁 $range 被取消")
         }
     }
 
     @SubCommand
     @Description("清理不发言")
-    public suspend fun CommandSender.cleaner(group: Group, day: Long) {
+    public suspend fun CommandSender.cleaner(day: Long, group: Group? = subject as? Group) {
+        if (group == null) {
+            sendMessage("未指定群")
+            return
+        }
+
         if (day > 0) {
             AdminTimerData.last[group.id] = day
-            sendMessage("清理不发言 开启，不发言期限 $day day")
+            sendMessage("${group.render()} 清理不发言 开启，不发言期限 $day day")
         } else {
             AdminTimerData.last.remove(group.id)
-            sendMessage("清理不发言 关闭")
+            sendMessage("${group.render()} 清理不发言 关闭")
         }
     }
 }

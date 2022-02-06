@@ -6,6 +6,7 @@ import net.mamoe.mirai.*
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.util.ContactUtils.render
+import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 import xyz.cssxsh.mirai.plugin.data.*
@@ -23,6 +24,12 @@ internal fun wait(start: LocalTime = LocalTime.now(), end: LocalTime): Long {
     val offset = if (end > start) 0 else 24 * 60 * 60
     return (end.toSecondOfDay() - start.toSecondOfDay() + offset) * 1000L
 }
+
+internal val NormalMember.lastSpeakAt: LocalDateTime
+    get() = LocalDateTime.ofInstant(Instant.ofEpochSecond(lastSpeakTimestamp.toLong()), ZoneId.systemDefault())
+
+internal val NormalMember.joinAt: LocalDateTime
+    get() = LocalDateTime.ofInstant(Instant.ofEpochSecond(joinTimestamp.toLong()), ZoneId.systemDefault())
 
 internal fun AbstractJvmPlugin.registerPermission(name: String, description: String): Permission {
     return PermissionService.INSTANCE.register(permissionId(name), description, parentPermission)

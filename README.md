@@ -77,17 +77,19 @@
 | `/<send> <friends> [bot]?`      | 发送给所有好友     |
 | `/<send> <to> [contact] [at]?`  | 发送给指定联系人    |
 
-1. `at` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true`, 将附加一个At
+1. `bot` 参数在命令行模式下需要指定
+2. `at` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true`, 将附加一个At
 
 ## AdminTimerCommand
 
-| Command                                 | Description |
-|:----------------------------------------|:------------|
-| `/<timer> <check> [minute]`             | 检查周期        |
-| `/<timer> <mute> [group] [start] [end]` | 宵禁          |
-| `/<timer> <to> [group] [day]`           | 清理不发言       |
+| Command                                  | Description |
+|:-----------------------------------------|:------------|
+| `/<timer> <check> [minute]`              | 检查周期        |
+| `/<timer> <mute> [start] [end] [group]?` | 宵禁          |
+| `/<timer> <to> [day] [group]?`           | 清理不发言       |
 
-1. `start`, `end` 为 开启时间和关闭时间 例如 `/timer mute 123456 11:00 06:00`
+1. `group` 为 要操作的群，在群聊中可以不指定
+2. `start`, `end` 为 开启时间和关闭时间 例如 `/timer mute 123456 11:00 06:00`
 
 # 配置
 

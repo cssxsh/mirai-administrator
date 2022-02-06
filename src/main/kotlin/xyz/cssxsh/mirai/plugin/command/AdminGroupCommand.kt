@@ -20,7 +20,7 @@ public object AdminGroupCommand : CompositeCommand(
                 for (bot in Bot.instances) {
                     appendLine("--- ${bot.render()} ---")
                     for (group in bot.groups) {
-                        appendLine("${group.render()}[${group.botPermission}]<${group.members.size}>(${group.botMuteRemaining}s)")
+                        appendLine("${group.render()}[${group.botPermission}]<${group.members.size}>")
                     }
                 }
             }
@@ -37,11 +37,9 @@ public object AdminGroupCommand : CompositeCommand(
     public suspend fun CommandSender.member(group: Group) {
         val message = try {
             buildString {
-                for (bot in Bot.instances) {
-                    appendLine("--- ${group.render()} ---")
-                    for (member in group.members) {
-                        appendLine("${member.render()}[${member.permission}](${member.muteTimeRemaining}s)")
-                    }
+                appendLine("--- ${group.render()} ---")
+                for (member in group.members) {
+                    appendLine("${member.render()}[${member.permission}](${member.joinAt}~${member.lastSpeakAt})")
                 }
             }
         } catch (cause: Throwable) {

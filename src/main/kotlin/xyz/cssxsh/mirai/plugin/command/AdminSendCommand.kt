@@ -32,16 +32,24 @@ public object AdminSendCommand : CompositeCommand(
 
     @SubCommand
     @Description("发送给所有群")
-    public suspend fun CommandSender.groups(bot: Bot? = null, at: Boolean = false) {
-        for (group in requireNotNull(bot ?: this.bot) { "未指定机器人" }.groups) {
+    public suspend fun CommandSender.groups(bot: Bot? = this.bot, at: Boolean = false) {
+        if (bot == null) {
+            sendMessage("未指定机器人")
+            return
+        }
+        for (group in bot.groups) {
             group.sendMessage(message = read(contact = group) + if (at) AtAll else EmptyMessageChain)
         }
     }
 
     @SubCommand
     @Description("发送给所有好友")
-    public suspend fun CommandSender.friends(bot: Bot? = null) {
-        for (friend in requireNotNull(bot ?: this.bot) { "未指定机器人" }.friends) {
+    public suspend fun CommandSender.friends(bot: Bot? = this.bot) {
+        if (bot == null) {
+            sendMessage("未指定机器人")
+            return
+        }
+        for (friend in bot.friends) {
             friend.sendMessage(message = read(contact = friend))
         }
     }
