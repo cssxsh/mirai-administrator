@@ -64,6 +64,7 @@
 | `/<group> <kick> [member] [reason]? [black]?` | 踢出群员        |
 | `/<group> <nick> [member] [nick]`             | 群昵称         |
 | `/<group> <title> [member] [title]`           | 群头衔         |
+| `/<group> <mute> [member] [second]`           | 禁言          |
 
 ## AdminRecallCommand
 
@@ -88,6 +89,7 @@
 | `/<send> <groups> [bot]? [at]?` | 发送给所有群      |
 | `/<send> <friends> [bot]?`      | 发送给所有好友     |
 | `/<send> <to> [contact] [at]?`  | 发送给指定联系人    |
+| `/<send> <nudge> [user]`        | 戳一戳指定联系人    |
 
 1. `bot` 参数在命令行模式下需要指定
 2. `at` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true`, 将附加一个At
