@@ -15,6 +15,11 @@ public sealed interface ComparableService : Comparable<ComparableService> {
      */
     public val id: String
 
+    /**
+     * 简介
+     */
+    public val description: String get() = ""
+
     public override fun compareTo(other: ComparableService): Int {
         return - (level.compareTo(other.level).takeUnless { it == 0 } ?: id.compareTo(other.id))
     }

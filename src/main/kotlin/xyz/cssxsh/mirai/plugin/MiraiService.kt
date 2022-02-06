@@ -97,6 +97,6 @@ internal fun ComparableService.Loader.reload() {
 internal fun ComparableService.Loader.render(): String = buildString {
     appendLine("ComparableService Registered [${instances.size}]:")
     for (subclass in ComparableService::class.sealedSubclasses) {
-        appendLine("${subclass.simpleName}: ${registered(subclass.java).joinToString { "${it.id}(${it.level})" }}")
+        appendLine("${subclass.simpleName}: ${registered(subclass.java).joinToString { it.id }}")
     }
 }
