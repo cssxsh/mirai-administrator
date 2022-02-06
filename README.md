@@ -37,10 +37,10 @@
 
 ## AdminFriendCommand
 
-| Command              | Description |
-|:---------------------|:------------|
-| `/<friend> <list>`   | 好友列表        |
-| `/<friend> <delete>` | 删除好友        |
+| Command                       | Description |
+|:------------------------------|:------------|
+| `/<friend> <list>`            | 好友列表        |
+| `/<friend> <delete> [friend]` | 删除好友        |
 
 ## AdminGroupCommand
 
@@ -59,7 +59,7 @@
 |:-----------------------|:------------|
 | `/<recall> [contact]?` | 撤回消息        |
 
-1. 不指定`contact`时，可以通过回复消息指定要撤销的消息，撤销回复消息指定的消息，如果没有指定，将尝试撤销最后一条不是由指令发送者发送的消息
+1. 不指定`contact`时，可以通过**回复消息**指定要撤销的消息，如果没有指定，将尝试撤销最后一条不是由指令发送者发送的消息
 2. `contact`是群员时，将尝试撤销这个群员的最后一条消息
 3. `contact`是群或好友时，将尝试撤销bot的最后一条消息
 
@@ -76,6 +76,18 @@
 | `/<send> <groups> [bot]? [at]?` | 发送给所有群      |
 | `/<send> <friends> [bot]?`      | 发送给所有好友     |
 | `/<send> <to> [contact] [at]?`  | 发送给指定联系人    |
+
+1. `at` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true`, 将附加一个At
+
+## AdminTimerCommand
+
+| Command                                 | Description |
+|:----------------------------------------|:------------|
+| `/<timer> <check> [minute]`             | 检查周期        |
+| `/<timer> <mute> [group] [start] [end]` | 宵禁          |
+| `/<timer> <to> [group] [day]`           | 清理不发言       |
+
+1. `start`, `end` 为 开启时间和关闭时间 例如 `/timer mute 123456 11:00 06:00`
 
 # 配置
 
