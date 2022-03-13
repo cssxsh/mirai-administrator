@@ -41,7 +41,7 @@ public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"
         return null
     }
 
-    public suspend fun handle(id: Long, accept: Boolean, black: Boolean, message: String): RequestEventData? {
+    public suspend fun handle(id: Long, accept: Boolean, black: Boolean, message: String): RequestEventData {
         for ((qq, list) in this) {
             val request = list[id] ?: continue
             val bot = Bot.getInstance(qq)
@@ -56,7 +56,7 @@ public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"
             }
             return request
         }
-        return null
+        throw NoSuchElementException("Not found event with $id")
     }
 
     public operator fun plusAssign(event: NewFriendRequestEvent) {
