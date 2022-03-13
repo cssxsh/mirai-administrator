@@ -15,8 +15,10 @@ public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"
 
     private val members by value<MutableMap<Long, List<RequestEventData.MemberJoinRequest>>>()
 
-    override operator fun iterator(): Iterator<Map.Entry<Long, List<RequestEventData>>> {
-        return (friends.entries + groups.entries + members.entries).iterator()
+    override operator fun iterator(): Iterator<Map.Entry<Long, List<RequestEventData>>> = iterator {
+        yieldAll(friends.entries)
+        yieldAll(groups.entries)
+        yieldAll(members.entries)
     }
 
     private operator fun List<RequestEventData>.get(id: Long): RequestEventData? {
