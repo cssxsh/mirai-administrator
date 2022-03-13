@@ -40,11 +40,11 @@ public object AdminContactCommand : CompositeCommand(
         message: String = ""
     ) {
         val result = try {
-            val request = requireNotNull(AdminRequestEventData.handle(id, accept, black, message)) { "找不到事件" }
+            val request = requireNotNull(AdminRequestEventData.handle(id, accept, black, message)) { "找不到事件 $id" }
             "请求已处理 $request"
         } catch (cause: Throwable) {
             logger.warning({ "出现错误" }, cause)
-            "出现错误"
+            "出现错误: ${cause.message}"
         }
 
         sendMessage(result)
