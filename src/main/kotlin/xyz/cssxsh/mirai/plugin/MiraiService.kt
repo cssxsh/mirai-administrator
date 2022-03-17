@@ -77,6 +77,7 @@ internal fun AdminRequestEventData.render(): String = buildString {
 }
 
 internal fun ComparableService.Loader.reload() {
+    instances.clear()
     for (classLoader in JvmPluginLoader.classLoaders) {
         instances.addAll(ServiceLoader.load(ComparableService::class.java, classLoader))
         for (subclass in ComparableService::class.sealedSubclasses) {
