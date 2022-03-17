@@ -176,15 +176,15 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     // region Timer
 
-    private val cache: Map<TimerService<*, *>, MutableSet<ContactOrBot>> =
-        WeakHashMap<TimerService<*, *>, MutableSet<ContactOrBot>>().withDefault { HashSet() }
+    private val cache: MutableMap<TimerService<*, *>, MutableSet<Long>> = WeakHashMap()
+
+    private val TimerService<*, *>.records get() = cache.getOrPut(this, ::HashSet)
 
     /**
      * 启动一个群定时服务
      */
     private fun GroupTimerService<*>.start(target: Group) {
-        val records = cache.getValue(this)
-        if (records.add(target).not()) return
+        if (records.add(target.id).not()) return
         launch(target.coroutineContext) {
             while (isActive) {
                 // 延时到 [moment]
@@ -253,7 +253,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
             }
         }.invokeOnCompletion {
-            records.remove(target)
+            records.remove(target.id)
         }
     }
 
@@ -261,8 +261,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
      * 启动一个定时消息服务
      */
     private fun BotTimingMessage.start(from: Bot) {
-        val records = cache.getValue(this)
-        if (records.add(from).not()) return
+        if (records.add(from.id).not()) return
         launch(from.coroutineContext) {
             while (isActive) {
                 delay(wait(end = moment(from) ?: break))
@@ -276,7 +275,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
             }
         }.invokeOnCompletion {
-            records.remove(from)
+            records.remove(from.id)
         }
     }
 
