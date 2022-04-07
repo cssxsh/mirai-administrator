@@ -23,7 +23,7 @@ public object MiraiAutoApprover : FriendApprover, GroupApprover, MemberApprover,
 
     override suspend fun approve(event: MemberJoinRequestEvent): ApproveResult {
         AdminRequestEventData += event
-        event.bot.owner().sendMessage(message = event.render(accept = autoGroupAccept))
+        event.bot.owner().sendMessage(message = event.render(accept = autoMemberAccept))
         return if (autoMemberAccept) ApproveResult.Accept else ApproveResult.Ignore
     }
 
