@@ -90,9 +90,6 @@ internal fun ComparableService.Loader.reload() {
     instances.add(MiraiMemberCleaner)
     instances.add(MiraiCurfewTimer)
     instances.add(MiraiContentCensor)
-    if (invoke<MessageSourceHandler>().isEmpty()) {
-        instances.add(MiraiMessageRecorder)
-    }
 }
 
 internal fun ComparableService.Loader.render(): String = buildString {
