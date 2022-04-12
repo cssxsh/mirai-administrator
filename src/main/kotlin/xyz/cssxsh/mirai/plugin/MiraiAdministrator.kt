@@ -158,8 +158,8 @@ public object MiraiAdministrator : SimpleListenerHost() {
     @EventHandler// XXX: AdminContactCommand ...
     internal suspend fun MessageEvent.approve() {
         if (toCommandSender().hasPermission(AdminContactCommand.permission).not()) return
-        val original = (message.findIsInstance<QuoteReply>() ?: return)
-            .source.originalMessage
+        val original = (source(contact = null, event = this) ?: message.findIsInstance<QuoteReply>()?.source ?: return)
+            .originalMessage
             .contentToString()
         val id = ("""(?<=with <)\d+""".toRegex().find(original)?.value ?: return).toLong()
         val accept = MiraiAutoApprover.replyAccept.toRegex() in message.contentToString()

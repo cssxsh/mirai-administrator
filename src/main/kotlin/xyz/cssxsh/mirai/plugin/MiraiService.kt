@@ -101,3 +101,10 @@ internal fun ComparableService.Loader.render(): String = buildString {
         appendLine("${subclass.simpleName}: ${registered(subclass.java).joinToString { it.id }}")
     }
 }
+
+internal fun source(contact: Contact?, event: MessageEvent?): MessageSource? {
+    for (handler in ComparableService<MessageSourceHandler>()) {
+        return handler.find(contact = contact, event = event) ?: continue
+    }
+    return null
+}
