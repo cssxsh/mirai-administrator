@@ -36,12 +36,12 @@ public object MiraiAdminPlugin : KotlinPlugin(
 
         ComparableService.reload()
         logger.info { ComparableService.render() }
-
-        MiraiAdministrator.registerTo(globalEventChannel())
-
         if (ComparableService<MessageSourceHandler>().isEmpty()) {
+            ComparableService.instances.add(MiraiMessageRecorder)
+            //没有handler即添加默认的并注册event
             MiraiMessageRecorder.registerTo(globalEventChannel())
         }
+        MiraiAdministrator.registerTo(globalEventChannel())
 
         AdminContactCommand.register()
         AdminFriendCommand.register()
