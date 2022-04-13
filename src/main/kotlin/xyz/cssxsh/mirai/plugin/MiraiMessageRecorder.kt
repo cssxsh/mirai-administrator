@@ -4,6 +4,7 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
+import xyz.cssxsh.mirai.plugin.data.AdminSetting.recordSize
 import xyz.cssxsh.mirai.spi.*
 
 /**
@@ -17,12 +18,20 @@ internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandle
 
     @EventHandler
     fun MessageEvent.mark() {
-        records.getOrPut(subject.id, ::mutableListOf).add(source)
+        val record = records.getOrPut(subject.id, ::mutableListOf)
+        if (record.size == recordSize) {
+            record.removeFirst()
+        }
+        record.add(source)
     }
 
     @EventHandler
     fun MessagePostSendEvent<*>.mark() {
-        records.getOrPut(target.id, ::mutableListOf).add(source ?: return)
+        val record = records.getOrPut(target.id, ::mutableListOf)
+        if (record.size == recordSize) {
+            record.removeFirst()
+        }
+        record.add(source ?: return)
     }
 
     override fun find(contact: Contact?, event: MessageEvent?): MessageSource? {
