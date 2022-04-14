@@ -40,6 +40,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
         MiraiAdministrator.registerTo(globalEventChannel())
 
         if (ComparableService<MessageSourceHandler>().isEmpty()) {
+            ComparableService.instances.add(MiraiMessageRecorder)
             MiraiMessageRecorder.registerTo(globalEventChannel())
         }
 
