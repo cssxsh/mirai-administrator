@@ -11,7 +11,7 @@ public data class LocalTimeRange(
     @SerialName("end")
     @Serializable(with = LocalTimeSerializer::class)
     override val endInclusive: LocalTime
-): ClosedRange<LocalTime> {
+) : ClosedRange<LocalTime> {
     override fun contains(value: LocalTime): Boolean {
         return when {
             start < endInclusive -> value >= start && value <= endInclusive
