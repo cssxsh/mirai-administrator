@@ -207,7 +207,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     }
                     is GroupCurfewTimer -> launch(SupervisorJob()) {
                         try {
-                            val mute = run(target)
+                            val mute = run(target) ?: target.settings.isMuteAll
                             if (target.settings.isMuteAll != mute) {
                                 target.settings.isMuteAll = mute
                             }
@@ -297,6 +297,23 @@ public object MiraiAdministrator : SimpleListenerHost() {
         for (timer in ComparableService<GroupTimerService<*>>()) {
             timer.start(target = group)
         }
+    }
+
+    @EventHandler
+    internal suspend fun GroupMuteAllEvent.mark() {
+        this.operator ?: return
+        val sleep = origin != new
+        for (timer in ComparableService<GroupCurfewTimer>()) {
+            timer.sleep = sleep
+        }
+
+        val message = if (sleep) {
+            "${group.render()} 的定时宵禁已自动关闭"
+        } else {
+            "${group.render()} 的定时宵禁已自动开启"
+        }
+
+        group.sendMessage(message)
     }
 
     // endregion
