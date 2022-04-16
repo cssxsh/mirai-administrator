@@ -303,18 +303,11 @@ public object MiraiAdministrator : SimpleListenerHost() {
     @EventHandler
     internal suspend fun GroupMuteAllEvent.mark() {
         this.operator ?: return
-        val sleep = origin != new
         for (timer in ComparableService<GroupCurfewTimer>()) {
-            timer.sleep = sleep
+            timer.sleep(group)
         }
 
-        val message = if (sleep) {
-            "${group.render()} 的定时宵禁已自动关闭"
-        } else {
-            "${group.render()} 的定时宵禁已自动开启"
-        }
-
-        group.sendMessage(message)
+        group.sendMessage("${group.render()} 的定时宵禁状态已改变")
     }
 
     // endregion

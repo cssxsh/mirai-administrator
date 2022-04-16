@@ -8,6 +8,7 @@ import java.time.*
 public object MiraiCurfewTimer : GroupCurfewTimer, MiraiCurfewTimerConfig by AdminTimerData {
     override val level: Int = 0
     override val id: String = "curfew-timer"
+    private val sleep: MutableMap<Long, Boolean> = HashMap()
 
     override fun moment(contact: Group): LocalTime? {
         val now: LocalTime = LocalTime.now()
@@ -17,10 +18,12 @@ public object MiraiCurfewTimer : GroupCurfewTimer, MiraiCurfewTimerConfig by Adm
     }
 
     override suspend fun run(contact: Group): Boolean? {
-        if (sleep) return null
+        if (sleep[contact.id] ?: false) return null
         val range: LocalTimeRange = muted[contact.id] ?: return null
         return LocalTime.now() in range
     }
 
-    override var sleep: Boolean = false
+    override fun sleep(contact: Group, state: Boolean?) {
+        sleep[contact.id] = state ?: !(sleep[contact.id] ?: false)
+    }
 }
