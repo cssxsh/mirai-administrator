@@ -26,4 +26,8 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiStatusMe
     @ValueName("censor_mute")
     @ValueDescription("消息审查，禁言时间 单位秒")
     override val censorMute: Int by value(0)
+
+    @ValueName("record_limit")
+    @ValueDescription("联系人（群/好友/...）聊天记录上限，（用于消息撤销等操作）")
+    public val recordLimit: Int by value(100)
 }
