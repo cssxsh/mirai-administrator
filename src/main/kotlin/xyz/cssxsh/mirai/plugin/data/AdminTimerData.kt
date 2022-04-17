@@ -11,4 +11,6 @@ public object AdminTimerData : AutoSavePluginData("AdminTimerData"),
     override val last: MutableMap<Long, Long> by value()
 
     override val muted: MutableMap<Long, LocalTimeRange> by value()
+
+    override val sleep: MutableMap<Long, Long> by value()
 }

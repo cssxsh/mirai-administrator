@@ -9,7 +9,7 @@ import net.mamoe.mirai.contact.*
 public interface GroupCurfewTimer : GroupTimerService<Boolean?> {
 
     /**
-     * 睡眠状态，为真时，定期器不工作
+     * 设置睡眠，定期器不工作一段时间
      */
-    public fun sleep(contact: Group, state: Boolean? = null)
+    public fun ignore(contact: Group)
 }

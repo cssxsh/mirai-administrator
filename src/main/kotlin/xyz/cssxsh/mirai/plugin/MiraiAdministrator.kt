@@ -302,12 +302,12 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     @EventHandler
     internal suspend fun GroupMuteAllEvent.mark() {
-        this.operator ?: return
+        val operator = this.operator ?: return
         for (timer in ComparableService<GroupCurfewTimer>()) {
-            timer.sleep(group)
+            timer.ignore(contact = group)
         }
 
-        group.sendMessage("${group.render()} 的定时宵禁状态已改变")
+        group.sendMessage("由 ${operator.render()} 操作，忽略当前宵禁定时器 ")
     }
 
     // endregion
