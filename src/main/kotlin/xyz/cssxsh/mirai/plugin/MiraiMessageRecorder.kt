@@ -41,14 +41,14 @@ internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandle
                 record = records[contact.group.id] ?: return null
                 record.findLast { it.fromId == contact.id }
             }
-            contact != null -> {
-                record = records[contact.id] ?: return null
-                record.findLast { it.fromId == contact.bot.id }
-            }
             event != null -> {
                 record = records[event.subject.id] ?: ArrayList()
                 event.message.findIsInstance<QuoteReply>()?.source
                     ?: record.findLast { it.fromId != event.source.fromId }
+            }
+            contact != null -> {
+                record = records[contact.id] ?: return null
+                record.findLast { it.fromId == contact.bot.id }
             }
             else -> throw IllegalArgumentException("无法指定要撤回消息")
         } ?: return null

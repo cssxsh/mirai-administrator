@@ -157,7 +157,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     // XXX: AdminContactCommand ...
     @EventHandler
-    internal suspend fun MessageEvent.approve() {
+    internal suspend fun FriendMessageEvent.approve() {
         if (toCommandSender().hasPermission(AdminContactCommand.permission).not()) return
         val original = (source(contact = null, event = this) ?: message.findIsInstance<QuoteReply>()?.source ?: return)
             .originalMessage
