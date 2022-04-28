@@ -9,6 +9,7 @@ import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.utils.warning
 import xyz.cssxsh.mirai.plugin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
@@ -101,7 +102,12 @@ internal fun ComparableService.Loader.render(): String = buildString {
 
 internal fun source(contact: Contact?, event: MessageEvent?): MessageSource? {
     for (handler in ComparableService<MessageSourceHandler>()) {
-        return handler.find(contact = contact, event = event) ?: continue
+        return try {
+            handler.find(contact = contact, event = event) ?: continue
+        } catch (cause: Throwable) {
+            logger.warning({ "message source find failure." }, cause)
+            continue
+        }
     }
     return null
 }
