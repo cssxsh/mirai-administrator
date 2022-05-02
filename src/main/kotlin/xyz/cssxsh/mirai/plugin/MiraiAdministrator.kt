@@ -331,5 +331,15 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGH, concurrency = ConcurrencyKind.LOCKED)
+    internal suspend fun MessageEvent.check() {
+        for (blacklist in ComparableService<BlackListService>()) {
+            if (blacklist.check(sender)) {
+                intercept()
+                break
+            }
+        }
+    }
+
     // endregion
 }

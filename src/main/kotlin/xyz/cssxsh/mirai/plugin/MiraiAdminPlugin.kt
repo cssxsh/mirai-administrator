@@ -25,6 +25,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
         AdminRequestEventData.reload()
         AdminTimerData.reload()
         AdminSetting.reload()
+        AdminBlackListData.reload()
 
         if (AdminSetting.owner != AdminSetting.OWNER_DEFAULT) {
             logger.info { "机器人所有者 ${AdminSetting.owner}" }

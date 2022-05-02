@@ -33,7 +33,8 @@
 
 本插件指令权限ID 格式为 `xyz.cssxsh.mirai.plugin.mirai-administrator:command.*`, `*` 是指令的第一指令名  
 例如 `/send to 12345` 的权限ID为 `xyz.cssxsh.mirai.plugin.mirai-administrator:command.send`  
-对 机器人发送的**联系人请求**通知消息 回复 `同意` 或 `不同意` 或 `拉黑` 即可处理
+对 机器人发送的**联系人请求**通知消息 回复 `同意` 或 `不同意` 或 `拉黑` 即可处理  
+机器人黑名单功能通过 `@EventHandler(priority = EventPriority.HIGH, concurrency = ConcurrencyKind.LOCKED)` 拦截消息
 
 ## AdminContactCommand
 
@@ -42,10 +43,13 @@
 | `/<contact> <delete> [contact]`               | 删除联系人       |
 | `/<contact> <handle> [id] [accept]? [black]?` | 处理联系人申请     |
 | `/<contact> <request>`                        | 查看申请列表      |
+| `/<contact> <black> {ids}`                    | 拉黑          |
+| `/<contact> <white> {ids}`                    | 取消拉黑        |
 
 1. `id` 是 事件id 或 好友id 或 群id
 2. `accept` 和 `black` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true` (不区分大小写)
 3. 对 机器人发送的新联系人通知消息 回复 `同意` 或 `不同意` 或 `拉黑` 即可处理，详见 [联系人审批配置](#联系人审批配置)
+4. `ids` 是 权限系统的用户标识符，例如 `m12345.6789`, 可以提供多个 `id` 一次性拉黑
 
 ## AdminFriendCommand
 
@@ -168,3 +172,8 @@ Wiki [Service Provider Interface](https://en.wikipedia.org/wiki/Service_provider
 ## 群头衔检查
 
 接口 [MemberTitleCensor](src/main/kotlin/xyz/cssxsh/mirai/spi/MemberTitleCensor.kt)
+
+## 黑名单
+
+接口 [BlackListService](src/main/kotlin/xyz/cssxsh/mirai/spi/BlackListService.kt)  
+实例 [MiraiBlackList](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiBlackList.kt)

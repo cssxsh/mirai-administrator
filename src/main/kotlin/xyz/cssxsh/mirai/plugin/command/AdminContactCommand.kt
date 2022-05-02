@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.plugin.command
 
 import net.mamoe.mirai.console.command.*
+import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.plugin.*
@@ -55,6 +56,36 @@ public object AdminContactCommand : CompositeCommand(
     public suspend fun CommandSender.request() {
         val message = try {
             AdminRequestEventData.render()
+        } catch (cause: Throwable) {
+            logger.warning({ "出现错误" }, cause)
+            "出现错误"
+        }
+
+        sendMessage(message)
+    }
+
+    @SubCommand
+    @Description("拉黑")
+    public suspend fun CommandSender.black(vararg ids: String) {
+        val message = try {
+            val args = ids.map(AbstractPermitteeId::parseFromString)
+            AdminBlackListData.ids.addAll(args)
+            AdminBlackListData.ids.joinToString("\n") { it.asString() }
+        } catch (cause: Throwable) {
+            logger.warning({ "出现错误" }, cause)
+            "出现错误"
+        }
+
+        sendMessage(message)
+    }
+
+    @SubCommand
+    @Description("取消拉黑")
+    public suspend fun CommandSender.white(vararg ids: String) {
+        val message = try {
+            val args = ids.map(AbstractPermitteeId::parseFromString)
+            AdminBlackListData.ids.removeAll(args)
+            AdminBlackListData.ids.joinToString("\n") { it.asString() }
         } catch (cause: Throwable) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
