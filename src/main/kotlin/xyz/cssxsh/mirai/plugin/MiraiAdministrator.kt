@@ -249,7 +249,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     if (cause != null) {
                         logger.error({ "${target.render()} timer run failure with $id" }, cause)
                     } else {
-                        logger.info { "${target.render()} timer run success with $id" }
+                        logger.verbose { "${target.render()} timer run success with $id" }
                     }
                 }
             }
