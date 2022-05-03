@@ -16,7 +16,7 @@ internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandle
 
     private val records: MutableMap<Long, MutableList<MessageSource>> = HashMap()
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun MessageEvent.mark() {
         val record = records.getOrPut(subject.id, ::mutableListOf)
         if (record.size == recordLimit) {
@@ -25,7 +25,7 @@ internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandle
         record.add(source)
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun MessagePostSendEvent<*>.mark() {
         val record = records.getOrPut(target.id, ::mutableListOf)
         if (record.size == recordLimit) {
