@@ -6,7 +6,6 @@ import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.permission.PermissionService.Companion.cancel
-import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.console.permission.PermissionService.Companion.permit
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
@@ -15,6 +14,7 @@ import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.plugin.command.*
+import xyz.cssxsh.mirai.plugin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.util.*
 import kotlin.collections.*
@@ -157,8 +157,8 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     // XXX: AdminContactCommand ...
     @EventHandler
-    internal suspend fun MessageEvent.approve() {
-        if (toCommandSender().hasPermission(AdminContactCommand.permission).not()) return
+    internal suspend fun FriendMessageEvent.approve() {
+        if (sender.id != AdminSetting.owner) return
         val original = (source(contact = null, event = this) ?: message.findIsInstance<QuoteReply>()?.source ?: return)
             .originalMessage
             .contentToString()
