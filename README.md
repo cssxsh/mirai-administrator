@@ -137,25 +137,25 @@ Wiki [Service Provider Interface](https://en.wikipedia.org/wiki/Service_provider
 ## 内容审核
 
 接口 [ContentCensor](src/main/kotlin/xyz/cssxsh/mirai/spi/ContentCensor.kt)  
-实例 [MiraiContentCensor](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiContentCensor.kt)
+实例 [MiraiContentCensor](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiContentCensor.kt)
 
 ## 联系人审批
 
 接口 [FriendApprover](src/main/kotlin/xyz/cssxsh/mirai/spi/FriendApprover.kt)  
 接口 [MemberApprover](src/main/kotlin/xyz/cssxsh/mirai/spi/MemberApprover.kt)  
 接口 [GroupApprover](src/main/kotlin/xyz/cssxsh/mirai/spi/GroupApprover.kt)  
-实例 [MiraiAutoApprover](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiAutoApprover.kt)
+实例 [MiraiAutoApprover](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiAutoApprover.kt)
 
 ## 定时消息
 
 接口 [BotTimingMessage](src/main/kotlin/xyz/cssxsh/mirai/spi/BotTimingMessage.kt)  
-实例 [MiraiOnlineMessage](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiOnlineMessage.kt)  
-实例 [MiraiStatusMessage](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiStatusMessage.kt)
+实例 [MiraiOnlineMessage](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiOnlineMessage.kt)  
+实例 [MiraiStatusMessage](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiStatusMessage.kt)
 
 ## 宵禁(群定时禁言)
 
 接口 [GroupCurfewTimer](src/main/kotlin/xyz/cssxsh/mirai/spi/GroupCurfewTimer.kt)  
-实例 [MiraiCurfewTimer](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiCurfewTimer.kt)
+实例 [MiraiCurfewTimer](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiCurfewTimer.kt)
 
 ## 放风(限时权限)
 
@@ -164,7 +164,7 @@ Wiki [Service Provider Interface](https://en.wikipedia.org/wiki/Service_provider
 ## 群成员清理
 
 接口 [MemberCleaner](src/main/kotlin/xyz/cssxsh/mirai/spi/MemberCleaner.kt)  
-实例 [MiraiMemberCleaner](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiMemberCleaner.kt)
+实例 [MiraiMemberCleaner](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiMemberCleaner.kt)
 
 ## 群昵称检查
 
@@ -177,4 +177,4 @@ Wiki [Service Provider Interface](https://en.wikipedia.org/wiki/Service_provider
 ## 黑名单
 
 接口 [BlackListService](src/main/kotlin/xyz/cssxsh/mirai/spi/BlackListService.kt)  
-实例 [MiraiBlackList](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiBlackList.kt)
+实例 [MiraiBlackList](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiBlackList.kt)
