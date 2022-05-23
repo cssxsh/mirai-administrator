@@ -11,7 +11,7 @@ public enum class MiraiContentType(public val key: MessageKey<*>) {
     AUDIO(key = Audio),
     FORWARD(key = ForwardMessage),
     VIP(key = VipFace),
-    Market(key = MarketFace),
+    MARKET(key = MarketFace),
     MUSIC(key = MusicShare),
-    Poke(key = PokeMessage)
+    POKE(key = PokeMessage)
 }
