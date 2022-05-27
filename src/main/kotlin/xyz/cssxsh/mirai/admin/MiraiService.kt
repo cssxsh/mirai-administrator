@@ -101,10 +101,37 @@ internal fun ComparableService.Loader.render(): String = buildString {
     }
 }
 
-internal fun source(contact: Contact?, event: MessageEvent?): MessageSource? {
+@Deprecated("接口定义不明确", ReplaceWith("null"))
+internal fun source(contact: Contact?, event: MessageEvent?): MessageSource? = null
+
+internal fun target(contact: Contact): MessageSource? {
     for (handler in ComparableService<MessageSourceHandler>()) {
         return try {
-            handler.find(contact = contact, event = event) ?: continue
+            handler.target(contact = contact) ?: continue
+        } catch (cause: Throwable) {
+            logger.warning({ "message source find failure." }, cause)
+            continue
+        }
+    }
+    return null
+}
+
+internal fun from(member: Member): MessageSource? {
+    for (handler in ComparableService<MessageSourceHandler>()) {
+        return try {
+            handler.from(member) ?: continue
+        } catch (cause: Throwable) {
+            logger.warning({ "message source find failure." }, cause)
+            continue
+        }
+    }
+    return null
+}
+
+internal fun quote(event: MessageEvent): MessageSource? {
+    for (handler in ComparableService<MessageSourceHandler>()) {
+        return try {
+            handler.quote(event = event) ?: continue
         } catch (cause: Throwable) {
             logger.warning({ "message source find failure." }, cause)
             continue

@@ -34,27 +34,28 @@ internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandle
         record.add(source ?: return)
     }
 
-    override fun find(contact: Contact?, event: MessageEvent?): MessageSource? {
-        val record: MutableList<MessageSource>
-        val source = when {
-            contact is Member -> {
-                record = records[contact.group.id] ?: return null
-                record.findLast { it.fromId == contact.id }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    fun MessageRecallEvent.mark() {
+        when (this) {
+            is MessageRecallEvent.FriendRecall -> records[author.id]?.removeIf {
+                it.ids.contentEquals(messageIds) && it.internalIds.contentEquals(messageInternalIds)
             }
-            contact != null -> {
-                record = records[contact.id] ?: return null
-                record.findLast { it.fromId == contact.bot.id }
+            is MessageRecallEvent.GroupRecall -> records[group.id]?.removeIf {
+                it.ids.contentEquals(messageIds) && it.internalIds.contentEquals(messageInternalIds)
             }
-            event != null -> {
-                record = records[event.subject.id] ?: ArrayList()
-                event.message.findIsInstance<QuoteReply>()?.source
-                    ?: record.findLast { it.fromId != event.source.fromId }
-            }
-            else -> throw IllegalArgumentException("无法指定要撤回消息")
-        } ?: return null
+        }
+    }
 
-        record.remove(source)
+    override fun from(member: Member): MessageSource? {
+        return records[member.group.id]?.findLast { it.fromId == member.id }
+    }
 
-        return source
+    override fun target(contact: Contact): MessageSource? {
+        return records[contact.id]?.findLast { it.fromId == contact.bot.id }
+    }
+
+    override fun quote(event: MessageEvent): MessageSource? {
+        return event.message.findIsInstance<QuoteReply>()?.source
+            ?: records[event.subject.id]?.findLast { it.fromId != event.source.fromId }
     }
 }

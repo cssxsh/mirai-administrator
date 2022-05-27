@@ -16,7 +16,12 @@ public object AdminRecallCommand : SimpleCommand(
     @Handler
     public suspend fun CommandSender.handle(contact: Contact? = null) {
         val message = try {
-            val source = source(contact = contact, event = (this as? CommandSenderOnMessage<*>)?.fromEvent)
+            val source = when {
+                contact is Member -> from(member = contact)
+                contact != null -> target(contact = contact)
+                this is CommandSenderOnMessage<*> -> quote(event = fromEvent)
+                else -> throw IllegalCommandArgumentException("参数不足以定位消息")
+            }
             if (source != null) {
                 source.recall()
                 "${contact?.render() ?: source.fromId} 的消息撤回成功"
