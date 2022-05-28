@@ -1,5 +1,7 @@
 package xyz.cssxsh.mirai.admin
 
+import com.cronutils.model.*
+import com.cronutils.model.time.*
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import net.mamoe.mirai.*
@@ -21,10 +23,7 @@ internal fun Bot.owner() = getFriendOrFail(AdminSetting.owner)
 
 internal val http by lazy { HttpClient(OkHttp) }
 
-internal fun wait(start: LocalTime = LocalTime.now(), end: LocalTime): Long {
-    val offset = if (end > start) 0 else 24 * 60 * 60
-    return (end.toSecondOfDay() - start.toSecondOfDay() + offset) * 1000L
-}
+internal fun Cron.toExecutionTime(): ExecutionTime = ExecutionTime.forCron(this)
 
 internal val NormalMember.lastSpeakAt: LocalDateTime
     get() = LocalDateTime.ofInstant(Instant.ofEpochSecond(lastSpeakTimestamp.toLong()), ZoneId.systemDefault())

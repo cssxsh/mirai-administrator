@@ -27,6 +27,13 @@ repositories {
 dependencies {
     compileOnly("net.mamoe:mirai-core:2.11.0")
     compileOnly("net.mamoe:mirai-core-utils:2.11.0")
+    api("com.cronutils:cron-utils:9.1.6") {
+        exclude("org.slf4j")
+        exclude("org.glassfish")
+        exclude("org.javassist")
+    }
+    compileOnly("org.glassfish:jakarta.el:3.0.4")
+    compileOnly("javax.validation:validation-api:2.0.1.Final")
 
     testImplementation(kotlin("test", "1.6.21"))
 }

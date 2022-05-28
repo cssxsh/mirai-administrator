@@ -1,16 +1,26 @@
 package xyz.cssxsh.mirai.admin.data
 
+import com.cronutils.model.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.modules.*
 import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.mirai.admin.*
 
-public object AdminTimerData : AutoSavePluginData("AdminTimerData"),
-    MiraiCurfewTimerConfig, MiraiMemberCleanerConfig {
+public object AdminTimerData : AutoSavePluginData("AdminTimerData") {
 
-    override var check: Long by value(3L)
+    override val serializersModule: SerializersModule = SerializersModule {
+        contextual(Cron::class, CronSerializer)
+        @OptIn(ExperimentalSerializationApi::class)
+        polymorphicDefaultSerializer(Cron::class) { CronSerializer }
+    }
 
-    override val last: MutableMap<Long, Long> by value()
+    public val last: MutableMap<Long, Long> by value()
 
-    override val muted: MutableMap<Long, LocalTimeRange> by value()
+    public val clear: MutableMap<Long, Cron> by value()
 
-    override val sleep: MutableMap<Long, Long> by value()
+    public val moment: MutableMap<Long, Int> by value()
+
+    public val mute: MutableMap<Long, Cron> by value()
+
+    public val status: MutableMap<Long, Cron> by value()
 }

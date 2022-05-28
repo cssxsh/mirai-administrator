@@ -14,8 +14,8 @@ import net.mamoe.mirai.utils.*
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
-import java.time.*
 import java.util.*
+import kotlin.collections.*
 
 public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by AdminOnlineMessageConfig {
     override val level: Int = 0
@@ -25,15 +25,10 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
         MiraiAdminPlugin.registerPermission("online.include", "发送上线通知")
     }
 
-    private val cache: MutableMap<Bot, LocalTime> = WeakHashMap()
+    private val cache: MutableSet<Long> = HashSet()
 
-    override fun moment(contact: Bot): LocalTime? {
-        return if (contact !in cache) {
-            cache[contact] = LocalTime.now()
-            LocalTime.now().plusSeconds(3)
-        } else {
-            null
-        }
+    override fun wait(contact: Bot): Long? {
+        return if (contact.id !in cache) duration * 1_000 else null
     }
 
     @OptIn(MiraiExperimentalApi::class)
@@ -43,7 +38,7 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
         brief = "QQ Bot 已启动"
         flag = 0
 
-        val avatar = avatars.getOrPut(group.bot.id) {
+        val avatar = avatars.getOrPut(group.bot.avatarUrl) {
             http.get<ByteArray>(group.bot.avatarUrl).toExternalResource()
         }
         val image = group.uploadImage(resource = avatar)
@@ -63,7 +58,7 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
         appendLine("[${group.botAsMember.nick}]开始接受指令执行")
     }
 
-    private val avatars: MutableMap<Long, ExternalResource> = WeakHashMap()
+    private val avatars: MutableMap<String, ExternalResource> = WeakHashMap()
 
     override suspend fun run(contact: Bot): Flow<MessageReceipt<*>> {
         return contact.groups.asFlow().transform { group ->

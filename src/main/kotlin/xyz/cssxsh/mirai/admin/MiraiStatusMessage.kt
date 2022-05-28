@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.admin
 
+import com.cronutils.model.*
 import kotlinx.coroutines.flow.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
@@ -10,14 +11,17 @@ import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
 
-public object MiraiStatusMessage : BotTimingMessage, MiraiStatusMessageConfig by AdminSetting {
+public object MiraiStatusMessage : BotTimingMessage {
     override val level: Int = 0
     override val id: String = "status"
-    private val records: MutableMap<Long, LocalTime> = HashMap()
+    private val settings: MutableMap<Long, Cron> = AdminTimerData.status
 
-    override fun moment(contact: Bot): LocalTime? {
-        if (sendStatusInterval <= 0) return null
-        return records[contact.id]?.plusMinutes(sendStatusInterval) ?: LocalTime.now().plusSeconds(3)
+    override fun wait(contact: Bot): Long? {
+        val cron = settings[contact.id] ?: return null
+        return cron.toExecutionTime()
+            .timeToNextExecution(ZonedDateTime.now())
+            .orElse(Duration.ZERO)
+            .toMillis()
     }
 
     override suspend fun run(contact: Bot): Flow<MessageReceipt<*>> {
@@ -27,8 +31,6 @@ public object MiraiStatusMessage : BotTimingMessage, MiraiStatusMessageConfig by
                 contact.owner().asCommandSender().handle()
             }.onFailure { cause ->
                 logger.error({ "send status info failure." }, cause)
-            }.onSuccess {
-                records[contact.id] = LocalTime.now()
             }
         }
     }

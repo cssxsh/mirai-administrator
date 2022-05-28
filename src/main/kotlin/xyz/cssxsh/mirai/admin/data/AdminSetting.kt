@@ -3,17 +3,13 @@ package xyz.cssxsh.mirai.admin.data
 import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.mirai.admin.*
 
-public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiStatusMessageConfig, MiraiContentCensorConfig {
+public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentCensorConfig {
 
     internal const val OWNER_DEFAULT = 12345L
 
     @ValueName("owner")
     @ValueDescription("机器人所有者")
     public val owner: Long by value(OWNER_DEFAULT)
-
-    @ValueName("send_status_interval")
-    @ValueDescription("自动发送机器人状态到所有者的间隔，单位为分钟，为零时不开启此项功能")
-    public override val sendStatusInterval: Long by value(60L)
 
     @ValueName("censor_regex")
     @ValueDescription("消息审查，正则表达式")

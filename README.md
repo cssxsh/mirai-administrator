@@ -101,16 +101,18 @@
 
 ## AdminTimerCommand
 
-| Command                                  | Description |
-|:-----------------------------------------|:------------|
-| `/<timer> <check> [minute]`              | 检查周期        |
-| `/<timer> <mute> [start] [end] [group]?` | 宵禁          |
-| `/<timer> <to> [day] [group]?`           | 清理不发言       |
+| Command                                    | Description |
+|:-------------------------------------------|:------------|
+| `/<timer> <mute> [moment] [cron] [group]?` | 宵禁          |
+| `/<timer> <cleaner> [day] [group]?`        | 清理不发言       |
+| `/<timer> <status> [cron] [bot]?`          | 定时发送机器人状态   |
 
 1. `group` 为 要操作的群，在群聊中可以不指定
-2. `start`, `end` 为 开启时间和关闭时间 例如 `/timer mute 11:00 06:00 123456`
-3. 开始时间和结束时间设置成一样宵禁就会关闭 例如 `/timer mute 00:00 00:00 123456`
-4. 期限天数设置为`0`就会关闭 例如 `/timer day 0 123456`
+2. `cron`, 为 CRON 表达式，例如 `0 0 1 * * ?` 表示每个凌晨一点都执行
+    可以使用在线编辑器生成 <https://www.bejson.com/othertools/cron/>
+    为防止被 空格 分成多个参数，请使用 `_` 下划线连接字符
+3. moment 是分钟为单位的禁言时间，小于 `0` 宵禁就会关闭 例如 `/timer mute 0 0_0_1_*_*_?`
+4. day 单位为天数的发言期限，小于 `0` 就会关闭 例如 `/timer cleaner 0 123456`
 
 # 配置
 

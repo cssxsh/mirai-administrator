@@ -184,13 +184,11 @@ public object MiraiAdministrator : SimpleListenerHost() {
     /**
      * 启动一个群定时服务
      */
-    private fun GroupTimerService<*>.start(target: Group) {
+    internal fun GroupTimerService<*>.start(target: Group) {
         if (records.add(target.id).not()) return
-        launch(target.coroutineContext) {
+        launch(target.coroutineContext) service@{
             while (isActive) {
-                // 延时到 [moment]
-                delay(wait(end = moment(target) ?: break))
-                if (target.isActive.not() || target.botPermission < MemberPermission.ADMINISTRATOR) break
+                delay(wait(contact = target) ?: break)
 
                 when (this@start) {
                     is GroupAllowTimer -> launch(SupervisorJob()) {
@@ -206,11 +204,15 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             }
                         }
                     }
-                    is GroupCurfewTimer -> launch(SupervisorJob()) {
+                    is GroupCurfewTimer -> launch(SupervisorJob()) curfew@{
                         try {
-                            val mute = run(target) ?: target.settings.isMuteAll
-                            if (target.settings.isMuteAll != mute) {
-                                target.settings.isMuteAll = mute
+                            val moment = run(target) ?: return@curfew
+                            if (!target.settings.isMuteAll) {
+                                target.settings.isMuteAll = true
+                            }
+                            delay(moment * 60_000L)
+                            if (target.settings.isMuteAll) {
+                                target.settings.isMuteAll = false
                             }
                         } catch (cause: Throwable) {
                             logger.error({ "${target.render()} mute set failure with $id" }, cause)
@@ -261,11 +263,11 @@ public object MiraiAdministrator : SimpleListenerHost() {
     /**
      * 启动一个定时消息服务
      */
-    private fun BotTimingMessage.start(from: Bot) {
+    internal fun BotTimingMessage.start(from: Bot) {
         if (records.add(from.id).not()) return
         launch(from.coroutineContext) {
             while (isActive) {
-                delay(wait(end = moment(from) ?: break))
+                delay(wait(contact = from) ?: break)
 
                 run(contact = from).onCompletion { cause ->
                     if (cause != null) {
@@ -298,16 +300,6 @@ public object MiraiAdministrator : SimpleListenerHost() {
         for (timer in ComparableService<GroupTimerService<*>>()) {
             timer.start(target = group)
         }
-    }
-
-    @EventHandler
-    internal suspend fun GroupMuteAllEvent.mark() {
-        val operator = this.operator ?: return
-        for (timer in ComparableService<GroupCurfewTimer>()) {
-            timer.ignore(contact = group)
-        }
-
-        group.sendMessage("由 ${operator.render()} 操作，忽略当前宵禁定时器 ")
     }
 
     // endregion
