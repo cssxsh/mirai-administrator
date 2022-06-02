@@ -86,6 +86,7 @@
 | Command         | Description |
 |:----------------|:------------|
 | `/<registered>` | 查看已注册指令     |
+| `/<reg>`        | 查看已注册指令     |
 
 ## AdminSendCommand
 

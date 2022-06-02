@@ -10,7 +10,7 @@ import xyz.cssxsh.mirai.spi.*
 
 public object AdminRegisteredCommand : SimpleCommand(
     owner = MiraiAdminPlugin,
-    primaryName = "registered",
+    primaryName = "registered", "reg",
     description = "查看已注册指令及服务"
 ) {
     @Handler
