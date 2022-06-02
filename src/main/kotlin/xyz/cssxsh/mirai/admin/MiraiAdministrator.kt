@@ -209,7 +209,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             if (!target.settings.isMuteAll) {
                                 target.settings.isMuteAll = true
                             }
-                            delay(moment * 60_000L)
+                            delay(moment)
                             if (target.settings.isMuteAll) {
                                 target.settings.isMuteAll = false
                             }

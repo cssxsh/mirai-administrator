@@ -9,6 +9,7 @@ import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import xyz.cssxsh.mirai.admin.*
+import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
 import java.util.*
 
@@ -19,7 +20,7 @@ public object AdminTimerCommand : CompositeCommand(
     overrideContext = buildCommandArgumentContext {
         Cron::class with { text ->
             try {
-                CronSerializer.parse(text)
+                DefaultCronParser.parse(text)
             } catch (cause: Throwable) {
                 throw CommandArgumentParserException(
                     message = cause.message ?: "表达式读取错误，建议找在线表达式生成器生成",
@@ -38,7 +39,7 @@ public object AdminTimerCommand : CompositeCommand(
             //
             appendLine("宵禁:")
             for ((group, cron) in AdminTimerData.mute) {
-                appendLine("Group($group)")
+                appendLine("Group($group) - ${AdminTimerData.moment[group]} minute")
                 appendLine(descriptor.describe(cron))
             }
             appendLine()
@@ -67,14 +68,14 @@ public object AdminTimerCommand : CompositeCommand(
         }
 
         if (moment > 0) {
-            AdminTimerData.mute[group.id] = cron
+            AdminTimerData.mute[group.id] = cron.asData()
             AdminTimerData.moment[group.id] = moment
             with(MiraiAdministrator) {
                 MiraiCurfewTimer.start(group)
             }
 
             sendMessage(message = buildString {
-                appendLine("${group.render()} 宵禁 将生效于")
+                appendLine("${group.render()} 宵禁 $moment 分钟 将生效于")
                 append(descriptor.describe(cron))
             })
         } else {
@@ -94,7 +95,7 @@ public object AdminTimerCommand : CompositeCommand(
 
         if (day > 0) {
             AdminTimerData.last[group.id] = day
-            AdminTimerData.clear[group.id] = cron
+            AdminTimerData.clear[group.id] = cron.asData()
             with(MiraiAdministrator) {
                 MiraiMemberCleaner.start(group)
             }
@@ -117,7 +118,7 @@ public object AdminTimerCommand : CompositeCommand(
             sendMessage("未指定机器人")
             return
         }
-        AdminTimerData.status[from.id] = cron
+        AdminTimerData.status[from.id] = cron.asData()
         with(MiraiAdministrator) {
             MiraiStatusMessage.start(from)
         }

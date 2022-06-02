@@ -14,7 +14,7 @@ import java.time.*
 public object MiraiStatusMessage : BotTimingMessage {
     override val level: Int = 0
     override val id: String = "status"
-    private val settings: MutableMap<Long, Cron> = AdminTimerData.status
+    private val settings: Map<Long, Cron> get() = AdminTimerData.status
 
     override fun wait(contact: Bot): Long? {
         val cron = settings[contact.id] ?: return null

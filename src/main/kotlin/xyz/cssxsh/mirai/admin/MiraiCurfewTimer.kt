@@ -20,5 +20,10 @@ public object MiraiCurfewTimer : GroupCurfewTimer {
             .toMillis()
     }
 
-    override suspend fun run(contact: Group): Int? = moment[contact.id]
+    override suspend fun run(contact: Group): Long? {
+
+        contact.sendMessage("宵禁将开始，${moment[contact.id]} 分钟后解禁")
+
+        return moment[contact.id]?.times(60_000L)
+    }
 }
