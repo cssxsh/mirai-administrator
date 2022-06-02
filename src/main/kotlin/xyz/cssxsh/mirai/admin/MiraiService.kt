@@ -101,7 +101,10 @@ internal fun ComparableService.Loader.render(): String = buildString {
 }
 
 @Deprecated("接口定义不明确", ReplaceWith("null"))
-internal fun source(contact: Contact?, event: MessageEvent?): MessageSource? = null
+internal fun source(contact: Contact?, event: MessageEvent?): MessageSource? {
+    logger.error { "xyz.cssxsh.mirai.admin.source 方法已废弃" }
+    return null
+}
 
 internal fun target(contact: Contact): MessageSource? {
     for (handler in ComparableService<MessageSourceHandler>()) {
