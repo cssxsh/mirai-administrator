@@ -13,7 +13,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-administrator",
         name = "mirai-administrator",
-        version = "1.1.0",
+        version = "1.2.0",
     ) {
         author("cssxsh")
     }
@@ -34,6 +34,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
         }
 
         logger.info { "发送上线通知请使用 /perm add g群号 ${MiraiOnlineMessage.permission.id} 赋予权限" }
+        logger.info { "定时消息部分功能更新了，请查看最新版文档" }
 
         ComparableService.reload()
         logger.info { ComparableService.render() }
