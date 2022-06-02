@@ -159,13 +159,12 @@ public object MiraiAdministrator : SimpleListenerHost() {
     @EventHandler
     internal suspend fun FriendMessageEvent.approve() {
         if (sender.id != AdminSetting.owner) return
-        val original = (quote(event = this) ?: message.findIsInstance<QuoteReply>()?.source ?: return)
-            .originalMessage
-            .contentToString()
+        if (message.anyIsInstance<PlainText>().not()) return
+        val original = (quote(event = this) ?: return).originalMessage.contentToString()
         val id = ("""(?<=with <)\d+""".toRegex().find(original)?.value ?: return).toLong()
         val accept = MiraiAutoApprover.replyAccept.toRegex() in message.contentToString()
         val black = MiraiAutoApprover.replyBlack.toRegex() in message.contentToString()
-
+        if (!accept && !black) return
         AdminContactCommand.runCatching {
             toCommandSender().handle(id = id, accept = accept, black = black, message = original)
         }.onFailure { cause ->
