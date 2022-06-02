@@ -12,6 +12,7 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
+import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
@@ -23,7 +24,10 @@ internal fun Bot.owner() = getFriendOrFail(AdminSetting.owner)
 
 internal val http by lazy { HttpClient(OkHttp) }
 
-internal fun Cron.toExecutionTime(): ExecutionTime = ExecutionTime.forCron(this)
+internal fun Cron.toExecutionTime(): ExecutionTime = when (this) {
+    is DataCron -> ExecutionTime.forCron(delegate)
+    else -> ExecutionTime.forCron(this)
+}
 
 internal val NormalMember.lastSpeakAt: LocalDateTime
     get() = LocalDateTime.ofInstant(Instant.ofEpochSecond(lastSpeakTimestamp.toLong()), ZoneId.systemDefault())

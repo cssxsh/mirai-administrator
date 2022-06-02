@@ -1,9 +1,14 @@
 package xyz.cssxsh.mirai.admin.data
 
+import kotlinx.serialization.modules.*
 import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.mirai.admin.cron.*
 
 public object AdminTimerData : AutoSavePluginData("AdminTimerData") {
+
+    override val serializersModule: SerializersModule = SerializersModule {
+        contextual(DataCron)
+    }
 
     public val last: MutableMap<Long, Long> by value()
 
