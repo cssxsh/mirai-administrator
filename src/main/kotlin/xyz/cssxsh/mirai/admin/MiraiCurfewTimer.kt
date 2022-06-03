@@ -9,7 +9,7 @@ import java.time.*
 public object MiraiCurfewTimer : GroupCurfewTimer {
     override val level: Int = 0
     override val id: String = "curfew-timer"
-    private val moment: Map<Long, Int> get() = AdminTimerData.moment
+    private val moments: Map<Long, Duration> get() = AdminTimerData.moments
     private val settings: Map<Long, Cron> get() = AdminTimerData.mute
 
     override fun wait(contact: Group): Long? {
@@ -21,9 +21,10 @@ public object MiraiCurfewTimer : GroupCurfewTimer {
     }
 
     override suspend fun run(contact: Group): Long? {
+        val moment = moments[contact.id] ?: return null
 
-        contact.sendMessage("宵禁将开始，${moment[contact.id]} 分钟后解禁")
+        contact.sendMessage("宵禁将开始，${moment} 后解禁")
 
-        return moment[contact.id]?.times(60_000L)
+        return moment.toMillis()
     }
 }

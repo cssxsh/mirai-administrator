@@ -4,31 +4,20 @@ import com.cronutils.descriptor.*
 import com.cronutils.model.*
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.*
-import net.mamoe.mirai.console.command.descriptor.*
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import xyz.cssxsh.mirai.admin.*
 import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
+import java.time.*
 import java.util.*
 
 public object AdminTimerCommand : CompositeCommand(
     owner = MiraiAdminPlugin,
     primaryName = "timer",
     description = "定时器相关指令",
-    overrideContext = buildCommandArgumentContext {
-        Cron::class with { text ->
-            try {
-                DefaultCronParser.parse(text)
-            } catch (cause: Throwable) {
-                throw CommandArgumentParserException(
-                    message = cause.message ?: "表达式读取错误，建议找在线表达式生成器生成",
-                    cause = cause
-                )
-            }
-        }
-    }
+    overrideContext = CronCommandArgumentContext
 ) {
     private val descriptor = CronDescriptor.instance(Locale.getDefault())
 
@@ -39,7 +28,7 @@ public object AdminTimerCommand : CompositeCommand(
             //
             appendLine("宵禁:")
             for ((group, cron) in AdminTimerData.mute) {
-                appendLine("Group($group) - ${AdminTimerData.moment[group]} minute")
+                appendLine("Group($group) - ${AdminTimerData.moments[group]} minute")
                 appendLine(descriptor.describe(cron))
             }
             appendLine()
@@ -61,26 +50,26 @@ public object AdminTimerCommand : CompositeCommand(
 
     @SubCommand
     @Description("宵禁")
-    public suspend fun CommandSender.mute(moment: Int, cron: Cron, group: Group? = subject as? Group) {
+    public suspend fun CommandSender.mute(moment: Duration, cron: Cron, group: Group? = subject as? Group) {
         if (group == null) {
             sendMessage("未指定群")
             return
         }
 
-        if (moment > 0) {
+        if (moment > Duration.ZERO) {
             AdminTimerData.mute[group.id] = cron.asData()
-            AdminTimerData.moment[group.id] = moment
+            AdminTimerData.moments[group.id] = moment
             with(MiraiAdministrator) {
                 MiraiCurfewTimer.start(group)
             }
 
             sendMessage(message = buildString {
-                appendLine("${group.render()} 宵禁 $moment 分钟 将生效于")
+                appendLine("${group.render()} 宵禁 $moment 将生效于")
                 append(descriptor.describe(cron))
             })
         } else {
             AdminTimerData.mute.remove(group.id)
-            AdminTimerData.moment.remove(group.id)
+            AdminTimerData.moments.remove(group.id)
             sendMessage("${group.render()} 宵禁 关闭")
         }
     }
