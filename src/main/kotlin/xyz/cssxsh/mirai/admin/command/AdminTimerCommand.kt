@@ -79,8 +79,8 @@ public object AdminTimerCommand : CompositeCommand(
                 append(descriptor.describe(cron))
             })
         } else {
-            AdminTimerData.last.remove(group.id)
-            AdminTimerData.clear.remove(group.id)
+            AdminTimerData.mute.remove(group.id)
+            AdminTimerData.moment.remove(group.id)
             sendMessage("${group.render()} 宵禁 关闭")
         }
     }
