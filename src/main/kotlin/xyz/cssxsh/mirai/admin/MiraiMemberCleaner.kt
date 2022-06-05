@@ -24,8 +24,7 @@ public object MiraiMemberCleaner : MemberCleaner {
         val day = last[contact.id] ?: return emptyList()
         val limit = LocalDateTime.now().minusDays(day)
         return contact.members.mapNotNull { member ->
-            val last = member.lastSpeakAt
-            if (last > limit) {
+            if (member.permission == MemberPermission.MEMBER && member.lastSpeakAt > limit) {
                 null
             } else {
                 member to "自 ${member.lastSpeakAt} 起，${day}天未发言"
