@@ -1,13 +1,9 @@
 package xyz.cssxsh.mirai.admin.command
 
 import net.mamoe.mirai.*
-import net.mamoe.mirai.console.*
 import net.mamoe.mirai.console.command.*
-import net.mamoe.mirai.console.util.*
 import net.mamoe.mirai.contact.*
-import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
-import net.mamoe.mirai.message.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.*
 
@@ -17,20 +13,6 @@ public object AdminSendCommand : CompositeCommand(
     description = "联系人处理相关操作"
 ) {
 
-    private suspend fun CommandSender.read(contact: Contact?): Message {
-        return when (this) {
-            is ConsoleCommandSender -> {
-                val code = MiraiConsole.requestInput("请输入要发送的消息")
-                MiraiCode.deserializeMiraiCode(code, contact)
-            }
-            is CommandSenderOnMessage<*> -> {
-                sendMessage("请输入要发送的消息")
-                fromEvent.nextMessage()
-            }
-            else -> throw IllegalStateException("未知环境 $this")
-        }
-    }
-
     @SubCommand
     @Description("发送给所有群")
     public suspend fun CommandSender.groups(bot: Bot? = this.bot, at: Boolean = false) {
@@ -39,7 +21,7 @@ public object AdminSendCommand : CompositeCommand(
             return
         }
         try {
-            val message = read(contact = null)
+            val message = request(hint = "请输入要发送的消息")
             for (group in bot.groups) {
                 group.sendMessage(message = message + if (at) AtAll else EmptyMessageChain)
             }
@@ -56,7 +38,7 @@ public object AdminSendCommand : CompositeCommand(
             return
         }
         try {
-            val message = read(contact = null)
+            val message = request(hint = "请输入要发送的消息")
             for (friend in bot.friends) {
                 friend.sendMessage(message = message)
             }
@@ -69,7 +51,7 @@ public object AdminSendCommand : CompositeCommand(
     @Description("发送给指定联系人")
     public suspend fun CommandSender.to(contact: Contact, at: Boolean = false) {
         contact.sendMessage(
-            message = read(contact = contact) + when {
+            message = request(hint = "请输入要发送的消息") + when {
                 !at -> EmptyMessageChain
                 contact is User -> At(contact)
                 contact is Group -> AtAll

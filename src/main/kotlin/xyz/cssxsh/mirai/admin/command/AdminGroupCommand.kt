@@ -1,10 +1,17 @@
 package xyz.cssxsh.mirai.admin.command
 
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
+import net.mamoe.mirai.contact.announcement.*
+import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.*
+import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import xyz.cssxsh.mirai.admin.*
 
 public object AdminGroupCommand : CompositeCommand(
@@ -111,12 +118,49 @@ public object AdminGroupCommand : CompositeCommand(
     public suspend fun CommandSender.mute(member: NormalMember, second: Int) {
         val message = try {
             if (second > 0) {
-                member.mute(second)
+                member.mute(durationSeconds = second)
                 "禁言成功"
             } else {
                 member.unmute()
                 "解除成功"
             }
+        } catch (cause: Throwable) {
+            logger.warning({ "设置错误" }, cause)
+            "设置错误"
+        }
+
+        sendMessage(message)
+    }
+
+    @SubCommand
+    @Description("设置管理员")
+    public suspend fun CommandSender.admin(member: NormalMember, operation: Boolean = true) {
+        val message = try {
+            member.modifyAdmin(operation = operation)
+            "设置成功"
+        } catch (cause: Throwable) {
+            logger.warning({ "设置错误" }, cause)
+            "设置错误"
+        }
+
+        sendMessage(message)
+    }
+
+    @SubCommand
+    @Description("设置公告")
+    public suspend fun CommandSender.announce(group: Group) {
+        val message = try {
+            val message = request(hint = "请输入公告内容")
+            val content = message.firstIsInstance<PlainText>().content
+            val image = message.findIsInstance<Image>()?.let {
+                http.get<HttpStatement>(urlString = it.queryUrl()).execute { response ->
+                    group.announcements.uploadImage(resource = response.receive<ByteArray>().toExternalResource())
+                }
+            }
+            group.announcements.publish(OfflineAnnouncement(content) {
+                this.image = image
+            })
+            "设置成功"
         } catch (cause: Throwable) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"

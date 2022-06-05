@@ -5,12 +5,17 @@ import com.cronutils.model.time.*
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import net.mamoe.mirai.*
+import net.mamoe.mirai.console.*
+import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.util.ContactUtils.render
+import net.mamoe.mirai.console.util.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
+import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
@@ -34,6 +39,18 @@ internal val NormalMember.lastSpeakAt: LocalDateTime
 
 internal val NormalMember.joinAt: LocalDateTime
     get() = LocalDateTime.ofInstant(Instant.ofEpochSecond(joinTimestamp.toLong()), ZoneId.systemDefault())
+
+internal suspend fun CommandSender.request(hint: String,  contact: Contact? = null): MessageChain = when (this) {
+    is ConsoleCommandSender -> {
+        val code = MiraiConsole.requestInput(hint)
+        MiraiCode.deserializeMiraiCode(code, contact)
+    }
+    is CommandSenderOnMessage<*> -> {
+        sendMessage(hint)
+        fromEvent.nextMessage()
+    }
+    else -> throw IllegalStateException("未知环境 $this")
+}
 
 internal fun AbstractJvmPlugin.registerPermission(name: String, description: String): Permission {
     return PermissionService.INSTANCE.register(permissionId(name), description, parentPermission)
