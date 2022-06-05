@@ -77,6 +77,9 @@ public object AdminGroupCommand : CompositeCommand(
         val message = try {
             member.kick(message = reason, block = black)
             "踢出成功"
+        } catch (exception: PermissionDeniedException) {
+            logger.warning({ "权限不足" }, exception)
+            "权限不足"
         } catch (cause: Throwable) {
             logger.warning({ "踢出错误" }, cause)
             "踢出错误"
@@ -91,6 +94,9 @@ public object AdminGroupCommand : CompositeCommand(
         val message = try {
             member.nameCard = nick
             "设置成功"
+        } catch (exception: PermissionDeniedException) {
+            logger.warning({ "权限不足" }, exception)
+            "权限不足"
         } catch (cause: Throwable) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
@@ -105,6 +111,9 @@ public object AdminGroupCommand : CompositeCommand(
         val message = try {
             member.specialTitle = title
             "设置成功"
+        } catch (exception: PermissionDeniedException) {
+            logger.warning({ "权限不足" }, exception)
+            "权限不足"
         } catch (cause: Throwable) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
@@ -124,6 +133,9 @@ public object AdminGroupCommand : CompositeCommand(
                 member.unmute()
                 "解除成功"
             }
+        } catch (exception: PermissionDeniedException) {
+            logger.warning({ "权限不足" }, exception)
+            "权限不足"
         } catch (cause: Throwable) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
@@ -138,6 +150,9 @@ public object AdminGroupCommand : CompositeCommand(
         val message = try {
             member.modifyAdmin(operation = operation)
             "设置成功"
+        } catch (exception: PermissionDeniedException) {
+            logger.warning({ "权限不足" }, exception)
+            "权限不足"
         } catch (cause: Throwable) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
@@ -161,6 +176,9 @@ public object AdminGroupCommand : CompositeCommand(
                 this.image = image
             })
             "设置成功"
+        } catch (exception: PermissionDeniedException) {
+            logger.warning({ "权限不足" }, exception)
+            "权限不足"
         } catch (cause: Throwable) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
