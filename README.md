@@ -70,6 +70,8 @@
 | `/<group> <nick> [member] [nick]`             | 群昵称         |
 | `/<group> <title> [member] [title]`           | 群头衔         |
 | `/<group> <mute> [member] [second]`           | 禁言          |
+| `/<group> <admin> [member] [operation]?`      | 设置管理员       |
+| `/<group> <announce> [group]`                 | 设置公告        |
 
 ## AdminRecallCommand
 

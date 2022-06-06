@@ -1,7 +1,5 @@
 package xyz.cssxsh.mirai.admin
 
-import com.cronutils.model.*
-import com.cronutils.model.time.*
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import net.mamoe.mirai.*
@@ -17,7 +15,6 @@ import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.*
 import net.mamoe.mirai.utils.*
-import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
@@ -28,11 +25,6 @@ internal inline val logger get() = MiraiAdminPlugin.logger
 internal fun Bot.owner() = getFriendOrFail(AdminSetting.owner)
 
 internal val http by lazy { HttpClient(OkHttp) }
-
-internal fun Cron.toExecutionTime(): ExecutionTime = when (this) {
-    is DataCron -> ExecutionTime.forCron(delegate)
-    else -> ExecutionTime.forCron(this)
-}
 
 internal val NormalMember.lastSpeakAt: LocalDateTime
     get() = LocalDateTime.ofInstant(Instant.ofEpochSecond(lastSpeakTimestamp.toLong()), ZoneId.systemDefault())

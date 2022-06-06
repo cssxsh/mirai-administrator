@@ -7,6 +7,7 @@ import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.command.CommandSender.Companion.asCommandSender
 import net.mamoe.mirai.message.*
 import net.mamoe.mirai.utils.*
+import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*

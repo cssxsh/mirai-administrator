@@ -2,6 +2,7 @@ package xyz.cssxsh.mirai.admin
 
 import com.cronutils.model.*
 import net.mamoe.mirai.contact.*
+import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*

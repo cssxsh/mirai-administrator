@@ -2,6 +2,7 @@ package xyz.cssxsh.mirai.admin.cron
 
 import com.cronutils.model.*
 import com.cronutils.model.definition.*
+import com.cronutils.model.time.*
 import com.cronutils.parser.*
 import net.mamoe.mirai.console.command.descriptor.*
 import java.time.*
@@ -14,6 +15,11 @@ public val DefaultCronParser: CronParser by lazy {
 }
 
 public fun Cron.asData(): DataCron = DataCron(delegate = this)
+
+public fun Cron.toExecutionTime(): ExecutionTime = when (this) {
+    is DataCron -> ExecutionTime.forCron(delegate)
+    else -> ExecutionTime.forCron(this)
+}
 
 public val CronCommandArgumentContext: CommandArgumentContext = buildCommandArgumentContext {
     Cron::class with { text ->
