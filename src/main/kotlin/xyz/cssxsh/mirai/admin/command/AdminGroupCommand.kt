@@ -13,6 +13,7 @@ import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.*
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import xyz.cssxsh.mirai.admin.*
+import java.util.*
 
 public object AdminGroupCommand : CompositeCommand(
     owner = MiraiAdminPlugin,
@@ -166,14 +167,28 @@ public object AdminGroupCommand : CompositeCommand(
     public suspend fun CommandSender.announce(group: Group) {
         val message = try {
             val message = request(hint = "请输入公告内容")
-            val content = message.firstIsInstance<PlainText>().content
+            val text = message.filterIsInstance<PlainText>()
+            val content = text[0].content
+            val properties = Properties().apply {
+                load(text.getOrNull(1)?.content.orEmpty().reader())
+            }
             val image = message.findIsInstance<Image>()?.let {
                 http.get<HttpStatement>(urlString = it.queryUrl()).execute { response ->
                     group.announcements.uploadImage(resource = response.receive<ByteArray>().toExternalResource())
                 }
             }
-            group.announcements.publish(OfflineAnnouncement(content) {
+            group.announcements.publish(OfflineAnnouncement(content = content) {
                 this.image = image
+                this.sendToNewMember = (properties["send"] ?: properties["sendToNewMember"])
+                    .toString().toBooleanStrictOrNull() ?: true
+                this.isPinned = (properties["pinned"] ?: properties["isPinned"])
+                    .toString().toBooleanStrictOrNull() ?: true
+                this.showEditCard = (properties["edit"] ?: properties["showEditCard"])
+                    .toString().toBooleanStrictOrNull() ?: true
+                this.showPopup = (properties["popup"] ?: properties["showPopup"])
+                    .toString().toBooleanStrictOrNull() ?: true
+                this.requireConfirmation = (properties["confirmation"] ?: properties["requireConfirmation"])
+                    .toString().toBooleanStrictOrNull() ?: true
             })
             "设置成功"
         } catch (exception: PermissionDeniedException) {
