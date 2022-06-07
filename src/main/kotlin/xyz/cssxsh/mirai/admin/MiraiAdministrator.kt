@@ -295,7 +295,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     @EventHandler
     internal fun BotGroupPermissionChangeEvent.mark() {
-        if (group.botPermission < MemberPermission.ADMINISTRATOR) return
+        if (new < MemberPermission.ADMINISTRATOR) return
         for (timer in ComparableService<GroupTimerService<*>>()) {
             timer.start(target = group)
         }

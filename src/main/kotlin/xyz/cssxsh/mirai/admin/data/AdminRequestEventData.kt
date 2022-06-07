@@ -9,11 +9,11 @@ import net.mamoe.mirai.event.events.*
 public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"),
     Sequence<Map.Entry<Long, List<RequestEventData>>> {
 
-    private val friends by value<MutableMap<Long, List<RequestEventData.NewFriendRequest>>>()
+    private val friends: MutableMap<Long, List<RequestEventData.NewFriendRequest>> by value()
 
-    private val groups by value<MutableMap<Long, List<RequestEventData.BotInvitedJoinGroupRequest>>>()
+    private val groups: MutableMap<Long, List<RequestEventData.BotInvitedJoinGroupRequest>> by value()
 
-    private val members by value<MutableMap<Long, List<RequestEventData.MemberJoinRequest>>>()
+    private val members: MutableMap<Long, List<RequestEventData.MemberJoinRequest>> by value()
 
     override operator fun iterator(): Iterator<Map.Entry<Long, List<RequestEventData>>> = iterator {
         yieldAll(friends.entries)

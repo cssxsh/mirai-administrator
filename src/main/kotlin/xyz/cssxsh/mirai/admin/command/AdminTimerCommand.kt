@@ -28,7 +28,7 @@ public object AdminTimerCommand : CompositeCommand(
             //
             appendLine("宵禁:")
             for ((group, cron) in AdminTimerData.mute) {
-                appendLine("Group($group) - ${AdminTimerData.moments[group]} minute")
+                appendLine("Group($group) - ${AdminTimerData.moments[group]}")
                 appendLine(descriptor.describe(cron))
             }
             appendLine()
