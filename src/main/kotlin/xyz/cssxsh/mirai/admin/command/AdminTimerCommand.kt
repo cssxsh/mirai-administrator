@@ -1,8 +1,7 @@
 package xyz.cssxsh.mirai.admin.command
 
-import com.cronutils.descriptor.*
 import com.cronutils.model.*
-import net.mamoe.mirai.Bot
+import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
@@ -11,7 +10,6 @@ import xyz.cssxsh.mirai.admin.*
 import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
 import java.time.*
-import java.util.*
 
 public object AdminTimerCommand : CompositeCommand(
     owner = MiraiAdminPlugin,
@@ -19,7 +17,6 @@ public object AdminTimerCommand : CompositeCommand(
     description = "定时器相关指令",
     overrideContext = CronCommandArgumentContext
 ) {
-    private val descriptor = CronDescriptor.instance(Locale.getDefault())
 
     @SubCommand
     @Description("设置")
@@ -29,21 +26,21 @@ public object AdminTimerCommand : CompositeCommand(
             appendLine("宵禁:")
             for ((group, cron) in AdminTimerData.mute) {
                 appendLine("Group($group) - ${AdminTimerData.moments[group]}")
-                appendLine(descriptor.describe(cron))
+                appendLine(cron.description())
             }
             appendLine()
             //
             appendLine("清理:")
             for ((group, cron) in AdminTimerData.clear) {
                 appendLine("Group($group) - ${AdminTimerData.last[group]} day")
-                appendLine(descriptor.describe(cron))
+                appendLine(cron.description())
             }
             appendLine()
             //
             appendLine("状态:")
             for ((bot, cron) in AdminTimerData.status) {
                 appendLine("Bot($bot)")
-                appendLine(descriptor.describe(cron))
+                appendLine(cron.description())
             }
         })
     }
@@ -65,7 +62,7 @@ public object AdminTimerCommand : CompositeCommand(
 
             sendMessage(message = buildString {
                 appendLine("${group.render()} 宵禁 $moment 将生效于")
-                append(descriptor.describe(cron))
+                append(cron.description())
             })
         } else {
             AdminTimerData.mute.remove(group.id)
@@ -91,7 +88,7 @@ public object AdminTimerCommand : CompositeCommand(
 
             sendMessage(message = buildString {
                 appendLine("${group.render()} 清理不发言 开启，不发言期限 $day day")
-                append(descriptor.describe(cron))
+                append(cron.description())
             })
         } else {
             AdminTimerData.last.remove(group.id)
@@ -114,7 +111,7 @@ public object AdminTimerCommand : CompositeCommand(
 
         sendMessage(message = buildString {
             appendLine("${from.render()} 状态消息 将生效于")
-            append(descriptor.describe(cron))
+            append(cron.description())
         })
     }
 }

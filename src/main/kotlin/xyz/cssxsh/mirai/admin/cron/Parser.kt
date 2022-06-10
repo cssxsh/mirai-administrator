@@ -1,25 +1,33 @@
 package xyz.cssxsh.mirai.admin.cron
 
+import com.cronutils.descriptor.*
 import com.cronutils.model.*
 import com.cronutils.model.definition.*
 import com.cronutils.model.time.*
 import com.cronutils.parser.*
 import net.mamoe.mirai.console.command.descriptor.*
 import java.time.*
+import java.util.*
 
-internal const val CRON_TYPE_KEY = "xyz.cssxsh.mirai.admin.cron"
+internal const val CRON_TYPE_KEY = "xyz.cssxsh.mirai.admin.cron.type"
 
 public val DefaultCronParser: CronParser by lazy {
-    val type = System.getProperty(CRON_TYPE_KEY, "QUARTZ")
-    CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.valueOf(type)))
+    val type = CronType.valueOf(System.getProperty(CRON_TYPE_KEY, "QUARTZ"))
+    CronParser(CronDefinitionBuilder.instanceDefinitionFor(type))
 }
 
-public fun Cron.asData(): DataCron = DataCron(delegate = this)
+internal const val CRON_LOCALE_KEY = "xyz.cssxsh.mirai.admin.cron.locale"
 
-public fun Cron.toExecutionTime(): ExecutionTime = when (this) {
-    is DataCron -> ExecutionTime.forCron(delegate)
-    else -> ExecutionTime.forCron(this)
+public val DefaultCronDescriptor: CronDescriptor by lazy {
+    val locale = System.getProperty(CRON_LOCALE_KEY)?.let { Locale.forLanguageTag(it) } ?: Locale.getDefault()
+    CronDescriptor.instance(locale)
 }
+
+public fun Cron.asData(): DataCron = this as? DataCron ?: DataCron(delegate = this)
+
+public fun Cron.toExecutionTime(): ExecutionTime = ExecutionTime.forCron((this as? DataCron)?.delegate ?: this)
+
+public fun Cron.description(): String = DefaultCronDescriptor.describe(this)
 
 public val CronCommandArgumentContext: CommandArgumentContext = buildCommandArgumentContext {
     Cron::class with { text ->
