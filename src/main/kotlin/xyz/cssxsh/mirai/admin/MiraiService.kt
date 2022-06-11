@@ -20,7 +20,13 @@ import xyz.cssxsh.mirai.spi.*
 import java.time.*
 import java.util.*
 
-internal inline val logger get() = MiraiAdminPlugin.logger
+internal val logger by lazy {
+    try {
+        MiraiAdminPlugin.logger
+    } catch (_: Throwable) {
+        MiraiLogger.Factory.create(MiraiAdministrator::class)
+    }
+}
 
 internal fun Bot.owner() = getFriendOrFail(AdminSetting.owner)
 
