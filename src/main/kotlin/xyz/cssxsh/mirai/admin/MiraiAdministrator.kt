@@ -6,12 +6,15 @@ import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.permission.PermissionService.Companion.cancel
+import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.console.permission.PermissionService.Companion.permit
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
+import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.MessageSource.Key.quote
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.command.*
 import xyz.cssxsh.mirai.admin.data.*
@@ -330,6 +333,33 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 break
             }
         }
+    }
+
+    // endregion
+
+    // region Comment
+
+    private val comments: MutableMap<Long, Long> = HashMap()
+
+    @EventHandler(concurrency = ConcurrencyKind.LOCKED)
+    internal suspend fun MessageEvent.comment() {
+        when {
+            this is UserMessageEvent && AdminCommentConfig.user -> {}
+            message.findIsInstance<At>()?.target == bot.id && AdminCommentConfig.at -> {}
+            else -> return
+        }
+
+        if (toCommandSender().hasPermission(AdminCommentConfig.permission).not()) return
+        if ((comments[sender.id] ?: 0) + AdminCommentConfig.interval > System.currentTimeMillis()) return
+
+        comments[sender.id] = System.currentTimeMillis()
+
+        buildForwardMessage { add(this@comment) }
+            .sendTo(contact = bot.owner())
+
+        MiraiCode.deserializeMiraiCode(code = AdminCommentConfig.reply.ifEmpty { return }, contact = sender)
+            .plus(message.quote())
+            .sendTo(contact = subject)
     }
 
     // endregion

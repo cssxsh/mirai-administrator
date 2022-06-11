@@ -22,6 +22,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
     override fun onEnable() {
         AdminAutoApproverConfig.reload()
         AdminOnlineMessageConfig.reload()
+        AdminCommentConfig.reload()
         AdminRequestEventData.reload()
         AdminTimerData.reload()
         AdminSetting.reload()
@@ -33,7 +34,8 @@ public object MiraiAdminPlugin : KotlinPlugin(
             throw IllegalArgumentException("机器人所有者 未设置")
         }
 
-        logger.info { "发送上线通知请使用 /perm add g群号 ${MiraiOnlineMessage.permission.id} 赋予权限" }
+        logger.info { "发送上线通知请使用 /perm add g群号 ${AdminOnlineMessageConfig.permission.id} 赋予权限" }
+        logger.info { "发送留言评论请使用 /perm add u1234 ${AdminCommentConfig.permission.id} 赋予权限" }
         logger.info { "定时消息部分功能更新了，请查看最新版文档" }
 
         ComparableService.reload()

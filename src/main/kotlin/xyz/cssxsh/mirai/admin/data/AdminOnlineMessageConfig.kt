@@ -1,9 +1,22 @@
 package xyz.cssxsh.mirai.admin.data
 
+import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.data.*
+import net.mamoe.mirai.console.permission.*
+import net.mamoe.mirai.console.util.*
 import xyz.cssxsh.mirai.admin.*
 
 public object AdminOnlineMessageConfig : ReadOnlyPluginConfig("AdminOnlineMessageConfig"), MiraiOnlineMessageConfig {
+
+    public override var permission: Permission = Permission.getRootPermission()
+        private set
+
+    @OptIn(ConsoleExperimentalApi::class)
+    override fun onInit(owner: PluginDataHolder, storage: PluginDataStorage) {
+        if (owner is CommandOwner) {
+            permission = owner.registerPermission(name = "online.include", description = "发送上线通知")
+        }
+    }
 
     @ValueName("type")
     @ValueDescription("发送上线消息的类型 XML, PLAIN, CUSTOM")

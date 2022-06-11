@@ -21,10 +21,6 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
     override val level: Int = 0
     override val id: String = "online"
 
-    internal val permission by lazy {
-        MiraiAdminPlugin.registerPermission("online.include", "发送上线通知")
-    }
-
     private val cache: MutableSet<Long> = HashSet()
 
     override fun wait(contact: Bot): Long? {

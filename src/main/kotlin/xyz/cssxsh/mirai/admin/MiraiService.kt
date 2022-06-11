@@ -50,7 +50,7 @@ internal suspend fun CommandSender.request(hint: String, contact: Contact? = nul
     else -> throw IllegalStateException("未知环境 $this")
 }
 
-internal fun AbstractJvmPlugin.registerPermission(name: String, description: String): Permission {
+internal fun CommandOwner.registerPermission(name: String, description: String): Permission {
     return PermissionService.INSTANCE.register(permissionId(name), description, parentPermission)
 }
 
