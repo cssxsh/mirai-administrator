@@ -32,7 +32,7 @@ internal val NormalMember.lastSpeakAt: LocalDateTime
 internal val NormalMember.joinAt: LocalDateTime
     get() = LocalDateTime.ofInstant(Instant.ofEpochSecond(joinTimestamp.toLong()), ZoneId.systemDefault())
 
-internal suspend fun CommandSender.request(hint: String,  contact: Contact? = null): MessageChain = when (this) {
+internal suspend fun CommandSender.request(hint: String, contact: Contact? = null): MessageChain = when (this) {
     is ConsoleCommandSender -> {
         val code = MiraiConsole.requestInput(hint)
         MiraiCode.deserializeMiraiCode(code, contact)
