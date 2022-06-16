@@ -111,15 +111,15 @@
 | `/<timer> <status> [cron] [bot]?`          | 定时发送机器人状态   |
 
 1. `group` 为 要操作的群，在群聊中可以不指定
-2. `cron`, 为 CRON 表达式, 由 `秒 分钟 小时 日 月 周` 组成
+2. `cron`, 为 CRON 表达式, 由 `秒 分钟 小时 日 月 周` 组成  
     例如 `0 0 1 * * ?` 表示每天 01:00 执行一次，`0 30 2 ? * 2-6` 表示星期一至星期五 每天 02:30 执行一次  
-    可以使用在线编辑器生成 <https://www.bejson.com/othertools/cron/>
-    为防止被 空格 分成多个参数，请使用 `"` 包裹参数
-3. `moment` 为 DURATION 表达式, 由 `PnDTnHnMn.nS` 组成
+    可以使用在线编辑器生成 <https://www.bejson.com/othertools/cron/>  
+    为防止被 空格 分成多个参数，请使用 `"` 包裹参数  
+3. `moment` 为 DURATION 表达式, 由 `PnDTnHnMn.nS` 组成  
     例如 `P1DT2H3M4.5S` 表示 一天二小时三分钟四点五秒，`PT5H` 表示 五小时
-5. mute 指令，moment 小于 `0` 宵禁就会关闭
-    例如 `/timer mute PT5H "0 0 1 ? * 2-6"`, 将会在 星期一到星期五的凌晨01:00 禁言 5 小时
-   例如 `/timer mute PT0S "0 0 0 1 * ?"`, 将会 取消 禁言定时器
+5. mute 指令，moment 小于 `0` 宵禁就会关闭  
+    例如 `/timer mute PT5H "0 0 1 ? * 2-6"`, 将会在 星期一到星期五的凌晨01:00 禁言 5 小时  
+    例如 `/timer mute PT0S "0 0 0 1 * ?"`, 将会 取消 禁言定时器  
 6. day 单位为天数的发言期限，小于 `0` 就会关闭 
     例如 `/timer cleaner 365 123456`
 
