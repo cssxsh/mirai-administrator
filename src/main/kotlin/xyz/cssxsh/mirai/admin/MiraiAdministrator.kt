@@ -344,6 +344,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     @EventHandler(concurrency = ConcurrencyKind.LOCKED)
     internal suspend fun MessageEvent.comment() {
         when {
+            sender == bot.owner() -> return
             this is UserMessageEvent && AdminCommentConfig.user -> {}
             message.findIsInstance<At>()?.target == bot.id && AdminCommentConfig.at -> {}
             else -> return
