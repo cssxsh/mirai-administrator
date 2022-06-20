@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.command.CommandSender.Companion.asCommandSender
+import net.mamoe.mirai.event.*
+import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.cron.*
@@ -26,10 +28,18 @@ public object MiraiStatusMessage : BotTimingMessage {
     }
 
     override suspend fun run(contact: Bot): Flow<MessageReceipt<*>> {
-        return flow {
-            // XXX: StatusCommand no return
+        val owner = contact.owner()
+        return channelFlow {
+            owner.globalEventChannel().subscribe<MessagePostSendEvent<*>> {
+                if (owner != target) return@subscribe ListeningStatus.LISTENING
+
+                receipt?.let { trySend(element = it) }
+                close(cause = exception)
+
+                ListeningStatus.STOPPED
+            }
             BuiltInCommands.StatusCommand.runCatching {
-                contact.owner().asCommandSender().handle()
+                owner.asCommandSender().handle()
             }.onFailure { cause ->
                 logger.error({ "send status info failure." }, cause)
             }
