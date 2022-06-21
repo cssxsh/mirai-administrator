@@ -19,7 +19,6 @@ import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.command.*
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
-import java.util.*
 import kotlin.collections.*
 import kotlin.coroutines.*
 
@@ -179,9 +178,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     // region Timer
 
-    private val cache: MutableMap<TimerService<*, *>, MutableSet<Long>> = WeakHashMap()
+    private val cache: MutableMap<String, MutableSet<Long>> = HashMap()
 
-    private val TimerService<*, *>.records get() = cache.getOrPut(this, ::HashSet)
+    private val TimerService<*, *>.records get() = cache.getOrPut(id, ::HashSet)
 
     /**
      * 启动一个群定时服务

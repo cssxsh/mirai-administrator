@@ -4,7 +4,7 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
-import xyz.cssxsh.mirai.admin.data.AdminSetting.recordLimit
+import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 
 /**
@@ -19,7 +19,7 @@ internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandle
     @EventHandler(priority = EventPriority.HIGHEST)
     fun MessageEvent.mark() {
         val record = records.getOrPut(subject.id, ::mutableListOf)
-        if (record.size == recordLimit) {
+        if (record.size == AdminSetting.recordLimit) {
             record.removeFirst()
         }
         record.add(source)
@@ -28,7 +28,7 @@ internal object MiraiMessageRecorder : SimpleListenerHost(), MessageSourceHandle
     @EventHandler(priority = EventPriority.HIGHEST)
     fun MessagePostSendEvent<*>.mark() {
         val record = records.getOrPut(target.id, ::mutableListOf)
-        if (record.size == recordLimit) {
+        if (record.size == AdminSetting.recordLimit) {
             record.removeFirst()
         }
         record.add(source ?: return)

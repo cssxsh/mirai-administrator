@@ -28,7 +28,7 @@ public object MiraiMemberCleaner : MemberCleaner {
             if (member.permission == MemberPermission.MEMBER && member.lastSpeakAt > limit) {
                 null
             } else {
-                member to "自 ${member.lastSpeakAt} 起，${day}天未发言"
+                member to "自 ${member.lastSpeakAt} 起，${day} 天未发言"
             }
         }
     }

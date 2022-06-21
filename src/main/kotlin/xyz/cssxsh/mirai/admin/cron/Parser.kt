@@ -12,7 +12,7 @@ import java.util.*
 internal const val CRON_TYPE_KEY = "xyz.cssxsh.mirai.admin.cron.type"
 
 public val DefaultCronParser: CronParser by lazy {
-    val type = CronType.valueOf(System.getProperty(CRON_TYPE_KEY, "QUARTZ"))
+    val type = CronType.valueOf(System.getProperty(CRON_TYPE_KEY, CronType.QUARTZ.name))
     CronParser(CronDefinitionBuilder.instanceDefinitionFor(type))
 }
 
