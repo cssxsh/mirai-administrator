@@ -132,7 +132,7 @@
 ## 机器人上线消息配置
 
 1. `AdminOnlineMessageConfig.yml`
-2. `xyz.cssxsh.mirai.mirai-administrator:online.include`  
+2. `xyz.cssxsh.mirai.plugin.mirai-administrator:online.include`  
    作用: 拥有此权限的群，会发送上线通知
 
 ## 消息审查及机器人所有者

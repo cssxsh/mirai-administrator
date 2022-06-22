@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.admin
 
 import io.ktor.client.request.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.permission.PermissionService.Companion.testPermission
@@ -24,7 +25,7 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
     private val cache: MutableSet<Long> = HashSet()
 
     override fun wait(contact: Bot): Long? {
-        return if (contact.id !in cache) duration * 1_000 else null
+        return if (cache.add(contact.id)) 0 else null
     }
 
     @OptIn(MiraiExperimentalApi::class)
@@ -65,7 +66,12 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
                 MiraiOnlineMessageConfig.Type.PLAIN -> plain(group = group)
                 MiraiOnlineMessageConfig.Type.CUSTOM -> MiraiCode.deserializeMiraiCode(code = custom, contact = group)
             }
-            emit(group.sendMessage(message = message))
+            try {
+                emit(group.sendMessage(message = message))
+            } catch (_: Throwable) {
+                //
+            }
+            delay(duration * 1_000)
         }
     }
 }
