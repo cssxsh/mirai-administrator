@@ -4,7 +4,7 @@ import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
-import net.mamoe.mirai.internal.message.*
+import net.mamoe.mirai.internal.message.flags.*
 import xyz.cssxsh.mirai.admin.*
 import xyz.cssxsh.mirai.spi.*
 
@@ -44,8 +44,12 @@ public object AdminRegisteredCommand : SimpleCommand(
                     override fun generateSummary(forward: RawForwardMessage): String = "已注册${commands.size}条指令"
                 }
             }
-            @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
-            sendMessage(forward + IgnoreLengthCheck)
+            try {
+                @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+                sendMessage(forward + IgnoreLengthCheck)
+            } catch (_: Throwable) {
+                sendMessage(forward)
+            }
         } catch (cause: Throwable) {
             logger.warning({ "出现错误" }, cause)
             sendMessage("出现错误")
