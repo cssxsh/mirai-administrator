@@ -16,7 +16,7 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentC
     override val censorRegex: String by value("")
 
     @ValueName("censor_types")
-    @ValueDescription("消息审查，类型")
+    @ValueDescription("消息审查，类型, IMAGE, FLASH, SERVICE, APP, AUDIO, FORWARD, VIP, MARKET, MUSIC, POKE")
     override val censorTypes: Set<MiraiContentType> by value()
 
     @ValueName("censor_mute")

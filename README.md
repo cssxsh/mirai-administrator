@@ -138,6 +138,7 @@
 ## 消息审查及机器人所有者
 
 1. `AdminSetting.yml`
+2. `censor_types` 可选值 `IMAGE, FLASH, SERVICE, APP, AUDIO, FORWARD, VIP, MARKET, MUSIC, POKE`
 
 # 服务接口
 
