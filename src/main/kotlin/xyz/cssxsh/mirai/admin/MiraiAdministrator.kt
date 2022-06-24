@@ -283,6 +283,19 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
+    /**
+     * 启动一个初始化服务
+     */
+    internal fun BotOnlineAction.start(from: Bot) {
+        launch(from.coroutineContext) {
+            run(bot = from)
+        }.invokeOnCompletion { cause ->
+            if (cause != null) {
+                logger.error({ "${from.render()} online action run failure with $id" }, cause)
+            }
+        }
+    }
+
     @EventHandler
     internal fun BotOnlineEvent.mark() {
         for (timer in ComparableService<GroupTimerService<*>>()) {
@@ -292,6 +305,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
         for (timer in ComparableService<BotTimingMessage>()) {
             timer.start(from = bot)
+        }
+        for (action in ComparableService<BotOnlineAction>()) {
+            action.start(from = bot)
         }
     }
 

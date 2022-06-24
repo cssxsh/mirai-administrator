@@ -2,12 +2,10 @@ package xyz.cssxsh.mirai.admin
 
 import io.ktor.client.request.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.permission.PermissionService.Companion.testPermission
 import net.mamoe.mirai.console.permission.PermitteeId.Companion.permitteeId
 import net.mamoe.mirai.contact.*
-import net.mamoe.mirai.message.*
 import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.*
@@ -18,15 +16,11 @@ import xyz.cssxsh.mirai.spi.*
 import java.util.*
 import kotlin.collections.*
 
-public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by AdminOnlineMessageConfig {
+public object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig by AdminOnlineMessageConfig {
     override val level: Int = 0
     override val id: String = "online"
 
     private val cache: MutableSet<Long> = HashSet()
-
-    override fun wait(contact: Bot): Long? {
-        return if (cache.add(contact.id)) 0 else null
-    }
 
     @OptIn(MiraiExperimentalApi::class)
     private suspend fun xml(group: Group) = buildXmlMessage(1) {
@@ -57,9 +51,10 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
 
     private val avatars: MutableMap<String, ExternalResource> = WeakHashMap()
 
-    override suspend fun run(contact: Bot): Flow<MessageReceipt<*>> {
-        return contact.groups.asFlow().transform { group ->
-            if (!permission.testPermission(group.permitteeId)) return@transform
+    override suspend fun run(bot: Bot) {
+        if (cache.add(bot.id)) return
+        for (group in bot.groups) {
+            if (!permission.testPermission(group.permitteeId)) continue
 
             val message = when (type) {
                 MiraiOnlineMessageConfig.Type.XML -> xml(group = group)
@@ -67,7 +62,7 @@ public object MiraiOnlineMessage : BotTimingMessage, MiraiOnlineMessageConfig by
                 MiraiOnlineMessageConfig.Type.CUSTOM -> MiraiCode.deserializeMiraiCode(code = custom, contact = group)
             }
             try {
-                emit(group.sendMessage(message = message))
+                group.sendMessage(message = message)
             } catch (_: Throwable) {
                 //
             }
