@@ -125,13 +125,17 @@ public object AdminGroupCommand : CompositeCommand(
 
     @SubCommand
     @Description("禁言")
-    public suspend fun CommandSender.mute(member: NormalMember, second: Int) {
+    public suspend fun CommandSender.mute(member: Member, second: Int) {
         val message = try {
             if (second > 0) {
                 member.mute(durationSeconds = second)
                 "禁言成功"
             } else {
-                member.unmute()
+                if (member is NormalMember) {
+                    member.unmute()
+                } else {
+                    member.mute(durationSeconds = 0)
+                }
                 "解除成功"
             }
         } catch (exception: PermissionDeniedException) {
