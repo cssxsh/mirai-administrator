@@ -359,7 +359,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     @EventHandler(concurrency = ConcurrencyKind.LOCKED)
     internal suspend fun MessageEvent.comment() {
         when {
-            sender == bot.owner() -> return
+            sender.id == AdminSetting.owner -> return
             this is UserMessageEvent && AdminCommentConfig.user -> {}
             message.findIsInstance<At>()?.target == bot.id && AdminCommentConfig.at -> {}
             else -> return
@@ -370,8 +370,17 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
         comments[sender.id] = System.currentTimeMillis()
 
-        buildForwardMessage { add(this@comment) }
-            .sendTo(contact = bot.owner())
+        val forward = buildForwardMessage {
+            displayStrategy = object : ForwardMessage.DisplayStrategy {
+                override fun generateTitle(forward: RawForwardMessage): String {
+                    return "来自 ${sender.render()} 的留言"
+                }
+            }
+
+            add(this@comment)
+        }
+
+        forward.sendTo(contact = bot.owner())
 
         MiraiCode.deserializeMiraiCode(code = AdminCommentConfig.reply.ifEmpty { return }, contact = sender)
             .plus(message.quote())

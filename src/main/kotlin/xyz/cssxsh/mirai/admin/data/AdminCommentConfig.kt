@@ -27,10 +27,10 @@ public object AdminCommentConfig : ReadOnlyPluginConfig("AdminCommentConfig") {
     public val interval: Long by value(600_000L)
 
     @ValueName("user")
-    @ValueDescription("两次评论之间的间隔，毫秒")
+    @ValueDescription("私聊是否能够留言")
     public val user: Boolean by value(true)
 
     @ValueName("at")
-    @ValueDescription("at 触发评论")
+    @ValueDescription("群聊 at 触发留言")
     public val at: Boolean by value(true)
 }
