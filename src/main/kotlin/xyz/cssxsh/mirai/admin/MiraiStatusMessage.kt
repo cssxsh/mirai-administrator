@@ -25,6 +25,7 @@ public object MiraiStatusMessage : BotTimingMessage {
             .timeToNextExecution(ZonedDateTime.now())
             .orElse(Duration.ZERO)
             .toMillis()
+            .coerceAtLeast(1_000)
     }
 
     override suspend fun run(contact: Bot): Flow<MessageReceipt<*>> {
