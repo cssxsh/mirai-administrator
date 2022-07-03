@@ -2,12 +2,12 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
 
-    id("net.mamoe.mirai-console") version "2.12.0-RC"
+    id("net.mamoe.mirai-console") version "2.12.0"
     id("net.mamoe.maven-central-publish") version "0.7.1"
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.2.2"
+version = "1.2.3"
 
 mavenCentralPublish {
     useCentralS01()
@@ -25,8 +25,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.mamoe:mirai-core:2.12.0-RC")
-    compileOnly("net.mamoe:mirai-core-utils:2.12.0-RC")
+    compileOnly("net.mamoe:mirai-core:2.12.0")
+    compileOnly("net.mamoe:mirai-core-utils:2.12.0")
     api("com.cronutils:cron-utils:9.1.6") {
         exclude("org.slf4j")
         exclude("org.glassfish")

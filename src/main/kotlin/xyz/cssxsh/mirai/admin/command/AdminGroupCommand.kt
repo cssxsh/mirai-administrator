@@ -2,12 +2,16 @@ package xyz.cssxsh.mirai.admin.command
 
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
+import io.ktor.http.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.contact.announcement.*
+import net.mamoe.mirai.internal.*
+import net.mamoe.mirai.internal.network.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.*
@@ -184,15 +188,15 @@ public object AdminGroupCommand : CompositeCommand(
             group.announcements.publish(OfflineAnnouncement(content = content) {
                 this.image = image
                 this.sendToNewMember = (properties["send"] ?: properties["sendToNewMember"])
-                    .toString().toBooleanStrictOrNull() ?: true
+                    .toString().toBooleanStrictOrNull() ?: false
                 this.isPinned = (properties["pinned"] ?: properties["isPinned"])
-                    .toString().toBooleanStrictOrNull() ?: true
+                    .toString().toBooleanStrictOrNull() ?: false
                 this.showEditCard = (properties["edit"] ?: properties["showEditCard"])
-                    .toString().toBooleanStrictOrNull() ?: true
+                    .toString().toBooleanStrictOrNull() ?: false
                 this.showPopup = (properties["popup"] ?: properties["showPopup"])
-                    .toString().toBooleanStrictOrNull() ?: true
+                    .toString().toBooleanStrictOrNull() ?: false
                 this.requireConfirmation = (properties["confirmation"] ?: properties["requireConfirmation"])
-                    .toString().toBooleanStrictOrNull() ?: true
+                    .toString().toBooleanStrictOrNull() ?: false
             })
             "设置成功"
         } catch (exception: PermissionDeniedException) {
@@ -204,5 +208,46 @@ public object AdminGroupCommand : CompositeCommand(
         }
 
         sendMessage(message)
+    }
+
+    @SubCommand
+    @Description("设置等级头衔")
+    public suspend fun CommandSender.rank(group: Group, vararg levels: String) {
+        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER", "DEPRECATION")
+        group.bot.asQQAndroidBot().run {
+            val set = Mirai.Http.post<String>("https://qinfo.clt.qq.com/cgi-bin/qun_info/set_group_level_info") {
+                body = FormDataContent(Parameters.build {
+                    append("gc", group.id.toString())
+                    append("bkn", client.wLoginSigInfo.bkn.toString())
+                    append("src", "qinfo_v3")
+                    levels.forEachIndexed { index, name ->
+                        append("lvln${index + 1}", name)
+                    }
+                })
+
+                headers {
+                    // ktor bug
+                    append(
+                        "cookie",
+                        "uin=o${id}; skey=${sKey}"
+                    )
+                }
+            }
+            sendMessage(message = set)
+            val get = Mirai.Http.get<String>("https://qinfo.clt.qq.com/cgi-bin/qun_info/get_group_level_info") {
+                parameter("gc", group.id)
+                parameter("bkn", client.wLoginSigInfo.bkn)
+                parameter("src", "qinfo_v3")
+
+                headers {
+                    // ktor bug
+                    append(
+                        "cookie",
+                        "uin=o${id}; skey=${sKey}"
+                    )
+                }
+            }
+            sendMessage(message = get)
+        }
     }
 }
