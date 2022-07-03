@@ -97,11 +97,17 @@ internal fun AdminRequestEventData.render(): String = buildString {
 
 internal fun ComparableService.Loader.reload() {
     instances.clear()
-    for (classLoader in JvmPluginLoader.classLoaders) {
-        instances.addAll(ServiceLoader.load(ComparableService::class.java, classLoader))
-        for (subclass in ComparableService::class.sealedSubclasses) {
-            instances.addAll(ServiceLoader.load(subclass.java, classLoader))
+    val oc = Thread.currentThread().contextClassLoader
+    try {
+        for (classLoader in JvmPluginLoader.classLoaders) {
+            Thread.currentThread().contextClassLoader = classLoader
+            instances.addAll(ServiceLoader.load(ComparableService::class.java, classLoader))
+            for (subclass in ComparableService::class.sealedSubclasses) {
+                instances.addAll(ServiceLoader.load(subclass.java, classLoader))
+            }
         }
+    } finally {
+        Thread.currentThread().contextClassLoader = oc
     }
     instances.add(MiraiAutoApprover)
     instances.add(MiraiOnlineMessage)
