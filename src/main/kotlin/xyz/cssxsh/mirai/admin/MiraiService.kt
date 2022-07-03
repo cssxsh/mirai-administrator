@@ -101,9 +101,13 @@ internal fun ComparableService.Loader.reload() {
     try {
         for (classLoader in JvmPluginLoader.classLoaders) {
             Thread.currentThread().contextClassLoader = classLoader
-            instances.addAll(ServiceLoader.load(ComparableService::class.java, classLoader))
-            for (subclass in ComparableService::class.sealedSubclasses) {
-                instances.addAll(ServiceLoader.load(subclass.java, classLoader))
+            for (provider in ServiceLoader.load(ComparableService::class.java, classLoader).stream()) {
+                try {
+                    val service = provider.type().kotlin.objectInstance ?: provider.get()
+                    instances.add(service)
+                } catch (cause: Throwable) {
+                    logger.warning({ "${provider.type().name} load fail." }, cause)
+                }
             }
         }
     } finally {
