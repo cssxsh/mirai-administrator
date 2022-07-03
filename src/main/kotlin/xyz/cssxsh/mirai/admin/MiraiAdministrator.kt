@@ -255,6 +255,8 @@ public object MiraiAdministrator : SimpleListenerHost() {
                         logger.verbose { "${target.render()} timer run success with $id" }
                     }
                 }
+                // XXX: 保险, 避免 corn 输入错误，导致疯狂执行
+                delay(60_000L)
             }
         }.invokeOnCompletion {
             records.remove(target.id)
@@ -277,6 +279,8 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }.collect { receipt ->
                     logger.info { "${from.render()} timer ${receipt.target.render()} success with $id" }
                 }
+                // XXX: 保险, 避免 corn 输入错误，导致疯狂执行
+                delay(60_000L)
             }
         }.invokeOnCompletion {
             records.remove(from.id)
