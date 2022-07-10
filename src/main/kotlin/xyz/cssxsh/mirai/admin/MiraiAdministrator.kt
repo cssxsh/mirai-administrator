@@ -406,6 +406,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
             // 检查是否还是禁言状态，如果是就退群
             if (group.isBotMuted) {
+                launch {
+                    bot.owner().sendMessage("因为禁言，将自动退群 ${group.render()}")
+                }
                 group.quit()
             }
         }
