@@ -14,9 +14,9 @@
 
 本插件实现的功能有:
 
-* 联系人相关 自动审批，指令查看
+* 联系人相关 自动审批，指令查看，用户留言
 * 消息相关 发送消息，撤回消息
-* 群管理相关 群消息审核，自动宵禁，自动清理不发言
+* 群管理相关 群消息审核，自动宵禁，自动清理不发言，禁言自动退群
 
 本插件提供[服务接口](#服务接口)以供其他插件拓展功能  
 例如使用 [Mirai Content Censor](https://github.com/gnuf0rce/mirai-content-censor) 依靠百度API审查群消息
@@ -128,6 +128,17 @@
 ## 联系人审批配置
 
 1. `AdminAutoApproverConfig.yml`
+
+## 禁言自动退群配置
+
+1. `AdminAutoQuitConfig.yml`
+2. `mute_limit` 大于这个设置秒数的禁言会触发自动退群
+
+## 留言配置
+
+1. `AdminCommentConfig.yml`
+2. `xyz.cssxsh.mirai.plugin.mirai-administrator:comment.include`  
+   作用: 拥有此权限的用户，可以给机器人留言
 
 ## 机器人上线消息配置
 

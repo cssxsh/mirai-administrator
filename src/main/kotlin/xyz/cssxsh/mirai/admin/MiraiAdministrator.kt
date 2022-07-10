@@ -392,4 +392,24 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     // endregion
+
+    // region Auto
+
+    @EventHandler
+    internal suspend fun BotMuteEvent.handle() {
+        with(AdminAutoQuitConfig) {
+            if (!admin && group.botPermission.isAdministrator()) return
+            if (!owner && operator.id == AdminSetting.owner) return
+            if (durationSeconds < limit) return
+
+            delay(duration)
+
+            // 检查是否还是禁言状态，如果是就退群
+            if (group.isBotMuted) {
+                group.quit()
+            }
+        }
+    }
+
+    // endregion
 }
