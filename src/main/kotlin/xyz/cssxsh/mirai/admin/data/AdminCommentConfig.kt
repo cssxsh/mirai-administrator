@@ -33,4 +33,8 @@ public object AdminCommentConfig : ReadOnlyPluginConfig("AdminCommentConfig") {
     @ValueName("at")
     @ValueDescription("群聊 at 触发留言")
     public val at: Boolean by value(true)
+
+    @ValueName("quote")
+    @ValueDescription("群聊 at 触发留言")
+    public val quote: Boolean by value(false)
 }

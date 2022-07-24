@@ -365,6 +365,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
         when {
             sender.id == AdminSetting.owner -> return
             this is UserMessageEvent && AdminCommentConfig.user -> {}
+            message.findIsInstance<QuoteReply>()?.source?.fromId == bot.id && AdminCommentConfig.quote -> {}
             message.findIsInstance<At>()?.target == bot.id && AdminCommentConfig.at -> {}
             else -> return
         }
