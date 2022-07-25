@@ -13,7 +13,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-administrator",
         name = "mirai-administrator",
-        version = "1.2.4",
+        version = "1.2.5",
     ) {
         author("cssxsh")
     }
@@ -69,5 +69,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
 
         MiraiAdministrator.cancelAll()
         MiraiMessageRecorder.cancelAll()
+
+        AdminCommentConfig.save()
     }
 }
