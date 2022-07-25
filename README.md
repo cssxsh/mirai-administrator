@@ -23,6 +23,7 @@
 
 ## MCL 指令安装
 
+**请确认 mcl.jar 的版本是 2.1.0+**  
 `./mcl --update-package xyz.cssxsh.mirai:mirai-administrator --channel stable --type plugin`
 
 # 指令
