@@ -382,6 +382,14 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
             }
 
+            try {
+                quote(this@comment)?.let {
+                    it.fromId at it.time says it.originalMessage
+                }
+            } catch (_ : Throwable) {
+                //
+            }
+
             add(this@comment)
         }
 
