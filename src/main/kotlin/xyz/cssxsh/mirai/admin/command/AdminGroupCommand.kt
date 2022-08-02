@@ -153,6 +153,23 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    @SubCommand("quiet")
+    @Description("全体禁言")
+    public suspend fun CommandSender.quiet(group: Group, open: Boolean = true) {
+        val message = try {
+            group.settings.isMuteAll = open
+            "设置全体禁言禁言成功"
+        } catch (exception: PermissionDeniedException) {
+            logger.warning({ "权限不足" }, exception)
+            "权限不足"
+        } catch (cause: Throwable) {
+            logger.warning({ "设置错误" }, cause)
+            "设置错误"
+        }
+
+        sendMessage(message)
+    }
+
     @SubCommand
     @Description("设置管理员")
     public suspend fun CommandSender.admin(member: NormalMember, operation: Boolean = true) {
