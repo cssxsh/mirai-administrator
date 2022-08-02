@@ -83,7 +83,7 @@ internal fun AdminRequestEventData.render(): String = buildString {
         val bot = try {
             Bot.getInstance(qq).render()
         } catch (_: Throwable) {
-            "$qq"
+            "Bot($qq)"
         }
         appendLine("--- $bot ---")
         for (request in list) {
@@ -127,12 +127,6 @@ internal fun ComparableService.Loader.render(): String = buildString {
     for (subclass in ComparableService::class.sealedSubclasses) {
         appendLine("${subclass.simpleName}: ${registered(subclass.java).joinToString { it.id }}")
     }
-}
-
-@Deprecated("接口定义不明确", ReplaceWith("null"))
-internal fun source(contact: Contact?, event: MessageEvent?): MessageSource? {
-    logger.error { "xyz.cssxsh.mirai.admin.source 方法已废弃" }
-    return null
 }
 
 internal fun target(contact: Contact): MessageSource? {

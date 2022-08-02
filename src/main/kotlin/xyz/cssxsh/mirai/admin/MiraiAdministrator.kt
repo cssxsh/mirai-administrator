@@ -375,7 +375,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
         comments[sender.id] = System.currentTimeMillis()
 
-        val forward = buildForwardMessage {
+        val forward = buildForwardMessage(subject) {
             displayStrategy = object : ForwardMessage.DisplayStrategy {
                 override fun generateTitle(forward: RawForwardMessage): String {
                     return "来自 ${sender.render()} 的留言"

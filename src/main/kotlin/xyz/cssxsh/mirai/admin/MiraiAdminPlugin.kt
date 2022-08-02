@@ -1,8 +1,11 @@
 package xyz.cssxsh.mirai.admin
 
+import net.mamoe.mirai.console.*
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.unregister
+import net.mamoe.mirai.console.plugin.*
 import net.mamoe.mirai.console.plugin.jvm.*
+import net.mamoe.mirai.console.util.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.command.*
@@ -13,13 +16,18 @@ public object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-administrator",
         name = "mirai-administrator",
-        version = "1.2.5",
+        version = "1.2.6",
     ) {
         author("cssxsh")
     }
 ) {
 
     override fun onEnable() {
+        // XXX: mirai console version check
+        check(SemVersion.parseRangeRequirement(">= 2.12.0-RC").test(MiraiConsole.version)) {
+            "$name $version 需要 Mirai-Console 版本 >= 2.12.0，目前版本是 ${MiraiConsole.version}"
+        }
+
         AdminAutoApproverConfig.reload()
         AdminOnlineMessageConfig.reload()
         AdminCommentConfig.reload()
