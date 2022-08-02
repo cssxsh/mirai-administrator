@@ -23,7 +23,7 @@ public object AdminSendCommand : CompositeCommand(
         try {
             val message = request(hint = "请输入要发送的消息")
             for (group in bot.groups) {
-                group.sendMessage(message = message + if (at) AtAll else EmptyMessageChain)
+                group.sendMessage(message = message + if (at) AtAll else emptyMessageChain())
             }
         } catch (cause: Throwable) {
             logger.warning({ "发送给所有好友 处理失败" }, cause)
@@ -52,10 +52,10 @@ public object AdminSendCommand : CompositeCommand(
     public suspend fun CommandSender.to(contact: Contact, at: Boolean = false) {
         contact.sendMessage(
             message = request(hint = "请输入要发送的消息") + when {
-                !at -> EmptyMessageChain
+                !at -> emptyMessageChain()
                 contact is User -> At(contact)
                 contact is Group -> AtAll
-                else -> EmptyMessageChain
+                else -> emptyMessageChain()
             }
         )
     }
