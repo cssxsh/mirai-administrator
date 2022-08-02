@@ -108,7 +108,7 @@
 | Command                                    | Description |
 |:-------------------------------------------|:------------|
 | `/<timer> <mute> [moment] [cron] [group]?` | 宵禁          |
-| `/<timer> <cleaner> [day] [group]?`        | 清理不发言       |
+| `/<timer> <cleaner> [day] [cron] [group]?` | 清理不发言       |
 | `/<timer> <status> [cron] [bot]?`          | 定时发送机器人状态   |
 
 1. `group` 为 要操作的群，在群聊中可以不指定
@@ -118,11 +118,11 @@
     为防止被 空格 分成多个参数，请使用 `"` 包裹参数  
 3. `moment` 为 DURATION 表达式, 由 `PnDTnHnMn.nS` 组成  
     例如 `P1DT2H3M4.5S` 表示 一天二小时三分钟四点五秒，`PT5H` 表示 五小时
-5. mute 指令，moment 小于 `0` 宵禁就会关闭  
+4. mute 指令，moment 小于 `0` 宵禁就会关闭  
     例如 `/timer mute PT5H "0 0 1 ? * 2-6"`, 将会在 星期一到星期五的凌晨01:00 禁言 5 小时  
     例如 `/timer mute PT0S "0 0 0 1 * ?"`, 将会 取消 禁言定时器  
-6. day 单位为天数的发言期限，小于 `0` 就会关闭 
-    例如 `/timer cleaner 365 123456`
+5. day 单位为天数的发言期限, 小于 `0` 宵禁就会关闭    
+    例如 `/timer cleaner 365 "0 0 12 ? * 0"`, 将会 取消 禁言定时器
 
 # 配置
 
