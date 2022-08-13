@@ -375,29 +375,32 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
         comments[sender.id] = System.currentTimeMillis()
 
-        val forward = buildForwardMessage(subject) {
-            displayStrategy = object : ForwardMessage.DisplayStrategy {
-                override fun generateTitle(forward: RawForwardMessage): String {
-                    return "来自 ${sender.render()} 的留言"
+        launch {
+            val forward = buildForwardMessage(subject) {
+                displayStrategy = object : ForwardMessage.DisplayStrategy {
+                    override fun generateTitle(forward: RawForwardMessage): String {
+                        return "来自 ${sender.render()} 的留言"
+                    }
                 }
+
+                try {
+                    quote(this@comment)?.let {
+                        it.fromId at it.time says it.originalMessage
+                    }
+                } catch (_: Throwable) {
+                    //
+                }
+
+                add(this@comment)
             }
 
-            try {
-                quote(this@comment)?.let {
-                    it.fromId at it.time says it.originalMessage
-                }
-            } catch (_ : Throwable) {
-                //
-            }
+            forward.sendTo(contact = bot.owner())
 
-            add(this@comment)
+            if (AdminCommentConfig.reply.isEmpty()) return@launch
+            MiraiCode.deserializeMiraiCode(code = AdminCommentConfig.reply, contact = sender)
+                .plus(message.quote())
+                .sendTo(contact = subject)
         }
-
-        forward.sendTo(contact = bot.owner())
-
-        MiraiCode.deserializeMiraiCode(code = AdminCommentConfig.reply.ifEmpty { return }, contact = sender)
-            .plus(message.quote())
-            .sendTo(contact = subject)
     }
 
     // endregion
