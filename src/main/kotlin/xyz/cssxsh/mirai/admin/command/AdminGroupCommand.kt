@@ -3,7 +3,6 @@ package xyz.cssxsh.mirai.admin.command
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
@@ -198,8 +197,8 @@ public object AdminGroupCommand : CompositeCommand(
                 load(text.getOrNull(1)?.content.orEmpty().reader())
             }
             val image = message.findIsInstance<Image>()?.let {
-                http.get<HttpStatement>(urlString = it.queryUrl()).execute { response ->
-                    group.announcements.uploadImage(resource = response.receive<ByteArray>().toExternalResource())
+                http.prepareGet(urlString = it.queryUrl()).execute { response ->
+                    group.announcements.uploadImage(resource = response.body<ByteArray>().toExternalResource())
                 }
             }
             group.announcements.publish(OfflineAnnouncement(content = content) {
@@ -230,40 +229,32 @@ public object AdminGroupCommand : CompositeCommand(
     @SubCommand
     @Description("设置等级头衔")
     public suspend fun CommandSender.rank(group: Group, vararg levels: String) {
-        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER", "DEPRECATION")
+        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         group.bot.asQQAndroidBot().run {
-            val set = Mirai.Http.post<String>("https://qinfo.clt.qq.com/cgi-bin/qun_info/set_group_level_info") {
-                body = FormDataContent(Parameters.build {
-                    append("gc", group.id.toString())
-                    append("bkn", client.wLoginSigInfo.bkn.toString())
-                    append("src", "qinfo_v3")
-                    levels.forEachIndexed { index, name ->
-                        append("lvln${index + 1}", name)
-                    }
-                })
-
+            val set = http.submitForm(Parameters.build {
+                append("gc", group.id.toString())
+                append("bkn", client.wLoginSigInfo.bkn.toString())
+                append("src", "qinfo_v3")
+                levels.forEachIndexed { index, name ->
+                    append("lvln${index + 1}", name)
+                }
+            }) {
                 headers {
                     // ktor bug
-                    append(
-                        "cookie",
-                        "uin=o${id}; skey=${sKey}"
-                    )
+                    append("cookie", "uin=o${id}; skey=${sKey}")
                 }
-            }
+            }.body<String>()
             sendMessage(message = set)
-            val get = Mirai.Http.get<String>("https://qinfo.clt.qq.com/cgi-bin/qun_info/get_group_level_info") {
+            val get = http.get("https://qinfo.clt.qq.com/cgi-bin/qun_info/get_group_level_info") {
                 parameter("gc", group.id)
                 parameter("bkn", client.wLoginSigInfo.bkn)
                 parameter("src", "qinfo_v3")
 
                 headers {
                     // ktor bug
-                    append(
-                        "cookie",
-                        "uin=o${id}; skey=${sKey}"
-                    )
+                    append("cookie", "uin=o${id}; skey=${sKey}")
                 }
-            }
+            }.body<String>()
             sendMessage(message = get)
         }
     }

@@ -2,6 +2,8 @@ package xyz.cssxsh.mirai.admin
 
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.compression.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.*
 import net.mamoe.mirai.console.command.*
@@ -30,7 +32,12 @@ internal val logger by lazy {
 
 internal fun Bot.owner() = getFriendOrFail(AdminSetting.owner)
 
-internal val http by lazy { HttpClient(OkHttp) }
+internal val http = HttpClient(OkHttp) {
+    install(UserAgent) {
+        agent = "Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro Build/RP1A.200720.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/045913 Mobile Safari/537.36 V1_AND_SQ_8.8.68_2538_YYB_D A_8086800 QQ/8.8.68.7265 NetType/WIFI WebP/0.3.0 Pixel/1080 StatusBarHeight/76 SimpleUISwitch/1 QQTheme/2971 InMagicWin/0 StudyMode/0 CurrentMode/1 CurrentFontScale/1.0 GlobalDensityScale/0.9818182 AppId/537112567 Edg/98.0.4758.102"
+    }
+    ContentEncoding()
+}
 
 internal val NormalMember.lastSpeakAt: LocalDateTime
     get() = LocalDateTime.ofInstant(Instant.ofEpochSecond(lastSpeakTimestamp.toLong()), ZoneId.systemDefault())

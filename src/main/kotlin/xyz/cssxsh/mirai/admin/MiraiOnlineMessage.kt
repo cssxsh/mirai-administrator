@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.admin
 
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.*
 import net.mamoe.mirai.*
@@ -30,7 +31,7 @@ public object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig by 
         flag = 0
 
         val avatar = avatars.getOrPut(group.bot.avatarUrl) {
-            http.get<ByteArray>(group.bot.avatarUrl).toExternalResource()
+            http.get(group.bot.avatarUrl).body<ByteArray>().toExternalResource()
         }
         val image = group.uploadImage(resource = avatar)
 
