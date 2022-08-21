@@ -14,7 +14,7 @@ public object AdminCommentConfig : ReadOnlyPluginConfig("AdminCommentConfig") {
     @OptIn(ConsoleExperimentalApi::class)
     override fun onInit(owner: PluginDataHolder, storage: PluginDataStorage) {
         if (owner is CommandOwner) {
-            permission = owner.registerPermission(name = "comment.include", description = "拥有此权限的发送者可以给机器人留言")
+            permission = owner.registerPermission(name = "comment.include", description = "拥有此权限可以给机器人留言")
         }
     }
 
