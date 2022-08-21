@@ -226,6 +226,8 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             } catch (cause: Throwable) {
                                 logger.error({ "${member.render()} clean failure with $id" }, cause)
                             }
+                            // XXX: Operation too fast
+                            delay(60_000L)
                         }
                     }
                     is MemberNickCensor -> launch(SupervisorJob()) {
