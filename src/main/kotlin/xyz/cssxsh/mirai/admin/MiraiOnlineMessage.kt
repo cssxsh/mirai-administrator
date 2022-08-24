@@ -12,6 +12,7 @@ import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
+import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.util.*
@@ -30,10 +31,8 @@ public object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig by 
         brief = "QQ Bot 已启动"
         flag = 0
 
-        val avatar = avatars.getOrPut(group.bot.avatarUrl) {
-            http.get(group.bot.avatarUrl).body<ByteArray>().toExternalResource()
-        }
-        val image = group.uploadImage(resource = avatar)
+        val avatar = avatars.getOrPut(group.bot.avatarUrl) { http.get(group.bot.avatarUrl).body() }
+        val image = avatar.toExternalResource().use { it.uploadAsImage(group) }
 
         item {
             layout = 2
@@ -50,7 +49,7 @@ public object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig by 
         appendLine("[${group.botAsMember.nick}]开始接受指令执行")
     }
 
-    private val avatars: MutableMap<String, ExternalResource> = WeakHashMap()
+    private val avatars: MutableMap<String, ByteArray> = WeakHashMap()
 
     override suspend fun run(bot: Bot) {
         if (cache.add(bot.id)) return
