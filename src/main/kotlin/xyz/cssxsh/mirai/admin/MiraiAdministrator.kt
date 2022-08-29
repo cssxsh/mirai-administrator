@@ -54,7 +54,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
                 break
             } catch (cause: Throwable) {
-                logger.warning({ "$approver 审核 $this 失败" }, cause)
+                logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
         }
@@ -71,7 +71,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
                 break
             } catch (cause: Throwable) {
-                logger.warning({ "$approver 审核 $this 失败" }, cause)
+                logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
         }
@@ -88,7 +88,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
                 break
             } catch (cause: Throwable) {
-                logger.warning({ "$approver 审核 $this 失败" }, cause)
+                logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
         }
@@ -108,7 +108,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
                 break
             } catch (cause: Throwable) {
-                logger.warning({ "$approver 审核 $this 失败" }, cause)
+                logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
         }
@@ -128,7 +128,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
                 break
             } catch (cause: Throwable) {
-                logger.warning({ "$approver 审核 $this 失败" }, cause)
+                logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
         }
@@ -151,7 +151,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
                 break
             } catch (cause: Throwable) {
-                logger.warning({ "$approver 审核 $this 失败" }, cause)
+                logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
         }
