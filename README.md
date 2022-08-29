@@ -152,6 +152,7 @@
 
 1. `AdminSetting.yml`
 2. `censor_types` 可选值 `IMAGE, FLASH, SERVICE, APP, AUDIO, FORWARD, VIP, MARKET, MUSIC, POKE`
+3. `censor_regex` 配置项废除, 改为加载 censor 文件夹中的 txt 文件
 
 # 服务接口
 

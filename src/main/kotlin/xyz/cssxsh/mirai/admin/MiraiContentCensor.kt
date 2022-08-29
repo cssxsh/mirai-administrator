@@ -10,19 +10,23 @@ public object MiraiContentCensor : ContentCensor, MiraiContentCensorConfig by Ad
     override val id: String = "default-censor"
 
     override suspend fun handle(event: GroupMessageEvent): Boolean {
-        if (censorTypes.any { event.message.contains(it.key) }) {
+        for (type in censorTypes) {
+            if (type.key !in event.message) continue
             event.group.sendMessage("触发消息类型审查")
             event.message.recall()
 
             if (censorMute > 0) event.sender.mute(censorMute)
+            return true
         }
-        if (censorRegex.isEmpty()) return false
 
-        if (censorRegex.toRegex() in event.message.contentToString()) {
+        val content = event.message.contentToString()
+        for (regex in censorRegex) {
+            if (regex !in content) continue
             event.group.sendMessage("触发消息正则审查")
             event.message.recall()
 
             if (censorMute > 0) event.sender.mute(censorMute)
+            return true
         }
 
         return false
