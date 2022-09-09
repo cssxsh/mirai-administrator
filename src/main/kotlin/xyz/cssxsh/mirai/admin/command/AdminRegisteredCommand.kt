@@ -33,10 +33,29 @@ public object AdminRegisteredCommand : SimpleCommand(
                         }
 
                         displayStrategy = object : ForwardMessage.DisplayStrategy {
-                            override fun generateTitle(forward: RawForwardMessage): String {
-                                return (owner as? Plugin)?.name ?: owner.parentPermission.id.namespace
+                            override fun generatePreview(forward: RawForwardMessage): List<String> {
+                                return if (owner is Plugin) {
+                                    listOf(
+                                        "Version: ${owner.version}",
+                                        "Author: ${owner.author}",
+                                        owner.info
+                                    )
+                                } else {
+                                    commands.map { "${it.primaryName}: ${it.description}" }
+                                }
                             }
-                            override fun generateSummary(forward: RawForwardMessage): String = "已注册${commands.size}条指令"
+
+                            override fun generateTitle(forward: RawForwardMessage): String {
+                                return if (owner is Plugin) {
+                                    owner.name
+                                } else {
+                                    owner.parentPermission.id.namespace
+                                }
+                            }
+
+                            override fun generateSummary(forward: RawForwardMessage): String {
+                                return "共${commands.size}条指令"
+                            }
                         }
                     }
                 }
@@ -53,14 +72,20 @@ public object AdminRegisteredCommand : SimpleCommand(
                         }
                     }
                     displayStrategy = object : ForwardMessage.DisplayStrategy {
-                        override fun generateTitle(forward: RawForwardMessage): String = "ComparableService"
-                        override fun generateSummary(forward: RawForwardMessage): String = "已注册${services.size}个服务"
+                        override fun generatePreview(forward: RawForwardMessage): List<String> = services.map { clazz ->
+                            "${clazz.simpleName!!}: ${
+                                ComparableService.registered(clazz.java).joinToString(", ") { it.id }
+                            }"
+                        }
+
+                        override fun generateTitle(forward: RawForwardMessage): String = "MiraiAdminService"
+                        override fun generateSummary(forward: RawForwardMessage): String = "共${services.size}个服务"
                     }
                 }
 
                 displayStrategy = object : ForwardMessage.DisplayStrategy {
                     override fun generateTitle(forward: RawForwardMessage): String = "已注册指令及服务"
-                    override fun generateSummary(forward: RawForwardMessage): String = "已注册${group.size}个插件"
+                    override fun generateSummary(forward: RawForwardMessage): String = "共${group.size}个分组"
                 }
             }
             try {
