@@ -24,7 +24,7 @@ public object AdminContactCommand : CompositeCommand(
                 else -> throw UnsupportedOperationException("delete $contact")
             }
             "删除成功"
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "删除错误" }, cause)
             "删除错误"
         }
@@ -43,7 +43,7 @@ public object AdminContactCommand : CompositeCommand(
         val result = try {
             val request = AdminRequestEventData.handle(id, accept, black, message)
             "请求已处理 $request"
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "出现错误" }, cause)
             "出现错误: ${cause.message}"
         }
@@ -56,7 +56,7 @@ public object AdminContactCommand : CompositeCommand(
     public suspend fun CommandSender.request() {
         val message = try {
             AdminRequestEventData.render()
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -71,7 +71,7 @@ public object AdminContactCommand : CompositeCommand(
             val args = ids.map(AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.addAll(args)
             AdminBlackListData.ids.joinToString("\n") { it.asString() }
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -86,7 +86,7 @@ public object AdminContactCommand : CompositeCommand(
             val args = ids.map(AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.removeAll(args)
             AdminBlackListData.ids.joinToString("\n") { it.asString() }
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }

@@ -24,7 +24,7 @@ public object AdminFriendCommand : CompositeCommand(
                     }
                 }
             }
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -38,7 +38,7 @@ public object AdminFriendCommand : CompositeCommand(
         val message = try {
             friend.delete()
             "删除成功"
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "删除错误" }, cause)
             "删除错误"
         }

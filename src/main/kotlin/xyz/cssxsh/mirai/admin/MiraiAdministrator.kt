@@ -53,7 +53,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     ApproveResult.Ignore -> continue
                 }
                 break
-            } catch (cause: Throwable) {
+            } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
@@ -70,7 +70,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     ApproveResult.Ignore -> continue
                 }
                 break
-            } catch (cause: Throwable) {
+            } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
@@ -87,7 +87,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     ApproveResult.Ignore -> continue
                 }
                 break
-            } catch (cause: Throwable) {
+            } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
@@ -107,7 +107,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     ApproveResult.Ignore -> continue
                 }
                 break
-            } catch (cause: Throwable) {
+            } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
@@ -127,7 +127,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     ApproveResult.Ignore -> continue
                 }
                 break
-            } catch (cause: Throwable) {
+            } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
@@ -150,7 +150,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     ApproveResult.Ignore -> continue
                 }
                 break
-            } catch (cause: Throwable) {
+            } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
                 continue
             }
@@ -200,7 +200,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                                 } else {
                                     AbstractPermitteeId.AnyMember(target.id).cancel(permissionId = id, false)
                                 }
-                            } catch (cause: Throwable) {
+                            } catch (cause: Exception) {
                                 logger.error({ "$id set failure with $id" }, cause)
                             }
                         }
@@ -215,7 +215,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             if (target.settings.isMuteAll) {
                                 target.settings.isMuteAll = false
                             }
-                        } catch (cause: Throwable) {
+                        } catch (cause: Exception) {
                             logger.error({ "${target.render()} mute set failure with $id" }, cause)
                         }
                     }
@@ -223,7 +223,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                         for ((member, reason) in run(target)) {
                             try {
                                 member.kick(message = reason)
-                            } catch (cause: Throwable) {
+                            } catch (cause: Exception) {
                                 logger.error({ "${member.render()} clean failure with $id" }, cause)
                             }
                             // XXX: Operation too fast
@@ -235,7 +235,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                         for (member in target.members) {
                             try {
                                 member.nameCard = censor(member) ?: continue
-                            } catch (cause: Throwable) {
+                            } catch (cause: Exception) {
                                 logger.error({ "${target.render()} nick set failure with $id" }, cause)
                             }
                         }
@@ -245,7 +245,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                         for (member in target.members) {
                             try {
                                 member.specialTitle = censor(member) ?: continue
-                            } catch (cause: Throwable) {
+                            } catch (cause: Exception) {
                                 logger.error({ "${target.render()} title set failure with $id" }, cause)
                             }
                         }
@@ -389,8 +389,8 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     quote(this@comment)?.let {
                         it.fromId at it.time says it.originalMessage
                     }
-                } catch (_: Throwable) {
-                    //
+                } catch (cause: Exception) {
+                    logger.warning({ "回溯评论上文失败" }, cause)
                 }
 
                 add(this@comment)

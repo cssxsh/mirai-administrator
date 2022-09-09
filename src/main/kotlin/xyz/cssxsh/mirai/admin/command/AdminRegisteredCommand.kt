@@ -66,10 +66,10 @@ public object AdminRegisteredCommand : SimpleCommand(
             try {
                 @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
                 sendMessage(forward + IgnoreLengthCheck)
-            } catch (_: Throwable) {
+            } catch (_: NoClassDefFoundError) {
                 sendMessage(forward)
             }
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "出现错误" }, cause)
             sendMessage("出现错误")
         }

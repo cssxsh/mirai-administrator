@@ -28,7 +28,7 @@ public object AdminRecallCommand : SimpleCommand(
             } else {
                 "${contact?.render().orEmpty()} 未找到消息"
             }
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }

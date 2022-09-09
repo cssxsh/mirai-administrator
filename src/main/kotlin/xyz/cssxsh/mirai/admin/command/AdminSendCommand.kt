@@ -25,7 +25,7 @@ public object AdminSendCommand : CompositeCommand(
             for (group in bot.groups) {
                 group.sendMessage(message = message + if (at) AtAll else emptyMessageChain())
             }
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "发送给所有好友 处理失败" }, cause)
         }
     }
@@ -42,7 +42,7 @@ public object AdminSendCommand : CompositeCommand(
             for (friend in bot.friends) {
                 friend.sendMessage(message = message)
             }
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "发送给所有好友 处理失败" }, cause)
         }
     }
@@ -71,7 +71,7 @@ public object AdminSendCommand : CompositeCommand(
                 else -> throw UnsupportedOperationException("nudge $user")
             }
             "发送成功"
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "发送失败" }, cause)
             "发送失败"
         }

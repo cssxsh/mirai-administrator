@@ -25,7 +25,7 @@ import java.util.*
 internal val logger by lazy {
     try {
         MiraiAdminPlugin.logger
-    } catch (_: Throwable) {
+    } catch (_: ExceptionInInitializerError) {
         MiraiLogger.Factory.create(MiraiAdministrator::class)
     }
 }
@@ -89,7 +89,7 @@ internal fun AdminRequestEventData.render(): String = buildString {
         if (list.isEmpty()) continue
         val bot = try {
             Bot.getInstance(qq).render()
-        } catch (_: Throwable) {
+        } catch (_: Exception) {
             "Bot($qq)"
         }
         appendLine("--- $bot ---")
@@ -112,7 +112,7 @@ internal fun ComparableService.Loader.reload() {
                 try {
                     val service = provider.type().kotlin.objectInstance ?: provider.get()
                     instances.add(service)
-                } catch (cause: Throwable) {
+                } catch (cause: Exception) {
                     logger.warning({ "${provider.type().name} load fail." }, cause)
                 }
             }
@@ -140,7 +140,7 @@ internal fun target(contact: Contact): MessageSource? {
     for (handler in ComparableService<MessageSourceHandler>()) {
         return try {
             handler.target(contact = contact) ?: continue
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "message source find failure." }, cause)
             continue
         }
@@ -152,7 +152,7 @@ internal fun from(member: Member): MessageSource? {
     for (handler in ComparableService<MessageSourceHandler>()) {
         return try {
             handler.from(member) ?: continue
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "message source find failure." }, cause)
             continue
         }
@@ -164,7 +164,7 @@ internal fun quote(event: MessageEvent): MessageSource? {
     for (handler in ComparableService<MessageSourceHandler>()) {
         return try {
             handler.quote(event = event) ?: continue
-        } catch (cause: Throwable) {
+        } catch (cause: Exception) {
             logger.warning({ "message source find failure." }, cause)
             continue
         }

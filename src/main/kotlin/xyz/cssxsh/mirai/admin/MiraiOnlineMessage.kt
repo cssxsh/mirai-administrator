@@ -63,8 +63,8 @@ public object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig by 
             }
             try {
                 group.sendMessage(message = message)
-            } catch (_: Throwable) {
-                //
+            } catch (cause: Exception) {
+                logger.warning({ "机器人上线消息发送失败" }, cause)
             }
             delay(duration * 1_000)
         }

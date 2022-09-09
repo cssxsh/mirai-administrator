@@ -22,7 +22,7 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentC
             for (pattern in patterns) {
                 val regex = try {
                     cache.getOrPut(pattern) { pattern.toRegex() }
-                } catch (_: Throwable) {
+                } catch (_: Exception) {
                     continue
                 }
 
@@ -44,7 +44,7 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentC
 
             try {
                 list[path.name] = path.readLines()
-            } catch (cause: Throwable) {
+            } catch (cause: Exception) {
                 plugin.logger.warning("读取失败 $path", cause)
             }
         }
@@ -72,7 +72,7 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentC
                             plugin.logger.info("审核库读取开始 $path , ${event.kind().name()}")
                             try {
                                 list[file.name] = file.readLines()
-                            } catch (cause: Throwable) {
+                            } catch (cause: Exception) {
                                 plugin.logger.warning("审核库读取失败 $file", cause)
                             }
                         }
