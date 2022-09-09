@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.2.7"
+version = "1.2.8"
 
 mavenCentralPublish {
     useCentralS01()
@@ -51,6 +51,8 @@ dependencies {
     compileOnly("javax.validation:validation-api:2.0.1.Final")
 
     testImplementation(kotlin("test"))
+    testImplementation("org.slf4j:slf4j-simple:2.0.0")
+    testImplementation("net.mamoe:mirai-logging-slf4j:2.13.0-M1")
 }
 
 kotlin {
