@@ -43,8 +43,8 @@ public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"
 
     public suspend fun handle(id: Long, accept: Boolean, black: Boolean, message: String): RequestEventData {
         for ((qq, list) in this) {
+            val bot = Bot.getInstanceOrNull(qq) ?: continue
             val request = list[id] ?: continue
-            val bot = Bot.getInstance(qq)
             if (accept) {
                 request.accept(bot)
             } else {

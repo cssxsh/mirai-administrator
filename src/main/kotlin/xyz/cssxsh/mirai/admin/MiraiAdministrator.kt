@@ -164,9 +164,8 @@ public object MiraiAdministrator : SimpleListenerHost() {
         if (message.anyIsInstance<PlainText>().not()) return
         val original = (quote(event = this) ?: return).originalMessage.contentToString()
         val id = ("""(?<=with <)\d+""".toRegex().find(original)?.value ?: return).toLong()
-        val accept = MiraiAutoApprover.replyAccept.toRegex() in message.contentToString()
-        val black = MiraiAutoApprover.replyBlack.toRegex() in message.contentToString()
-        if (!accept && !black) return
+        val accept = MiraiAutoApprover.replyAccept.toRegex() matches message.contentToString()
+        val black = MiraiAutoApprover.replyBlack.toRegex() matches message.contentToString()
         AdminContactCommand.runCatching {
             toCommandSender().handle(id = id, accept = accept, black = black, message = original)
         }.onFailure { cause ->
