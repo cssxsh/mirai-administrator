@@ -24,6 +24,7 @@ public object MiraiMemberCleaner : MemberCleaner {
 
     override suspend fun run(contact: Group): List<Pair<NormalMember, String>> {
         val day = last[contact.id] ?: return emptyList()
+        if (day <= 0) return emptyList()
         val limit = LocalDateTime.now().minusDays(day)
         return contact.members.mapNotNull { member ->
             if (member.permission == MemberPermission.MEMBER && member.lastSpeakAt > limit) {
