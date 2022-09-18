@@ -152,7 +152,7 @@
 
 1. `AdminSetting.yml`
 2. `censor_types` 可选值 `IMAGE, FLASH, SERVICE, APP, AUDIO, FORWARD, VIP, MARKET, MUSIC, POKE`
-3. `censor_regex` 配置项废除, 改为加载 censor 文件夹中的 txt 文件，会监听文件改动，无需重启
+3. 正则词库, 须手动添加，将会加载 censor 文件夹中的 txt 文件，每一行对应一个正则匹配，会监听文件改动，无需重启
 
 # 服务接口
 

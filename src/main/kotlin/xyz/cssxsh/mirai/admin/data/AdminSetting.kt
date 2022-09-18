@@ -20,6 +20,7 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentC
     override val censorRegex: Sequence<Regex> = sequence {
         for ((_, patterns) in list) {
             for (pattern in patterns) {
+                if (pattern.isEmpty()) continue
                 val regex = try {
                     cache.getOrPut(pattern) { pattern.toRegex() }
                 } catch (_: Exception) {
@@ -38,9 +39,8 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentC
         folder.toFile().mkdirs()
 
         for (path in folder.listDirectoryEntries()) {
-            if (!path.toString().endsWith(".txt")) continue
-            if (path.fileSize() == 0L) continue
-            plugin.logger.info("审核库读取开始 ${path.fileName}")
+            if (!path.name.endsWith(".txt")) continue
+            plugin.logger.info("读取审核库 ${path.fileName}")
 
             try {
                 list[path.name] = path.readLines()
@@ -68,12 +68,16 @@ public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentC
                         StandardWatchEventKinds.ENTRY_CREATE,
                         StandardWatchEventKinds.ENTRY_MODIFY -> {
                             val file = folder.resolve(path)
-                            if (file.fileSize() == 0L) continue
-                            plugin.logger.info("审核库读取开始 $path , ${event.kind().name()}")
+                            if (!file.exists()) {
+                                plugin.logger.info("移除审核库 $path , ${event.kind().name()}")
+                                list.remove(file.name)
+                                continue
+                            }
+                            plugin.logger.info("更新审核库 $path , ${event.kind().name()}")
                             try {
                                 list[file.name] = file.readLines()
                             } catch (cause: Exception) {
-                                plugin.logger.warning("审核库读取失败 $file", cause)
+                                plugin.logger.warning("更新审核库 $file", cause)
                             }
                         }
                         StandardWatchEventKinds.ENTRY_CREATE -> {
