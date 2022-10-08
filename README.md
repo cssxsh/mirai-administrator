@@ -74,6 +74,7 @@
 | `/<group> <quiet> [group] [open]?`            | 全体禁言        |
 | `/<group> <admin> [member] [operation]?`      | 设置管理员       |
 | `/<group> <announce> [group]`                 | 设置公告        |
+| `/<group> <rank> [group] {levels}`            | 设置等级头衔      |
 
 ## AdminRecallCommand
 

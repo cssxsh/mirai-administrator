@@ -229,33 +229,18 @@ public object AdminGroupCommand : CompositeCommand(
     @SubCommand
     @Description("设置等级头衔")
     public suspend fun CommandSender.rank(group: Group, vararg levels: String) {
-        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
-        group.bot.asQQAndroidBot().run {
-            val set = http.submitForm(Parameters.build {
-                append("gc", group.id.toString())
-                append("bkn", client.wLoginSigInfo.bkn.toString())
-                append("src", "qinfo_v3")
-                levels.forEachIndexed { index, name ->
-                    append("lvln${index + 1}", name)
-                }
-            }) {
-                headers {
-                    // ktor bug
-                    append("cookie", "uin=o${id}; skey=${sKey}")
-                }
-            }.body<String>()
-            sendMessage(message = set)
-            val get = http.get("https://qinfo.clt.qq.com/cgi-bin/qun_info/get_group_level_info") {
-                parameter("gc", group.id)
-                parameter("bkn", client.wLoginSigInfo.bkn)
-                parameter("src", "qinfo_v3")
-
-                headers {
-                    // ktor bug
-                    append("cookie", "uin=o${id}; skey=${sKey}")
-                }
-            }.body<String>()
-            sendMessage(message = get)
+        if (levels.size !in 1..6) throw IllegalCommandArgumentException("等级词条数量不对")
+        val message = try {
+            group.active.setRankTitles(levels.withIndex().associate { it.index to it.value })
+            "设置成功"
+        } catch (exception: PermissionDeniedException) {
+            logger.warning({ "权限不足" }, exception)
+            "权限不足"
+        } catch (cause: Exception) {
+            logger.warning({ "设置错误" }, cause)
+            "设置错误"
         }
+
+        sendMessage(message)
     }
 }
