@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.admin.command
 
+import kotlinx.coroutines.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.contact.*
@@ -15,7 +16,7 @@ public object AdminSendCommand : CompositeCommand(
 
     @SubCommand
     @Description("发送给所有群")
-    public suspend fun CommandSender.groups(bot: Bot? = this.bot, at: Boolean = false) {
+    public suspend fun CommandSender.groups(bot: Bot? = this.bot, at: Boolean = false, second: Long = 3) {
         if (bot == null) {
             sendMessage("未指定机器人")
             return
@@ -23,7 +24,8 @@ public object AdminSendCommand : CompositeCommand(
         try {
             val message = request(hint = "请输入要发送的消息")
             for (group in bot.groups) {
-                group.sendMessage(message = message + if (at) AtAll else emptyMessageChain())
+                delay(second * 1000)
+                group.sendMessage(message = if (at) message + AtAll else message)
             }
         } catch (cause: Exception) {
             logger.warning({ "发送给所有好友 处理失败" }, cause)
@@ -32,7 +34,7 @@ public object AdminSendCommand : CompositeCommand(
 
     @SubCommand
     @Description("发送给所有好友")
-    public suspend fun CommandSender.friends(bot: Bot? = this.bot) {
+    public suspend fun CommandSender.friends(bot: Bot? = this.bot, second: Long = 3) {
         if (bot == null) {
             sendMessage("未指定机器人")
             return
@@ -40,6 +42,7 @@ public object AdminSendCommand : CompositeCommand(
         try {
             val message = request(hint = "请输入要发送的消息")
             for (friend in bot.friends) {
+                delay(second * 1000)
                 friend.sendMessage(message = message)
             }
         } catch (cause: Exception) {

@@ -94,15 +94,16 @@
 
 ## AdminSendCommand
 
-| Command                         | Description |
-|:--------------------------------|:------------|
-| `/<send> <groups> [bot]? [at]?` | 发送给所有群      |
-| `/<send> <friends> [bot]?`      | 发送给所有好友     |
-| `/<send> <to> [contact] [at]?`  | 发送给指定联系人    |
-| `/<send> <nudge> [user]`        | 戳一戳指定联系人    |
+| Command                                   | Description |
+|:------------------------------------------|:------------|
+| `/<send> <groups> [bot]? [at]? [second]?` | 发送给所有群      |
+| `/<send> <friends> [bot]? [second]?`      | 发送给所有好友     |
+| `/<send> <to> [contact] [at]?`            | 发送给指定联系人    |
+| `/<send> <nudge> [user]`                  | 戳一戳指定联系人    |
 
 1. `bot` 参数在命令行模式下需要指定
 2. `at` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true`, 将附加一个At
+3. `second` 参数为 延迟的秒数 例如 `/send groups 123456 false 10`
 
 ## AdminTimerCommand
 
