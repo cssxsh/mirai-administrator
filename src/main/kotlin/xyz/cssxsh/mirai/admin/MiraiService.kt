@@ -62,7 +62,8 @@ internal fun CommandOwner.registerPermission(name: String, description: String):
 }
 
 internal fun NewFriendRequestEvent.render(accept: Boolean): Message = buildMessageChain {
-    appendLine("@${fromNick}#${fromId} with <${eventId}>")
+    appendLine("with <${eventId}>")
+    appendLine("@${fromNick}#${fromId}")
     appendLine("申请添加好友")
     appendLine("from $fromGroup")
     appendLine(message)
@@ -70,7 +71,8 @@ internal fun NewFriendRequestEvent.render(accept: Boolean): Message = buildMessa
 }
 
 internal fun MemberJoinRequestEvent.render(accept: Boolean): Message = buildMessageChain {
-    appendLine("@${fromNick}#${fromId} with <${eventId}>")
+    appendLine("with <${eventId}>")
+    appendLine("@${fromNick}#${fromId}")
     appendLine("申请加入群")
     appendLine("to [$groupName](${groupId}) by $invitorId")
     appendLine(message)
@@ -78,7 +80,8 @@ internal fun MemberJoinRequestEvent.render(accept: Boolean): Message = buildMess
 }
 
 internal fun BotInvitedJoinGroupRequestEvent.render(accept: Boolean): Message = buildMessageChain {
-    appendLine("@${invitorNick}#${invitorId} with <${eventId}>")
+    appendLine("with <${eventId}>")
+    appendLine("@${invitorNick}#${invitorId}")
     appendLine("邀请机器人加入群")
     appendLine("to [${groupName}](${groupId})")
     if (accept) appendLine("已自动同意")
