@@ -19,8 +19,17 @@ public object AdminFriendCommand : CompositeCommand(
             buildString {
                 for (bot in Bot.instances) {
                     appendLine("--- ${bot.render()} ---")
-                    for (friend in bot.friends) {
-                        appendLine(friend.render())
+                    try {
+                        for (friendGroup in bot.friendGroups.asCollection()) {
+                            appendLine("### ${friendGroup.name} ###")
+                            for (friend in friendGroup.friends) {
+                                appendLine(friend.render())
+                            }
+                        }
+                    } catch (_: ExceptionInInitializerError) {
+                        for (friend in bot.friends) {
+                            appendLine(friend.render())
+                        }
                     }
                 }
             }

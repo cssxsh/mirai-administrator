@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.admin
 
+import kotlinx.coroutines.*
 import net.mamoe.mirai.console.*
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.unregister
@@ -16,7 +17,7 @@ public object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-administrator",
         name = "mirai-administrator",
-        version = "1.2.8",
+        version = "1.2.9",
     ) {
         author("cssxsh")
     }
@@ -76,8 +77,8 @@ public object MiraiAdminPlugin : KotlinPlugin(
         AdminSendCommand.unregister()
         AdminTimerCommand.unregister()
 
-        MiraiAdministrator.cancelAll()
-        MiraiMessageRecorder.cancelAll()
+        MiraiAdministrator.cancel()
+        MiraiMessageRecorder.cancel()
 
         AdminCommentConfig.save()
     }

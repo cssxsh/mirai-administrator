@@ -68,7 +68,7 @@ public object AdminContactCommand : CompositeCommand(
     @Description("拉黑")
     public suspend fun CommandSender.black(vararg ids: String) {
         val message = try {
-            val args = ids.map(AbstractPermitteeId::parseFromString)
+            val args = ids.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.addAll(args)
             AdminBlackListData.ids.joinToString("\n") { it.asString() }
         } catch (cause: Exception) {
@@ -83,7 +83,7 @@ public object AdminContactCommand : CompositeCommand(
     @Description("取消拉黑")
     public suspend fun CommandSender.white(vararg ids: String) {
         val message = try {
-            val args = ids.map(AbstractPermitteeId::parseFromString)
+            val args = ids.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.removeAll(args)
             AdminBlackListData.ids.joinToString("\n") { it.asString() }
         } catch (cause: Exception) {
