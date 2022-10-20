@@ -35,7 +35,7 @@ public val CronCommandArgumentContext: CommandArgumentContext = buildCommandArgu
             DefaultCronParser.parse(text)
         } catch (cause: Exception) {
             throw CommandArgumentParserException(
-                message = cause.message ?: "Cron 表达式读取错误，建议找在线表达式生成器生成",
+                message = "Cron 表达式读取错误，建议找在线表达式生成器生成",
                 cause = cause
             )
         }
@@ -45,7 +45,7 @@ public val CronCommandArgumentContext: CommandArgumentContext = buildCommandArgu
             Duration.parse(text)
         } catch (cause: Exception) {
             throw CommandArgumentParserException(
-                message = cause.message ?: "Duration 表达式格式为 PnDTnHnMn.nS",
+                message = "Duration 表达式格式为 PnDTnHnMn.nS",
                 cause = cause
             )
         }

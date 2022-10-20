@@ -12,6 +12,7 @@ import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.command.*
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
+import java.time.*
 
 public object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
@@ -48,6 +49,9 @@ public object MiraiAdminPlugin : KotlinPlugin(
         logger.info { "发送留言评论请使用 /perm add u1234 ${AdminCommentConfig.permission.id} 赋予权限" }
         logger.info { "定时消息部分功能更新了，请查看最新版文档" }
         logger.info { "censor_regex 配置项废除, 改为加载 censor 文件夹中的 txt 文件（不需要重启，会监听文件修改）" }
+        if (ZoneId.systemDefault() != ZoneId.of("Asia/Shanghai")) {
+            logger.warning { "当前系统时区不是 Asia/Shanghai" }
+        }
 
         ComparableService.reload()
         logger.info { ComparableService.render() }

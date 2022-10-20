@@ -10,6 +10,7 @@ import java.time.*
 public object MiraiMemberCleaner : MemberCleaner {
     override val level: Int = 0
     override val id: String = "cleaner"
+    override val records: MutableSet<Long> = HashSet()
     private val last: Map<Long, Long> get() = AdminTimerData.last
     private val settings: Map<Long, Cron> get() = AdminTimerData.clear
 

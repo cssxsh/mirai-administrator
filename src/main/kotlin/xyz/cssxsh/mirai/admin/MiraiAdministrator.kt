@@ -177,10 +177,6 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     // region Timer
 
-    private val cache: MutableMap<String, MutableSet<Long>> = HashMap()
-
-    private val TimerService<*, *>.records get() = cache.getOrPut(id, ::HashSet)
-
     /**
      * 启动一个群定时服务
      */
@@ -191,7 +187,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 delay(wait(contact = target) ?: break)
 
                 when (this@start) {
-                    is GroupAllowTimer -> launch(SupervisorJob()) {
+                    is GroupAllowTimer -> launch {
                         for ((id, permit) in run(target)) {
                             try {
                                 if (permit) {
@@ -204,7 +200,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             }
                         }
                     }
-                    is GroupCurfewTimer -> launch(SupervisorJob()) curfew@{
+                    is GroupCurfewTimer -> launch curfew@{
                         try {
                             val moment = run(target) ?: return@curfew
                             if (!target.settings.isMuteAll) {
@@ -218,7 +214,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             logger.error({ "${target.render()} mute set failure with $id" }, cause)
                         }
                     }
-                    is MemberCleaner -> launch(SupervisorJob()) {
+                    is MemberCleaner -> launch {
                         for ((member, reason) in run(target)) {
                             try {
                                 member.kick(message = reason)
@@ -229,7 +225,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             delay(60_000L)
                         }
                     }
-                    is MemberNickCensor -> launch(SupervisorJob()) {
+                    is MemberNickCensor -> launch {
                         val censor = run(target)
                         for (member in target.members) {
                             try {
@@ -239,7 +235,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             }
                         }
                     }
-                    is MemberTitleCensor -> launch(SupervisorJob()) {
+                    is MemberTitleCensor -> launch {
                         val censor = run(target)
                         for (member in target.members) {
                             try {
