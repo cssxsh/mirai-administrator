@@ -8,6 +8,7 @@ import net.mamoe.mirai.*
 import net.mamoe.mirai.console.*
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.permission.*
+import net.mamoe.mirai.console.plugin.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.console.util.*
@@ -109,11 +110,14 @@ internal fun ComparableService.Loader.reload() {
     instances.clear()
     val oc = Thread.currentThread().contextClassLoader
     try {
-        for (classLoader in JvmPluginLoader.classLoaders) {
+        for (plugin in PluginManager.plugins) {
+            if (plugin !is JvmPlugin) continue
+            if (plugin.description.dependencies.none { it.id == "xyz.cssxsh.mirai.plugin.mirai-administrator" }) continue
+            val classLoader = plugin::class.java.classLoader
             Thread.currentThread().contextClassLoader = classLoader
             for (provider in ServiceLoader.load(ComparableService::class.java, classLoader).stream()) {
                 try {
-                    val service = provider.type().kotlin.objectInstance ?: provider.get()
+                    val service = provider.get()
                     instances.add(service)
                 } catch (cause: Exception) {
                     logger.warning({ "${provider.type().name} load fail." }, cause)
