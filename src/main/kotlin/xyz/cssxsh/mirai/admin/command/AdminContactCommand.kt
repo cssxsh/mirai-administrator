@@ -66,9 +66,9 @@ public object AdminContactCommand : CompositeCommand(
 
     @SubCommand
     @Description("拉黑")
-    public suspend fun CommandSender.black(vararg ids: String) {
+    public suspend fun CommandSender.black(vararg permitteeIds: String) {
         val message = try {
-            val args = ids.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
+            val args = permitteeIds.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.addAll(args)
             AdminBlackListData.ids.joinToString("\n") { it.asString() }
         } catch (cause: Exception) {
@@ -81,9 +81,9 @@ public object AdminContactCommand : CompositeCommand(
 
     @SubCommand
     @Description("取消拉黑")
-    public suspend fun CommandSender.white(vararg ids: String) {
+    public suspend fun CommandSender.white(vararg permitteeIds: String) {
         val message = try {
-            val args = ids.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
+            val args = permitteeIds.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.removeAll(args)
             AdminBlackListData.ids.joinToString("\n") { it.asString() }
         } catch (cause: Exception) {

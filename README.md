@@ -44,13 +44,13 @@
 | `/<contact> <delete> [contact]`               | 删除联系人       |
 | `/<contact> <handle> [id] [accept]? [black]?` | 处理联系人申请     |
 | `/<contact> <request>`                        | 查看申请列表      |
-| `/<contact> <black> {ids}`                    | 拉黑          |
-| `/<contact> <white> {ids}`                    | 取消拉黑        |
+| `/<contact> <black> {permitteeIds}`           | 拉黑          |
+| `/<contact> <white> {permitteeIds}`           | 取消拉黑        |
 
 1. `id` 是 事件id 或 好友id 或 群id
 2. `accept` 和 `black` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true` (不区分大小写)
 3. 对 机器人发送的新联系人通知消息 回复 `同意` 或 `不同意` 或 `拉黑` 即可处理，详见 [联系人审批配置](#联系人审批配置)
-4. `ids` 是 权限系统的用户标识符，例如 `m12345.6789`, 可以提供多个 `id` 一次性拉黑
+4. `permitteeIds` 是 权限系统的用户标识符，例如 `m12345.6789`, 可以提供多个 [PermitteeId](https://github.com/mamoe/mirai/blob/dev/mirai-console/docs/Permissions.md#%E8%A2%AB%E8%AE%B8%E5%8F%AF%E4%BA%BA-id) 一次性拉黑/取消拉黑
 5. 黑名单通过 `@EventHandler(priority = EventPriority.HIGH, concurrency = ConcurrencyKind.LOCKED)` 拦截消息
 
 ## AdminFriendCommand
