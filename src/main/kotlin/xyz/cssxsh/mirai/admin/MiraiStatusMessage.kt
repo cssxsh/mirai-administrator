@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.admin
 
 import com.cronutils.model.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
@@ -17,7 +18,7 @@ import java.time.*
 public object MiraiStatusMessage : BotTimingMessage {
     override val level: Int = 0
     override val id: String = "status"
-    override val records: MutableSet<Long> = HashSet()
+    override val records: MutableMap<Long, Job> = java.util.concurrent.ConcurrentHashMap()
     private val settings: Map<Long, Cron> get() = AdminTimerData.status
 
     override fun wait(contact: Bot): Long? {

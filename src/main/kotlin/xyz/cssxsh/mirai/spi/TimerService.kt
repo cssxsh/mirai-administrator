@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.spi
 
+import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.*
 
 /**
@@ -11,7 +12,7 @@ public sealed interface TimerService<C : ContactOrBot, R> : ComparableService {
     /**
      * 已经开始运行的标记
      */
-    public val records: MutableSet<Long>
+    public val records: MutableMap<Long, Job>
 
     /**
      * 运行的时间，为 null 时停止定时器

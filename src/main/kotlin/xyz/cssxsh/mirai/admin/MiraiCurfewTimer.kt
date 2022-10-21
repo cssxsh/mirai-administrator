@@ -11,7 +11,7 @@ import java.time.*
 public object MiraiCurfewTimer : GroupCurfewTimer {
     override val level: Int = 0
     override val id: String = "curfew-timer"
-    override val records: MutableSet<Long> = HashSet()
+    override val records: MutableMap<Long, Job> = java.util.concurrent.ConcurrentHashMap()
     private val moments: Map<Long, Duration> get() = AdminTimerData.moments
     private val settings: Map<Long, Cron> get() = AdminTimerData.mute
 

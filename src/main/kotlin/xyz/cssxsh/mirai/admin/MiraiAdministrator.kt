@@ -180,9 +180,10 @@ public object MiraiAdministrator : SimpleListenerHost() {
     /**
      * 启动一个群定时服务
      */
-    internal fun GroupTimerService<*>.start(target: Group) {
-        if (records.add(target.id).not()) return
-        launch(target.coroutineContext) service@{
+    internal fun GroupTimerService<*>.start(target: Group, reset: Boolean = false) {
+        if (!reset && target.id in records) return
+        records.remove(target.id)?.cancel()
+        val job = launch(target.coroutineContext) service@{
             while (isActive) {
                 delay(wait(contact = target) ?: break)
 
@@ -255,17 +256,20 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 // XXX: 保险, 避免 corn 输入错误，导致疯狂执行
                 delay(60_000L)
             }
-        }.invokeOnCompletion {
+        }
+        job.invokeOnCompletion {
             records.remove(target.id)
         }
+        records[target.id] = job
     }
 
     /**
      * 启动一个定时消息服务
      */
-    internal fun BotTimingMessage.start(from: Bot) {
-        if (records.add(from.id).not()) return
-        launch(from.coroutineContext) {
+    internal fun BotTimingMessage.start(from: Bot, reset: Boolean = false) {
+        if (!reset && from.id in records) return
+        records.remove(from.id)?.cancel()
+        val job = launch(from.coroutineContext) {
             while (isActive) {
                 delay(wait(contact = from) ?: break)
 
@@ -279,9 +283,11 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 // XXX: 保险, 避免 corn 输入错误，导致疯狂执行
                 delay(60_000L)
             }
-        }.invokeOnCompletion {
+        }
+        job.invokeOnCompletion {
             records.remove(from.id)
         }
+        records[from.id] = job
     }
 
     /**

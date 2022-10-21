@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.admin
 
 import com.cronutils.model.*
+import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.*
 import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
@@ -10,7 +11,7 @@ import java.time.*
 public object MiraiMemberCleaner : MemberCleaner {
     override val level: Int = 0
     override val id: String = "cleaner"
-    override val records: MutableSet<Long> = HashSet()
+    override val records: MutableMap<Long, Job> = java.util.concurrent.ConcurrentHashMap()
     private val last: Map<Long, Long> get() = AdminTimerData.last
     private val settings: Map<Long, Cron> get() = AdminTimerData.clear
 
