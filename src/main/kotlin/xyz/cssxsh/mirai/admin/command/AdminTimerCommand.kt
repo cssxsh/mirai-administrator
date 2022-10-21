@@ -57,7 +57,7 @@ public object AdminTimerCommand : CompositeCommand(
             AdminTimerData.mute[group.id] = cron.asData()
             AdminTimerData.moments[group.id] = moment
             with(MiraiAdministrator) {
-                MiraiCurfewTimer.start(group)
+                MiraiCurfewTimer.start(group, true)
             }
 
             sendMessage(message = buildString {
@@ -67,6 +67,10 @@ public object AdminTimerCommand : CompositeCommand(
         } else {
             AdminTimerData.mute.remove(group.id)
             AdminTimerData.moments.remove(group.id)
+            with(MiraiAdministrator) {
+                MiraiCurfewTimer.start(group, true)
+            }
+
             sendMessage("${group.render()} 宵禁 关闭")
         }
     }
@@ -83,7 +87,7 @@ public object AdminTimerCommand : CompositeCommand(
             AdminTimerData.last[group.id] = day
             AdminTimerData.clear[group.id] = cron.asData()
             with(MiraiAdministrator) {
-                MiraiMemberCleaner.start(group)
+                MiraiMemberCleaner.start(group, true)
             }
 
             sendMessage(message = buildString {
@@ -93,6 +97,10 @@ public object AdminTimerCommand : CompositeCommand(
         } else {
             AdminTimerData.last.remove(group.id)
             AdminTimerData.clear.remove(group.id)
+            with(MiraiAdministrator) {
+                MiraiMemberCleaner.start(group, true)
+            }
+
             sendMessage("${group.render()} 清理不发言 关闭")
         }
     }
@@ -106,7 +114,7 @@ public object AdminTimerCommand : CompositeCommand(
         }
         AdminTimerData.status[from.id] = cron.asData()
         with(MiraiAdministrator) {
-            MiraiStatusMessage.start(from)
+            MiraiStatusMessage.start(from, true)
         }
 
         sendMessage(message = buildString {
