@@ -367,7 +367,8 @@ public object MiraiAdministrator : SimpleListenerHost() {
     internal suspend fun MessageEvent.comment() {
         when {
             sender.id == AdminSetting.owner -> return
-            this is UserMessageEvent && AdminCommentConfig.user -> {}
+            this is UserMessageEvent && AdminCommentConfig.user &&
+                message.findIsInstance<PlainText>()?.content?.getOrNull(0) != '/' -> {}
             message.findIsInstance<QuoteReply>()?.source?.fromId == bot.id && AdminCommentConfig.quote -> {}
             message.findIsInstance<At>()?.target == bot.id && AdminCommentConfig.at -> {}
             else -> return
