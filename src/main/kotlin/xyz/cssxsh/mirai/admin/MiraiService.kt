@@ -134,6 +134,7 @@ internal fun ComparableService.Loader.reload() {
     instances.add(MiraiCurfewTimer)
     instances.add(MiraiContentCensor)
     instances.add(MiraiBlackList)
+    instances.add(MiraiMessageTimer)
 }
 
 internal fun ComparableService.Loader.render(): String = buildString {

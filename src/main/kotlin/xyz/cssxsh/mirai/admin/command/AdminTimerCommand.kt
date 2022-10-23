@@ -6,6 +6,7 @@ import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.*
 import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
@@ -41,6 +42,15 @@ public object AdminTimerCommand : CompositeCommand(
             for ((bot, cron) in AdminTimerData.status) {
                 appendLine("Bot($bot)")
                 appendLine(cron.description())
+            }
+            //
+            appendLine("定时:")
+            for ((group, list) in AdminTimerData.message) {
+                if (list.isEmpty()) continue
+                appendLine("Group($group)")
+                for (cron in list) {
+                    appendLine(cron.description())
+                }
             }
         })
     }
@@ -119,6 +129,33 @@ public object AdminTimerCommand : CompositeCommand(
 
         sendMessage(message = buildString {
             appendLine("${from.render()} 状态消息 将生效于")
+            append(cron.description())
+        })
+    }
+
+    @SubCommand
+    @Description("定时发送群消息")
+    public suspend fun CommandSender.message(cron: Cron, target: Group, at: Boolean = false) {
+        val message = request(hint = "请输入要发送的消息/或者stop终止定时") + if (at) AtAll else emptyMessageChain()
+        if (message.findIsInstance<PlainText>()?.content == "stop") {
+            AdminTimerData.message[target.id] = AdminTimerData.message[target.id].orEmpty()
+                .filterNot { it.asString() == cron.asString() }
+
+            sendMessage(message = "定时消息将取消")
+            return
+        }
+        val json = with(MessageChain) {
+            message.serializeToJsonString()
+        }
+        val uuid = "${target.id}/${cron.asString().toByteArray().toUHexString("")}.json"
+        val file = AdminTimerData.folder.resolve(uuid)
+        file.parentFile.mkdirs()
+        file.writeText(json)
+        AdminTimerData.message[target.id] = (AdminTimerData.message[target.id].orEmpty() + cron.asData())
+            .distinctBy { it.asString() }
+
+        sendMessage(message = buildString {
+            appendLine("${target.render()} 定时消息 将生效于")
             append(cron.description())
         })
     }

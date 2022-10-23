@@ -110,9 +110,11 @@
 
 | Command                                    | Description |
 |:-------------------------------------------|:------------|
+| `/<timer> <config>`                        | 显示当前设置      |
 | `/<timer> <mute> [moment] [cron] [group]?` | 宵禁          |
 | `/<timer> <cleaner> [day] [cron] [group]?` | 清理不发言       |
 | `/<timer> <status> [cron] [bot]?`          | 定时发送机器人状态   |
+| `/<timer> <message> [cron] [target] [at]`  | 定时发送消息      |
 
 1. `group` 为 要操作的群，在群聊中可以不指定
 2. `cron`, 为 CRON 表达式, 由 `秒 分钟 小时 日 月 周` 组成  
