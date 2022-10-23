@@ -4,6 +4,7 @@ import kotlinx.coroutines.*
 import net.mamoe.mirai.console.*
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.unregister
+import net.mamoe.mirai.console.data.*
 import net.mamoe.mirai.console.plugin.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.util.*
@@ -42,7 +43,14 @@ public object MiraiAdminPlugin : KotlinPlugin(
         if (AdminSetting.owner != AdminSetting.OWNER_DEFAULT) {
             logger.info { "机器人所有者 ${AdminSetting.owner}" }
         } else {
-            throw IllegalArgumentException("机器人所有者 未设置")
+            runBlocking {
+                val owner = ConsoleInput.requestInput(hint = "请输入机器人所有者").toLong()
+                @OptIn(ConsoleExperimentalApi::class)
+                @Suppress("UNCHECKED_CAST")
+                val value = AdminSetting.findBackingFieldValue<Long>("owner") as Value<Long>
+                value.value = owner
+                AdminSetting.save()
+            }
         }
 
         logger.info { "发送上线通知请使用 /perm add g群号 ${AdminOnlineMessageConfig.permission.id} 赋予权限" }
