@@ -135,6 +135,7 @@ internal fun ComparableService.Loader.reload() {
     instances.add(MiraiContentCensor)
     instances.add(MiraiBlackList)
     instances.add(MiraiMessageTimer)
+    instances.add(MiraiBackupService)
 }
 
 internal fun ComparableService.Loader.render(): String = buildString {
@@ -178,4 +179,46 @@ internal fun quote(event: MessageEvent): MessageSource? {
         }
     }
     return null
+}
+
+internal fun backup() {
+    if (ComparableService<BackupService>().isEmpty()) throw UnsupportedOperationException("没有任何实例")
+    for (backup in ComparableService<BackupService>()) {
+        try {
+            backup.bot()
+        } catch (cause: UnsupportedOperationException) {
+            continue
+        } catch (cause: Exception) {
+            logger.warning({ "backup bot failure." }, cause)
+            continue
+        }
+        logger.info { "backup bot ok by ${backup.id}" }
+        break
+    }
+
+    for (backup in ComparableService<BackupService>()) {
+        try {
+            backup.friend()
+        } catch (cause: UnsupportedOperationException) {
+            continue
+        } catch (cause: Exception) {
+            logger.warning({ "backup friend failure." }, cause)
+            continue
+        }
+        logger.info { "backup friend ok by ${backup.id}" }
+        break
+    }
+
+    for (backup in ComparableService<BackupService>()) {
+        try {
+            backup.group()
+        } catch (cause: UnsupportedOperationException) {
+            continue
+        } catch (cause: Exception) {
+            logger.warning({ "backup group failure." }, cause)
+            continue
+        }
+        logger.info { "backup group ok by ${backup.id}" }
+        break
+    }
 }

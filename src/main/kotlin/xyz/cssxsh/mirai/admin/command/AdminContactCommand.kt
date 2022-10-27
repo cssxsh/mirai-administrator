@@ -93,4 +93,18 @@ public object AdminContactCommand : CompositeCommand(
 
         sendMessage(message)
     }
+
+    @SubCommand
+    @Description("备份联系人数据")
+    public suspend fun CommandSender.backup() {
+        val message = try {
+            xyz.cssxsh.mirai.admin.backup()
+            "备份已开始"
+        } catch (cause: Exception) {
+            logger.warning({ "出现错误" }, cause)
+            "出现错误"
+        }
+
+        sendMessage(message)
+    }
 }
