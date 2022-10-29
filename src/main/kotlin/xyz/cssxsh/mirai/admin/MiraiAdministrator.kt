@@ -357,6 +357,17 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGH, concurrency = ConcurrencyKind.LOCKED)
+    internal suspend fun NudgeEvent.check() {
+        val sender = from as? User ?: return
+        for (blacklist in ComparableService<BlackListService>()) {
+            if (blacklist.check(sender)) {
+                intercept()
+                break
+            }
+        }
+    }
+
     // endregion
 
     // region Comment
