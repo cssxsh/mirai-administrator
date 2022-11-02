@@ -43,7 +43,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     // region Approver
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun MemberJoinRequestEvent.handle() {
         for (approver in ComparableService<MemberApprover>()) {
             try {
@@ -52,6 +52,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     is ApproveResult.Reject -> reject(blackList = status.black, message = status.message)
                     ApproveResult.Ignore -> continue
                 }
+                intercept()
                 break
             } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
@@ -60,7 +61,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun MemberJoinEvent.handle() {
         for (approver in ComparableService<MemberApprover>()) {
             try {
@@ -69,6 +70,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     is ApproveResult.Reject -> member.kick(message = status.message, block = status.black)
                     ApproveResult.Ignore -> continue
                 }
+                intercept()
                 break
             } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
@@ -77,7 +79,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun NewFriendRequestEvent.handle() {
         for (approver in ComparableService<FriendApprover>()) {
             try {
@@ -86,6 +88,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     is ApproveResult.Reject -> reject(blackList = status.black)
                     ApproveResult.Ignore -> continue
                 }
+                intercept()
                 break
             } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
@@ -94,7 +97,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun FriendAddEvent.handle() {
         for (approver in ComparableService<FriendApprover>()) {
             try {
@@ -106,6 +109,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     }
                     ApproveResult.Ignore -> continue
                 }
+                intercept()
                 break
             } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
@@ -114,7 +118,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun BotInvitedJoinGroupRequestEvent.handle() {
         for (approver in ComparableService<GroupApprover>()) {
             try {
@@ -126,6 +130,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     }
                     ApproveResult.Ignore -> continue
                 }
+                intercept()
                 break
             } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
@@ -134,7 +139,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun BotJoinGroupEvent.handle() {
         for (approver in ComparableService<GroupApprover>()) {
             try {
@@ -149,6 +154,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     }
                     ApproveResult.Ignore -> continue
                 }
+                intercept()
                 break
             } catch (cause: Exception) {
                 logger.warning({ "${approver.id} 审核 $this 失败" }, cause)
@@ -158,7 +164,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     }
 
     // XXX: AdminContactCommand ...
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun FriendMessageEvent.approve() {
         if (sender.id != AdminSetting.owner) return
         if (message.anyIsInstance<PlainText>().not()) return
@@ -171,6 +177,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }.onFailure { cause ->
             logger.error({ "handle contact request failure." }, cause)
         }
+        intercept()
     }
 
     // endregion
