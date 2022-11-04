@@ -337,24 +337,30 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     // region Censor
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun GroupMessageEvent.mark() {
         if (group.botPermission <= sender.permission) return
         for (censor in ComparableService<ContentCensor>()) {
-            if (censor.handle(event = this)) break else continue
+            if (censor.handle(event = this)) {
+                intercept()
+                break
+            }
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun NudgeEvent.mark() {
         if (from !is Member) return
         if ((subject as Group).botPermission <= (from as Member).permission) return
         for (censor in ComparableService<ContentCensor>()) {
-            if (censor.handle(event = this)) break else continue
+            if (censor.handle(event = this)) {
+                intercept()
+                break
+            }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, concurrency = ConcurrencyKind.LOCKED)
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun MessageEvent.check() {
         for (blacklist in ComparableService<BlackListService>()) {
             if (blacklist.check(sender)) {
@@ -364,7 +370,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, concurrency = ConcurrencyKind.LOCKED)
+    @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun NudgeEvent.check() {
         val sender = from as? User ?: return
         for (blacklist in ComparableService<BlackListService>()) {
