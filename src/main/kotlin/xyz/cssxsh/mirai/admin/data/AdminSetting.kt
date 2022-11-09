@@ -9,7 +9,8 @@ import java.nio.file.*
 import java.util.WeakHashMap
 import kotlin.io.path.*
 
-public object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentCensorConfig {
+@PublishedApi
+internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiContentCensorConfig {
 
     internal const val OWNER_DEFAULT = 12345L
 

@@ -8,7 +8,8 @@ import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
 
-public object MiraiMemberCleaner : MemberCleaner {
+@PublishedApi
+internal object MiraiMemberCleaner : MemberCleaner {
     override val level: Int = 0
     override val id: String = "cleaner"
     override val records: MutableMap<Long, Job> = java.util.concurrent.ConcurrentHashMap()

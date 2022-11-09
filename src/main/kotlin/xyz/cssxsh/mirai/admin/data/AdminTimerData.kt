@@ -8,27 +8,28 @@ import xyz.cssxsh.mirai.admin.cron.*
 import java.io.*
 import java.time.*
 
-public object AdminTimerData : AutoSavePluginData("AdminTimerData") {
+@PublishedApi
+internal object AdminTimerData : AutoSavePluginData("AdminTimerData") {
 
     override val serializersModule: SerializersModule = SerializersModule {
         contextual(DataCron)
         contextual(DurationSerializer)
     }
 
-    public var folder: File = File("./message")
+    var folder: File = File("./message")
         private set
 
-    public val last: MutableMap<Long, Long> by value()
+    val last: MutableMap<Long, Long> by value()
 
-    public val clear: MutableMap<Long, DataCron> by value()
+    val clear: MutableMap<Long, DataCron> by value()
 
-    public val moments: MutableMap<Long, Duration> by value()
+    val moments: MutableMap<Long, Duration> by value()
 
-    public val mute: MutableMap<Long, DataCron> by value()
+    val mute: MutableMap<Long, DataCron> by value()
 
-    public val status: MutableMap<Long, DataCron> by value()
+    val status: MutableMap<Long, DataCron> by value()
 
-    public val message: MutableMap<Long, List<DataCron>> by value { this[12345] = emptyList() }
+    val message: MutableMap<Long, List<DataCron>> by value { this[12345] = emptyList() }
 
     @ConsoleExperimentalApi
     override fun onInit(owner: PluginDataHolder, storage: PluginDataStorage) {

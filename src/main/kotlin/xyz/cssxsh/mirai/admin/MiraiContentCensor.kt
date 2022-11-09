@@ -5,7 +5,8 @@ import net.mamoe.mirai.message.data.MessageSource.Key.recall
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 
-public object MiraiContentCensor : ContentCensor, MiraiContentCensorConfig by AdminSetting {
+@PublishedApi
+internal object MiraiContentCensor : ContentCensor, MiraiContentCensorConfig by AdminSetting {
     override val level: Int = 0
     override val id: String = "default-censor"
 

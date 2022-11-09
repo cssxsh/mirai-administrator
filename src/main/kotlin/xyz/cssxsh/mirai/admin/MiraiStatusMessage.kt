@@ -15,7 +15,8 @@ import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
 
-public object MiraiStatusMessage : BotTimingMessage {
+@PublishedApi
+internal object MiraiStatusMessage : BotTimingMessage {
     override val level: Int = 0
     override val id: String = "status"
     override val records: MutableMap<Long, Job> = java.util.concurrent.ConcurrentHashMap()

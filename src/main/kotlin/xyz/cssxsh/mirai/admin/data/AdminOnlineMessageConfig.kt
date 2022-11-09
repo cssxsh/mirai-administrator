@@ -6,7 +6,8 @@ import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.util.*
 import xyz.cssxsh.mirai.admin.*
 
-public object AdminOnlineMessageConfig : ReadOnlyPluginConfig("AdminOnlineMessageConfig"), MiraiOnlineMessageConfig {
+@PublishedApi
+internal object AdminOnlineMessageConfig : ReadOnlyPluginConfig("AdminOnlineMessageConfig"), MiraiOnlineMessageConfig {
 
     public override var permission: Permission = Permission.getRootPermission()
         private set
@@ -20,13 +21,13 @@ public object AdminOnlineMessageConfig : ReadOnlyPluginConfig("AdminOnlineMessag
 
     @ValueName("type")
     @ValueDescription("发送上线消息的类型 XML, PLAIN, CUSTOM")
-    public override val type: MiraiOnlineMessageConfig.Type by value(MiraiOnlineMessageConfig.Type.XML)
+    override val type: MiraiOnlineMessageConfig.Type by value(MiraiOnlineMessageConfig.Type.XML)
 
     @ValueName("custom")
     @ValueDescription("CUSTOM 上线消息的内容")
-    public override val custom: String by value("哈哈哈，鸡汤来啦 [mirai:atall]")
+    override val custom: String by value("哈哈哈，鸡汤来啦 [mirai:atall]")
 
     @ValueName("duration")
     @ValueDescription("逐个发送消息延时，单位秒")
-    public override val duration: Long by value(10L)
+    override val duration: Long by value(10L)
 }

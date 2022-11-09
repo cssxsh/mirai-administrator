@@ -4,7 +4,8 @@ import net.mamoe.mirai.event.events.*
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 
-public object MiraiAutoApprover : FriendApprover, GroupApprover, MemberApprover,
+@PublishedApi
+internal object MiraiAutoApprover : FriendApprover, GroupApprover, MemberApprover,
     MiraiAutoApproverConfig by AdminAutoApproverConfig {
     override val level: Int = 0
     override val id: String = "default-approver"

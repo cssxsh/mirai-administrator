@@ -15,7 +15,8 @@ import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 import java.time.*
 
-public object MiraiAdminPlugin : KotlinPlugin(
+@PublishedApi
+internal object MiraiAdminPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-administrator",
         name = "mirai-administrator",
@@ -43,14 +44,12 @@ public object MiraiAdminPlugin : KotlinPlugin(
         if (AdminSetting.owner != AdminSetting.OWNER_DEFAULT) {
             logger.info { "机器人所有者 ${AdminSetting.owner}" }
         } else {
-            runBlocking {
-                val owner = ConsoleInput.requestInput(hint = "请输入机器人所有者").toLong()
-                @OptIn(ConsoleExperimentalApi::class)
-                @Suppress("UNCHECKED_CAST")
-                val value = AdminSetting.findBackingFieldValue<Long>("owner") as Value<Long>
-                value.value = owner
-                AdminSetting.save()
-            }
+            val owner = runBlocking { ConsoleInput.requestInput(hint = "请输入机器人所有者") }.toLong()
+            @OptIn(ConsoleExperimentalApi::class)
+            @Suppress("UNCHECKED_CAST")
+            val value = AdminSetting.findBackingFieldValue<Long>("owner") as Value<Long>
+            value.value = owner
+            AdminSetting.save()
         }
 
         logger.info { "发送上线通知请使用 /perm add g群号 ${AdminOnlineMessageConfig.permission.id} 赋予权限" }

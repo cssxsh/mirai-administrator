@@ -9,7 +9,8 @@ import java.io.File
 import java.util.zip.*
 import kotlin.io.use
 
-public object MiraiBackupService : BackupService {
+@PublishedApi
+internal object MiraiBackupService : BackupService {
     override val level: Int = 0
     override val id: String = "default-backup"
 

@@ -6,7 +6,8 @@ import net.mamoe.mirai.data.*
 import net.mamoe.mirai.data.RequestEventData.Factory.toRequestEventData
 import net.mamoe.mirai.event.events.*
 
-public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"),
+@PublishedApi
+internal object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"),
     Sequence<Map.Entry<Long, List<RequestEventData>>> {
 
     private val friends: MutableMap<Long, List<RequestEventData.NewFriendRequest>> by value()
@@ -41,7 +42,7 @@ public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"
         return null
     }
 
-    public suspend fun handle(id: Long, accept: Boolean, black: Boolean, message: String): RequestEventData {
+    suspend fun handle(id: Long, accept: Boolean, black: Boolean, message: String): RequestEventData {
         for ((qq, list) in this) {
             val bot = Bot.getInstanceOrNull(qq) ?: continue
             val request = list[id] ?: continue
@@ -59,37 +60,37 @@ public object AdminRequestEventData : AutoSavePluginData("AdminRequestEventData"
         throw NoSuchElementException("Not found event with $id")
     }
 
-    public operator fun plusAssign(event: NewFriendRequestEvent) {
+    operator fun plusAssign(event: NewFriendRequestEvent) {
         friends.compute(event.bot.id) { _, list ->
             list.orEmpty() + event.toRequestEventData()
         }
     }
 
-    public operator fun plusAssign(event: BotInvitedJoinGroupRequestEvent) {
+    operator fun plusAssign(event: BotInvitedJoinGroupRequestEvent) {
         groups.compute(event.bot.id) { _, list ->
             list.orEmpty() + event.toRequestEventData()
         }
     }
 
-    public operator fun plusAssign(event: MemberJoinRequestEvent) {
+    operator fun plusAssign(event: MemberJoinRequestEvent) {
         members.compute(event.bot.id) { _, list ->
             list.orEmpty() + event.toRequestEventData()
         }
     }
 
-    public operator fun minusAssign(event: FriendAddEvent) {
+    operator fun minusAssign(event: FriendAddEvent) {
         friends.compute(event.bot.id) { _, list ->
             list.orEmpty().filterNot { it.requester == event.friend.id }
         }
     }
 
-    public operator fun minusAssign(event: BotJoinGroupEvent) {
+    operator fun minusAssign(event: BotJoinGroupEvent) {
         groups.compute(event.bot.id) { _, list ->
             list.orEmpty().filterNot { it.groupId == event.group.id }
         }
     }
 
-    public operator fun minusAssign(event: MemberJoinEvent) {
+    operator fun minusAssign(event: MemberJoinEvent) {
         members.compute(event.bot.id) { _, list ->
             list.orEmpty().filterNot { it.groupId == event.groupId && it.requester == event.member.id }
         }

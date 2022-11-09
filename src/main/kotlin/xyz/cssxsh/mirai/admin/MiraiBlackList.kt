@@ -6,7 +6,8 @@ import net.mamoe.mirai.contact.*
 import xyz.cssxsh.mirai.admin.data.*
 import xyz.cssxsh.mirai.spi.*
 
-public object MiraiBlackList : BlackListService, MiraiBlackListConfig by AdminBlackListData {
+@PublishedApi
+internal object MiraiBlackList : BlackListService, MiraiBlackListConfig by AdminBlackListData {
     override val level: Int = 0
     override val id: String = "default-blacklist"
 

@@ -18,7 +18,8 @@ import xyz.cssxsh.mirai.spi.*
 import java.util.*
 import kotlin.collections.*
 
-public object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig by AdminOnlineMessageConfig {
+@PublishedApi
+internal object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig by AdminOnlineMessageConfig {
     override val level: Int = 0
     override val id: String = "online"
 

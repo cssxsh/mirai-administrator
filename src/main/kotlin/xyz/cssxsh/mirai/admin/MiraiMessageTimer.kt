@@ -14,7 +14,8 @@ import xyz.cssxsh.mirai.spi.*
 import java.io.*
 import java.time.*
 
-public object MiraiMessageTimer : BotTimingMessage {
+@PublishedApi
+internal object MiraiMessageTimer : BotTimingMessage {
     override val level: Int = 0
     override val id: String = "message-timer"
     override val records: MutableMap<Long, Job> = java.util.concurrent.ConcurrentHashMap()

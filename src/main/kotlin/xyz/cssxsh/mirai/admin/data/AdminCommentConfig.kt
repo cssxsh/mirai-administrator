@@ -6,7 +6,8 @@ import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.util.*
 import xyz.cssxsh.mirai.admin.*
 
-public object AdminCommentConfig : ReadOnlyPluginConfig("AdminCommentConfig") {
+@PublishedApi
+internal object AdminCommentConfig : ReadOnlyPluginConfig("AdminCommentConfig") {
 
     public var permission: Permission = Permission.getRootPermission()
         private set
@@ -20,21 +21,21 @@ public object AdminCommentConfig : ReadOnlyPluginConfig("AdminCommentConfig") {
 
     @ValueName("reply")
     @ValueDescription("回复评论者消息")
-    public val reply: String by value("成功留言")
+    val reply: String by value("成功留言")
 
     @ValueName("interval")
     @ValueDescription("两次评论之间的间隔，毫秒")
-    public val interval: Long by value(600_000L)
+    val interval: Long by value(600_000L)
 
     @ValueName("user")
     @ValueDescription("私聊是否能够留言")
-    public val user: Boolean by value(true)
+    val user: Boolean by value(true)
 
     @ValueName("at")
     @ValueDescription("群聊 at 触发留言")
-    public val at: Boolean by value(true)
+    val at: Boolean by value(true)
 
     @ValueName("quote")
     @ValueDescription("群聊 quote 触发留言")
-    public val quote: Boolean by value(true)
+    val quote: Boolean by value(true)
 }
