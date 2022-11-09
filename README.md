@@ -3,7 +3,7 @@
 > 基于 Mirai Console 的 管理员 Bot 及其标准
 
 [![Release](https://img.shields.io/github/v/release/cssxsh/mirai-administrator)](https://github.com/cssxsh/mirai-administrator/releases)
-![Downloads](https://img.shields.io/github/downloads/cssxsh/mirai-administrator/total)
+[![Downloads](https://img.shields.io/github/downloads/cssxsh/mirai-administrator/total)](https://repo1.maven.org/maven2/xyz/cssxsh/mirai/mirai-administrator/)
 [![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-administrator)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-administrator)
 
 **使用前应该查阅的相关文档或项目**
@@ -24,7 +24,7 @@
 ## MCL 指令安装
 
 **请确认 mcl.jar 的版本是 2.1.0+**  
-`./mcl --update-package xyz.cssxsh.mirai:mirai-administrator --channel stable --type plugin`
+`./mcl --update-package xyz.cssxsh.mirai:mirai-administrator --channel maven-stable --type plugin`
 
 # 指令
 
@@ -46,6 +46,7 @@
 | `/<contact> <request>`                        | 查看申请列表      |
 | `/<contact> <black> {permitteeIds}`           | 拉黑          |
 | `/<contact> <white> {permitteeIds}`           | 取消拉黑        |
+| `/<contact> <backup>`                         | 触发备份功能      |
 
 1. `id` 是 事件id 或 好友id 或 群id
 2. `accept` 和 `black` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true` (不区分大小写)
@@ -179,8 +180,13 @@ Wiki [Service Provider Interface](https://en.wikipedia.org/wiki/Service_provider
 ## 定时消息
 
 接口 [BotTimingMessage](src/main/kotlin/xyz/cssxsh/mirai/spi/BotTimingMessage.kt)  
-实例 [MiraiOnlineMessage](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiOnlineMessage.kt)  
+实例 [MiraiMessageTimer](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiMessageTimer.kt)  
 实例 [MiraiStatusMessage](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiStatusMessage.kt)
+
+## 上线操作
+
+接口 [BotOnlineAction](src/main/kotlin/xyz/cssxsh/mirai/spi/BotOnlineAction.kt)  
+实例 [MiraiOnlineMessage](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiOnlineMessage.kt)  
 
 ## 宵禁(群定时禁言)
 
@@ -208,3 +214,8 @@ Wiki [Service Provider Interface](https://en.wikipedia.org/wiki/Service_provider
 
 接口 [BlackListService](src/main/kotlin/xyz/cssxsh/mirai/spi/BlackListService.kt)  
 实例 [MiraiBlackList](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiBlackList.kt)
+
+## 联系人备份
+
+接口 [BackupService](src/main/kotlin/xyz/cssxsh/mirai/spi/BackupService.kt)  
+实例 [MiraiBackupService](src/main/kotlin/xyz/cssxsh/mirai/admin/MiraiBackupService.kt)
