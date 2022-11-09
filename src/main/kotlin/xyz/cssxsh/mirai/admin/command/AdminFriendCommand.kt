@@ -18,10 +18,10 @@ public object AdminFriendCommand : CompositeCommand(
         val message = try {
             buildString {
                 for (bot in Bot.instances) {
-                    appendLine("--- ${bot.render()} ---")
+                    appendLine("### ${bot.render()} ###")
                     try {
                         for (friendGroup in bot.friendGroups.asCollection()) {
-                            appendLine("### ${friendGroup.name} ###")
+                            appendLine("--- ${bot.render()}/${friendGroup.name} ---")
                             for (friend in friendGroup.friends) {
                                 appendLine(friend.render())
                             }
