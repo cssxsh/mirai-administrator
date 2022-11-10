@@ -2,6 +2,9 @@ package xyz.cssxsh.mirai.admin
 
 import net.mamoe.mirai.message.data.*
 
+/**
+ * 把 MessageKey 封装成 enum 作为 ContentType 配置
+ */
 public enum class MiraiContentType(public val key: MessageKey<*>) {
     IMAGE(key = Image),
     FLASH(key = FlashImage),

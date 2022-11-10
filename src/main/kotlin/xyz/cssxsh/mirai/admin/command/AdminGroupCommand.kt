@@ -18,6 +18,9 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import xyz.cssxsh.mirai.admin.*
 import java.util.*
 
+/**
+ * 群组相关指令
+ */
 public object AdminGroupCommand : CompositeCommand(
     owner = MiraiAdminPlugin,
     primaryName = "group",

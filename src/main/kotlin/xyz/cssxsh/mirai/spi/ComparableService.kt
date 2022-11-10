@@ -3,6 +3,9 @@ package xyz.cssxsh.mirai.spi
 import java.util.*
 import kotlin.collections.*
 
+/**
+ * Admin 插件对接服务接口
+ */
 public sealed interface ComparableService : Comparable<ComparableService> {
 
     /**
@@ -24,6 +27,9 @@ public sealed interface ComparableService : Comparable<ComparableService> {
         return other.level.compareTo(level).takeUnless { it == 0 } ?: id.compareTo(other.id)
     }
 
+    /**
+     * 加载器
+     */
     public companion object Loader {
 
         internal val instances: MutableSet<ComparableService> = TreeSet()

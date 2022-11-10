@@ -9,6 +9,9 @@ import net.mamoe.mirai.internal.message.flags.*
 import xyz.cssxsh.mirai.admin.*
 import xyz.cssxsh.mirai.spi.*
 
+/**
+ * 已注册服务查看，代替 原生 help 指令
+ */
 public object AdminRegisteredCommand : SimpleCommand(
     owner = MiraiAdminPlugin,
     primaryName = "registered", "reg",

@@ -3,16 +3,17 @@ package xyz.cssxsh.mirai.admin
 import kotlinx.serialization.*
 import net.mamoe.mirai.console.permission.*
 
-public interface MiraiOnlineMessageConfig {
+@PublishedApi
+internal interface MiraiOnlineMessageConfig {
 
-    public val duration: Long
+    val duration: Long
 
-    public val type: Type
+    val type: Type
 
-    public val custom: String
+    val custom: String
 
-    public val permission: Permission
+    val permission: Permission
 
     @Serializable
-    public enum class Type { XML, PLAIN, CUSTOM }
+    enum class Type { XML, PLAIN, CUSTOM }
 }

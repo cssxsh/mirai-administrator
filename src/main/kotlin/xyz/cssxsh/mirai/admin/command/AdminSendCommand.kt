@@ -8,10 +8,13 @@ import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.*
 
+/**
+ * 发送相关指令
+ */
 public object AdminSendCommand : CompositeCommand(
     owner = MiraiAdminPlugin,
     primaryName = "send",
-    description = "联系人处理相关操作"
+    description = "发送消息或者戳一戳"
 ) {
 
     @SubCommand

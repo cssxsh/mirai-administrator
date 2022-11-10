@@ -7,6 +7,9 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.*
 
+/**
+ * 好友相关指令
+ */
 public object AdminFriendCommand : CompositeCommand(
     owner = MiraiAdminPlugin,
     primaryName = "friend",

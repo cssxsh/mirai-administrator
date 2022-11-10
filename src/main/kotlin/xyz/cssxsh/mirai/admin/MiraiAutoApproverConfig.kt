@@ -1,14 +1,15 @@
 package xyz.cssxsh.mirai.admin
 
-public interface MiraiAutoApproverConfig {
+@PublishedApi
+internal interface MiraiAutoApproverConfig {
 
-    public val autoFriendAccept: Boolean
+    val autoFriendAccept: Boolean
 
-    public val autoGroupAccept: Boolean
+    val autoGroupAccept: Boolean
 
-    public val autoMemberAccept: Boolean
+    val autoMemberAccept: Boolean
 
-    public val replyAccept: String
+    val replyAccept: String
 
-    public val replyBlack: String
+    val replyBlack: String
 }

@@ -7,6 +7,9 @@ import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.*
 import xyz.cssxsh.mirai.admin.data.*
 
+/**
+ * 联系人相关指令
+ */
 public object AdminContactCommand : CompositeCommand(
     owner = MiraiAdminPlugin,
     primaryName = "contact",

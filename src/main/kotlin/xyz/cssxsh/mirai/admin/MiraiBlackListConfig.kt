@@ -2,7 +2,8 @@ package xyz.cssxsh.mirai.admin
 
 import net.mamoe.mirai.console.permission.*
 
-public interface MiraiBlackListConfig {
+@PublishedApi
+internal interface MiraiBlackListConfig {
 
-    public val ids: Iterable<PermitteeId>
+    val ids: Iterable<PermitteeId>
 }

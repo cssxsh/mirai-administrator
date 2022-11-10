@@ -11,6 +11,9 @@ import java.util.*
 
 internal const val CRON_TYPE_KEY = "xyz.cssxsh.mirai.admin.cron.type"
 
+/**
+ * 默认 [Cron] 解析器
+ */
 public val DefaultCronParser: CronParser by lazy {
     val type = CronType.valueOf(System.getProperty(CRON_TYPE_KEY, CronType.QUARTZ.name))
     CronParser(CronDefinitionBuilder.instanceDefinitionFor(type))
@@ -18,17 +21,34 @@ public val DefaultCronParser: CronParser by lazy {
 
 internal const val CRON_LOCALE_KEY = "xyz.cssxsh.mirai.admin.cron.locale"
 
+/**
+ * 默认 [Cron] 解释器
+ */
 public val DefaultCronDescriptor: CronDescriptor by lazy {
     val locale = System.getProperty(CRON_LOCALE_KEY)?.let { Locale.forLanguageTag(it) } ?: Locale.getDefault()
     CronDescriptor.instance(locale)
 }
 
+/**
+ * 包装成 [DataCron]
+ */
 public fun Cron.asData(): DataCron = this as? DataCron ?: DataCron(delegate = this)
 
+/**
+ * 获取 [ExecutionTime]
+ */
 public fun Cron.toExecutionTime(): ExecutionTime = ExecutionTime.forCron((this as? DataCron)?.delegate ?: this)
 
+/**
+ * 解释 [Cron]
+ * @see DefaultCronDescriptor
+ */
 public fun Cron.description(): String = DefaultCronDescriptor.describe(this)
 
+/**
+ * [Cron], [Duration] 指令参数解析
+ * @see DefaultCronDescriptor
+ */
 public val CronCommandArgumentContext: CommandArgumentContext = buildCommandArgumentContext {
     Cron::class with { text ->
         try {

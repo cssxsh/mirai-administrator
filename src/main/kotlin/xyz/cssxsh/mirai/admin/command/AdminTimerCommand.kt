@@ -12,6 +12,9 @@ import xyz.cssxsh.mirai.admin.cron.*
 import xyz.cssxsh.mirai.admin.data.*
 import java.time.*
 
+/**
+ * 定时器相关指令
+ */
 public object AdminTimerCommand : CompositeCommand(
     owner = MiraiAdminPlugin,
     primaryName = "timer",

@@ -7,6 +7,9 @@ import net.mamoe.mirai.message.data.MessageSource.Key.recall
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.*
 
+/**
+ * 撤回相关指令
+ */
 public object AdminRecallCommand : SimpleCommand(
     owner = MiraiAdminPlugin,
     primaryName = "recall",

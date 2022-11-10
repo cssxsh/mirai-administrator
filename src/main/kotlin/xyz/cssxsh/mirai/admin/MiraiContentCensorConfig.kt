@@ -1,10 +1,11 @@
 package xyz.cssxsh.mirai.admin
 
-public interface MiraiContentCensorConfig {
+@PublishedApi
+internal interface MiraiContentCensorConfig {
 
-    public val censorRegex: Sequence<Regex>
+    val censorRegex: Sequence<Regex>
 
-    public val censorTypes: Set<MiraiContentType>
+    val censorTypes: Set<MiraiContentType>
 
-    public val censorMute: Int
+    val censorMute: Int
 }
