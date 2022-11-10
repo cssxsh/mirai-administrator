@@ -35,8 +35,10 @@ public object AdminSendCommand : CompositeCommand(
                 delay(second * 1000)
                 group.sendMessage(message = if (at) message + AtAll else message)
             }
-        } catch (cause: Exception) {
-            logger.warning({ "发送给所有好友 处理失败" }, cause)
+        } catch (cause: SendMessageFailedException) {
+            logger.warning({ "发送给所有群 发送失败" }, cause)
+        } catch (cause: IllegalStateException) {
+            logger.warning({ "发送给所有群 处理失败" }, cause)
         }
     }
 
@@ -58,7 +60,9 @@ public object AdminSendCommand : CompositeCommand(
                 delay(second * 1000)
                 friend.sendMessage(message = message)
             }
-        } catch (cause: Exception) {
+        } catch (cause: SendMessageFailedException) {
+            logger.warning({ "发送给所有好友 发送失败" }, cause)
+        } catch (cause: IllegalStateException) {
             logger.warning({ "发送给所有好友 处理失败" }, cause)
         }
     }
@@ -98,7 +102,7 @@ public object AdminSendCommand : CompositeCommand(
                 else -> throw UnsupportedOperationException("nudge $user")
             }
             "发送成功"
-        } catch (cause: Exception) {
+        } catch (cause: UnsupportedOperationException) {
             logger.warning({ "发送失败" }, cause)
             "发送失败"
         }

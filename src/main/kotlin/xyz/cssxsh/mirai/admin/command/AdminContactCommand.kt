@@ -31,9 +31,12 @@ public object AdminContactCommand : CompositeCommand(
                 else -> throw UnsupportedOperationException("delete $contact")
             }
             "删除成功"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "删除错误" }, cause)
             "删除错误"
+        } catch (cause: UnsupportedOperationException) {
+            logger.warning({ "删除错误" }, cause)
+            "不支持的操作"
         }
 
         sendMessage(message)
@@ -57,8 +60,11 @@ public object AdminContactCommand : CompositeCommand(
         val result = try {
             val request = AdminRequestEventData.handle(id, accept, black, message)
             "请求已处理 $request"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
+            "出现错误: ${cause.message}"
+        } catch (cause: NoSuchElementException) {
+            logger.warning({ "找不到数据" }, cause)
             "出现错误: ${cause.message}"
         }
 
@@ -73,7 +79,7 @@ public object AdminContactCommand : CompositeCommand(
     public suspend fun CommandSender.request() {
         val message = try {
             AdminRequestEventData.render()
-        } catch (cause: Exception) {
+        } catch (cause: NoSuchElementException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -92,7 +98,7 @@ public object AdminContactCommand : CompositeCommand(
             val args = permitteeIds.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.addAll(args)
             AdminBlackListData.ids.joinToString("\n") { it.asString() }
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -111,7 +117,7 @@ public object AdminContactCommand : CompositeCommand(
             val args = permitteeIds.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.removeAll(args)
             AdminBlackListData.ids.joinToString("\n") { it.asString() }
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -128,7 +134,7 @@ public object AdminContactCommand : CompositeCommand(
         val message = try {
             xyz.cssxsh.mirai.admin.backup()
             "备份已开始"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }

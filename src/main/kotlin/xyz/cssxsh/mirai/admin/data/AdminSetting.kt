@@ -5,6 +5,7 @@ import net.mamoe.mirai.console.data.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.util.*
 import xyz.cssxsh.mirai.admin.*
+import java.io.IOException
 import java.nio.file.*
 import java.util.WeakHashMap
 import kotlin.io.path.*
@@ -45,7 +46,7 @@ internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiConten
 
             try {
                 list[path.name] = path.readLines()
-            } catch (cause: Exception) {
+            } catch (cause: IOException) {
                 plugin.logger.warning("读取失败 $path", cause)
             }
         }

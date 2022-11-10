@@ -93,7 +93,7 @@ internal fun AdminRequestEventData.render(): String = buildString {
         if (list.isEmpty()) continue
         val bot = try {
             Bot.getInstance(qq).render()
-        } catch (_: Exception) {
+        } catch (_: NoSuchElementException) {
             "Bot($qq)"
         }
         appendLine("--- $bot ---")
