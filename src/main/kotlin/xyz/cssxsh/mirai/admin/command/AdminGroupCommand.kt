@@ -26,6 +26,9 @@ public object AdminGroupCommand : CompositeCommand(
     primaryName = "group",
     description = "群处理相关操作"
 ) {
+    /**
+     * 打印群列表
+     */
     @SubCommand
     @Description("群列表")
     public suspend fun CommandSender.list() {
@@ -46,6 +49,10 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 打印群成员
+     * @param group 目标群
+     */
     @SubCommand
     @Description("群成员")
     public suspend fun CommandSender.member(group: Group) {
@@ -64,6 +71,10 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * BOT退出群
+     * @param group 目标群
+     */
     @SubCommand
     @Description("退出群聊")
     public suspend fun CommandSender.quit(group: Group) {
@@ -78,6 +89,12 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 踢出群员
+     * @param member 目标群员
+     * @param reason 回复原因
+     * @param black 拉黑
+     */
     @SubCommand
     @Description("踢出群员")
     public suspend fun CommandSender.kick(member: NormalMember, reason: String = "", black: Boolean = false) {
@@ -95,6 +112,11 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 设置群员昵称
+     * @param member 目标群员
+     * @param nick 昵称
+     */
     @SubCommand
     @Description("群昵称")
     public suspend fun CommandSender.nick(member: NormalMember, nick: String) {
@@ -112,6 +134,11 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 设置群员头衔
+     * @param member 目标群员
+     * @param title 头衔
+     */
     @SubCommand
     @Description("群头衔")
     public suspend fun CommandSender.title(member: NormalMember, title: String) {
@@ -129,6 +156,11 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 设置群员禁言
+     * @param member 目标群员
+     * @param second 禁言时间，小于零时解除禁言
+     */
     @SubCommand
     @Description("禁言")
     public suspend fun CommandSender.mute(member: Member, second: Int) {
@@ -155,6 +187,11 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 设置全体禁言
+     * @param group 目标群
+     * @param open 开启/关闭
+     */
     @SubCommand("quiet")
     @Description("全体禁言")
     public suspend fun CommandSender.quiet(group: Group, open: Boolean = true) {
@@ -172,6 +209,11 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 设置管理员
+     * @param member 目标群员
+     * @param operation 授予/取消
+     */
     @SubCommand
     @Description("设置管理员")
     public suspend fun CommandSender.admin(member: NormalMember, operation: Boolean = true) {
@@ -189,6 +231,10 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 设置公告
+     * @param group 目标群
+     */
     @SubCommand
     @Description("设置公告")
     public suspend fun CommandSender.announce(group: Group) {
@@ -229,6 +275,11 @@ public object AdminGroupCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 设置等级头衔
+     * @param group 目标群
+     * @param levels 等级列表对应 1~6 级
+     */
     @SubCommand
     @Description("设置等级头衔")
     public suspend fun CommandSender.rank(group: Group, vararg levels: String) {

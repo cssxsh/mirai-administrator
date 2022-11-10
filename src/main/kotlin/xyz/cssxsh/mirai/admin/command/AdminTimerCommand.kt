@@ -21,7 +21,9 @@ public object AdminTimerCommand : CompositeCommand(
     description = "定时器相关指令",
     overrideContext = CronCommandArgumentContext
 ) {
-
+    /**
+     * 打印定时设置
+     */
     @SubCommand
     @Description("设置")
     public suspend fun CommandSender.config() {
@@ -58,6 +60,12 @@ public object AdminTimerCommand : CompositeCommand(
         })
     }
 
+    /**
+     * 设置宵禁
+     * @param moment 时长
+     * @param cron 启用的时间点
+     * @param group 目标群
+     */
     @SubCommand
     @Description("宵禁")
     public suspend fun CommandSender.mute(moment: Duration, cron: Cron, group: Group? = subject as? Group) {
@@ -88,6 +96,12 @@ public object AdminTimerCommand : CompositeCommand(
         }
     }
 
+    /**
+     * 清理不发言
+     * @param day 不发言时长
+     * @param cron 启用的时间点
+     * @param group 目标群
+     */
     @SubCommand
     @Description("清理不发言")
     public suspend fun CommandSender.cleaner(day: Long, cron: Cron, group: Group? = subject as? Group) {
@@ -118,6 +132,11 @@ public object AdminTimerCommand : CompositeCommand(
         }
     }
 
+    /**
+     * 定时发送机器人状态到所有者
+     * @param cron 启用的时间点
+     * @param bot 目标机器人
+     */
     @SubCommand
     @Description("定时发送机器人状态")
     public suspend fun CommandSender.status(cron: Cron, from: Bot? = bot) {
@@ -136,6 +155,12 @@ public object AdminTimerCommand : CompositeCommand(
         })
     }
 
+    /**
+     * 定时发送群消息
+     * @param cron 启用的时间点
+     * @param target 目标群
+     * @param at 是否At
+     */
     @SubCommand
     @Description("定时发送群消息")
     public suspend fun CommandSender.message(cron: Cron, target: Group, at: Boolean = false) {

@@ -15,6 +15,9 @@ public object AdminFriendCommand : CompositeCommand(
     primaryName = "friend",
     description = "查看当前的好友"
 ) {
+    /**
+     * 打印好友列表
+     */
     @SubCommand
     @Description("好友列表")
     public suspend fun CommandSender.list() {
@@ -44,6 +47,10 @@ public object AdminFriendCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 删除好友
+     * @param friend 操作对象
+     */
     @SubCommand
     @Description("删除好友")
     public suspend fun CommandSender.delete(friend: Friend) {

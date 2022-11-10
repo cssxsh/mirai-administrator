@@ -15,7 +15,13 @@ public object AdminRecallCommand : SimpleCommand(
     primaryName = "recall",
     description = "撤回消息"
 ) {
-
+    /**
+     * 撤回消息
+     * @param contact 指定的联系人
+     *     如果是群员就撤回他最新一条消息
+     *     如果是群/好友就尝试撤回最新消息
+     *     如果包含回复引用，就撤销被引用消息
+     */
     @Handler
     public suspend fun CommandSender.handle(contact: Contact? = null) {
         val message = try {

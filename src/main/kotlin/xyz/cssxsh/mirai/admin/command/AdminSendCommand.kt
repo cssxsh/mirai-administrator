@@ -16,7 +16,12 @@ public object AdminSendCommand : CompositeCommand(
     primaryName = "send",
     description = "发送消息或者戳一戳"
 ) {
-
+    /**
+     * 发送消息给所有群
+     * @param bot 操作的机器人
+     * @param at 是否At全体
+     * @param second 发送的间隔
+     */
     @SubCommand
     @Description("发送给所有群")
     public suspend fun CommandSender.groups(bot: Bot? = this.bot, at: Boolean = false, second: Long = 3) {
@@ -35,6 +40,11 @@ public object AdminSendCommand : CompositeCommand(
         }
     }
 
+    /**
+     * 发送消息给所有好友
+     * @param bot 操作的机器人
+     * @param second 发送的间隔
+     */
     @SubCommand
     @Description("发送给所有好友")
     public suspend fun CommandSender.friends(bot: Bot? = this.bot, second: Long = 3) {
@@ -53,6 +63,11 @@ public object AdminSendCommand : CompositeCommand(
         }
     }
 
+    /**
+     * 发送给指定联系人
+     * @param contact 目标联系人
+     * @param at 是否At
+     */
     @SubCommand
     @Description("发送给指定联系人")
     public suspend fun CommandSender.to(contact: Contact, at: Boolean = false) {
@@ -66,6 +81,12 @@ public object AdminSendCommand : CompositeCommand(
         )
     }
 
+    /**
+     * 发送消息给所有群
+     * @param bot 操作的机器人
+     * @param at 是否At全体
+     * @param second 发送的间隔
+     */
     @SubCommand
     @Description("戳一戳指定联系人")
     public suspend fun CommandSender.nudge(user: User) {

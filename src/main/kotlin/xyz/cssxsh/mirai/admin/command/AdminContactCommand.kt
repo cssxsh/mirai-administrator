@@ -15,6 +15,10 @@ public object AdminContactCommand : CompositeCommand(
     primaryName = "contact",
     description = "联系人处理相关操作"
 ) {
+    /**
+     * 删除联系人
+     * @param contact 联系人，好友/群/群员/陌生人
+     */
     @SubCommand
     @Description("删除联系人")
     public suspend fun CommandSender.delete(contact: Contact) {
@@ -35,6 +39,13 @@ public object AdminContactCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 处理 加群/好友 请求
+     * @param id 事件ID 或者 邀请人 ID
+     * @param accept 接受
+     * @param black 拉黑
+     * @param message 回复消息
+     */
     @SubCommand
     @Description("处理请求")
     public suspend fun CommandSender.handle(
@@ -54,6 +65,9 @@ public object AdminContactCommand : CompositeCommand(
         sendMessage(result)
     }
 
+    /**
+     * 打印申请列表
+     */
     @SubCommand
     @Description("申请列表")
     public suspend fun CommandSender.request() {
@@ -67,6 +81,10 @@ public object AdminContactCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 设置黑名单
+     * @param permitteeIds 被拉黑的许可人标识符
+     */
     @SubCommand
     @Description("拉黑")
     public suspend fun CommandSender.black(vararg permitteeIds: String) {
@@ -82,6 +100,10 @@ public object AdminContactCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 取消黑名单
+     * @param permitteeIds 被拉黑的许可人标识符
+     */
     @SubCommand
     @Description("取消拉黑")
     public suspend fun CommandSender.white(vararg permitteeIds: String) {
@@ -97,6 +119,9 @@ public object AdminContactCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 备份联系人数据
+     */
     @SubCommand
     @Description("备份联系人数据")
     public suspend fun CommandSender.backup() {

@@ -17,6 +17,9 @@ public object AdminRegisteredCommand : SimpleCommand(
     primaryName = "registered", "reg",
     description = "查看已注册指令及服务"
 ) {
+    /**
+     * 打印注册指令及服务 到转发合并消息
+     */
     @Handler
     public suspend fun UserCommandSender.handle() {
         try {
