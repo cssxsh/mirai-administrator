@@ -41,7 +41,7 @@ public object AdminGroupCommand : CompositeCommand(
                     }
                 }
             }
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -63,7 +63,7 @@ public object AdminGroupCommand : CompositeCommand(
                     appendLine("${member.render()}[${member.permission}](${member.joinAt}~${member.lastSpeakAt})")
                 }
             }
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -81,7 +81,7 @@ public object AdminGroupCommand : CompositeCommand(
         val message = try {
             group.quit()
             "退出成功"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "退出错误" }, cause)
             "退出错误"
         }
@@ -104,7 +104,7 @@ public object AdminGroupCommand : CompositeCommand(
         } catch (exception: PermissionDeniedException) {
             logger.warning({ "权限不足" }, exception)
             "权限不足"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "踢出错误" }, cause)
             "踢出错误"
         }
@@ -126,7 +126,7 @@ public object AdminGroupCommand : CompositeCommand(
         } catch (exception: PermissionDeniedException) {
             logger.warning({ "权限不足" }, exception)
             "权限不足"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
         }
@@ -148,7 +148,7 @@ public object AdminGroupCommand : CompositeCommand(
         } catch (exception: PermissionDeniedException) {
             logger.warning({ "权限不足" }, exception)
             "权限不足"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
         }
@@ -179,7 +179,7 @@ public object AdminGroupCommand : CompositeCommand(
         } catch (exception: PermissionDeniedException) {
             logger.warning({ "权限不足" }, exception)
             "权限不足"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
         }
@@ -201,7 +201,7 @@ public object AdminGroupCommand : CompositeCommand(
         } catch (exception: PermissionDeniedException) {
             logger.warning({ "权限不足" }, exception)
             "权限不足"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
         }
@@ -223,7 +223,7 @@ public object AdminGroupCommand : CompositeCommand(
         } catch (exception: PermissionDeniedException) {
             logger.warning({ "权限不足" }, exception)
             "权限不足"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
         }
@@ -267,7 +267,7 @@ public object AdminGroupCommand : CompositeCommand(
         } catch (exception: PermissionDeniedException) {
             logger.warning({ "权限不足" }, exception)
             "权限不足"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
         }
@@ -290,7 +290,7 @@ public object AdminGroupCommand : CompositeCommand(
         } catch (exception: PermissionDeniedException) {
             logger.warning({ "权限不足" }, exception)
             "权限不足"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "设置错误" }, cause)
             "设置错误"
         }

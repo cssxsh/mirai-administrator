@@ -32,14 +32,14 @@ public object AdminFriendCommand : CompositeCommand(
                                 appendLine(friend.render())
                             }
                         }
-                    } catch (_: ExceptionInInitializerError) {
+                    } catch (_: NoSuchMethodError) {
                         for (friend in bot.friends) {
                             appendLine(friend.render())
                         }
                     }
                 }
             }
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
         }
@@ -57,7 +57,7 @@ public object AdminFriendCommand : CompositeCommand(
         val message = try {
             friend.delete()
             "删除成功"
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "删除错误" }, cause)
             "删除错误"
         }

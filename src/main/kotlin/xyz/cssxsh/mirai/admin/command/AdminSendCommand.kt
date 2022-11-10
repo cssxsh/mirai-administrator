@@ -105,6 +105,9 @@ public object AdminSendCommand : CompositeCommand(
         } catch (cause: UnsupportedOperationException) {
             logger.warning({ "发送失败" }, cause)
             "发送失败"
+        } catch (cause: IllegalStateException) {
+            logger.warning({ "发送失败" }, cause)
+            "发送失败"
         }
 
         sendMessage(message)

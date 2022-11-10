@@ -100,7 +100,7 @@ public object AdminRegisteredCommand : SimpleCommand(
             } catch (_: NoClassDefFoundError) {
                 sendMessage(forward)
             }
-        } catch (cause: Exception) {
+        } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             sendMessage("出现错误")
         }
