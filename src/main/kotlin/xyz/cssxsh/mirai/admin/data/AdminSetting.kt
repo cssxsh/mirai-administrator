@@ -78,7 +78,7 @@ internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiConten
                             plugin.logger.info("更新审核库 $path , ${event.kind().name()}")
                             try {
                                 list[file.name] = file.readLines()
-                            } catch (cause: Exception) {
+                            } catch (cause: IOException) {
                                 plugin.logger.warning("更新审核库 $file", cause)
                             }
                         }
