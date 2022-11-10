@@ -24,7 +24,7 @@ internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiConten
                 if (pattern.isEmpty()) continue
                 val regex = try {
                     cache.getOrPut(pattern) { pattern.toRegex() }
-                } catch (_: Exception) {
+                } catch (_: IllegalArgumentException) {
                     continue
                 }
 
@@ -94,7 +94,7 @@ internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiConten
 
     @ValueName("owner")
     @ValueDescription("机器人所有者")
-    public val owner: Long by value(OWNER_DEFAULT)
+    val owner: Long by value(OWNER_DEFAULT)
 
     @ValueName("censor_regex")
     @ValueDescription("配置项废除, 改为加载 censor 文件夹中的 txt 文件")
@@ -111,5 +111,5 @@ internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiConten
 
     @ValueName("record_limit")
     @ValueDescription("联系人（群/好友/...）聊天记录上限，（用于消息撤销等操作）")
-    public val recordLimit: Int by value(100)
+    val recordLimit: Int by value(100)
 }

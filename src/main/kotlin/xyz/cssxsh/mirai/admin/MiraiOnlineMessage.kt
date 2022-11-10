@@ -64,7 +64,7 @@ internal object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig b
             }
             try {
                 group.sendMessage(message = message)
-            } catch (cause: Exception) {
+            } catch (cause: SendMessageFailedException) {
                 logger.warning({ "机器人上线消息发送失败" }, cause)
             }
             delay(duration * 1_000)

@@ -26,7 +26,7 @@ import java.util.*
 internal val logger by lazy {
     try {
         MiraiAdminPlugin.logger
-    } catch (_: ExceptionInInitializerError) {
+    } catch (_: UninitializedPropertyAccessException) {
         MiraiLogger.Factory.create(MiraiAdministrator::class)
     }
 }
@@ -119,7 +119,7 @@ internal fun ComparableService.Loader.reload() {
                 try {
                     val service = provider.get()
                     instances.add(service)
-                } catch (cause: Exception) {
+                } catch (cause: ServiceConfigurationError) {
                     logger.warning({ "${provider.type().name} load fail." }, cause)
                 }
             }

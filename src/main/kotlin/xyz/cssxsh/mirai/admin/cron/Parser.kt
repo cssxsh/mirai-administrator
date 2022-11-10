@@ -7,6 +7,7 @@ import com.cronutils.model.time.*
 import com.cronutils.parser.*
 import net.mamoe.mirai.console.command.descriptor.*
 import java.time.*
+import java.time.format.*
 import java.util.*
 
 internal const val CRON_TYPE_KEY = "xyz.cssxsh.mirai.admin.cron.type"
@@ -53,7 +54,7 @@ public val CronCommandArgumentContext: CommandArgumentContext = buildCommandArgu
     Cron::class with { text ->
         try {
             DefaultCronParser.parse(text)
-        } catch (cause: Exception) {
+        } catch (cause: IllegalArgumentException) {
             throw CommandArgumentParserException(
                 message = "Cron 表达式读取错误，建议找在线表达式生成器生成",
                 cause = cause
@@ -63,7 +64,7 @@ public val CronCommandArgumentContext: CommandArgumentContext = buildCommandArgu
     Duration::class with { text ->
         try {
             Duration.parse(text)
-        } catch (cause: Exception) {
+        } catch (cause: DateTimeParseException) {
             throw CommandArgumentParserException(
                 message = "Duration 表达式格式为 PnDTnHnMn.nS",
                 cause = cause
