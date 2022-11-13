@@ -45,6 +45,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun MemberJoinRequestEvent.handle() {
+        if ((group?.botPermission ?: MemberPermission.MEMBER) < MemberPermission.ADMINISTRATOR) return
         for (approver in ComparableService<MemberApprover>()) {
             try {
                 when (val status = approver.approve(event = this)) {
@@ -63,6 +64,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
 
     @EventHandler(priority = EventPriority.HIGH)
     internal suspend fun MemberJoinEvent.handle() {
+        if (group.botPermission < MemberPermission.ADMINISTRATOR) return
         for (approver in ComparableService<MemberApprover>()) {
             try {
                 when (val status = approver.approve(event = this)) {
