@@ -10,7 +10,7 @@ import java.time.*
 import java.time.format.*
 import java.util.*
 
-internal const val CRON_TYPE_KEY = "xyz.cssxsh.mirai.admin.cron.type"
+internal const val CRON_TYPE_KEY = "xyz.cssxsh.mirai.cron.type"
 
 /**
  * 默认 [Cron] 解析器
@@ -20,7 +20,7 @@ public val DefaultCronParser: CronParser by lazy {
     CronParser(CronDefinitionBuilder.instanceDefinitionFor(type))
 }
 
-internal const val CRON_LOCALE_KEY = "xyz.cssxsh.mirai.admin.cron.locale"
+internal const val CRON_LOCALE_KEY = "xyz.cssxsh.mirai.cron.locale"
 
 /**
  * 默认 [Cron] 解释器
