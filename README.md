@@ -161,6 +161,10 @@
 2.  `censor_types` 可选值 `IMAGE, FLASH, SERVICE, APP, AUDIO, FORWARD, VIP, MARKET, MUSIC, POKE`
 3.  正则词库, 须手动添加，将会加载 censor 文件夹中的 txt 文件，每一行对应一个正则匹配，会监听文件改动，无需重启
 
+## [爱发电](https://afdian.net/@cssxsh)
+
+![afdian](https://mirai.mamoe.net/assets/uploads/files/1670551864384-8ab9fe4e-37ff-440f-bd1e-c7bda4e1a85e-image.png)
+
 ## 服务接口
 
 SPI接口 [ComparableService](src/main/kotlin/xyz/cssxsh/mirai/spi/ComparableService.kt)  
