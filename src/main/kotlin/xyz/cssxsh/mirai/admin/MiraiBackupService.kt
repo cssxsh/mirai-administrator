@@ -5,9 +5,8 @@ import io.ktor.utils.io.streams.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.contact.*
 import xyz.cssxsh.mirai.spi.*
-import java.io.File
+import java.io.*
 import java.util.zip.*
-import kotlin.io.use
 
 @PublishedApi
 internal object MiraiBackupService : BackupService {
