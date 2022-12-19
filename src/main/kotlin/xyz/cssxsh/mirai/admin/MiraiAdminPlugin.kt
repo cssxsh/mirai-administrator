@@ -40,6 +40,7 @@ internal object MiraiAdminPlugin : KotlinPlugin(
         AdminSetting.reload()
         AdminBlackListData.reload()
         AdminAutoQuitConfig.reload()
+        AdminMailConfig.reload()
 
         if (AdminSetting.owner != AdminSetting.OWNER_DEFAULT) {
             logger.info { "机器人所有者 ${AdminSetting.owner}" }

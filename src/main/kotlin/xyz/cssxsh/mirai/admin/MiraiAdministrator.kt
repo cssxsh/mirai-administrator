@@ -18,9 +18,11 @@ import net.mamoe.mirai.message.data.MessageSource.Key.quote
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.command.*
 import xyz.cssxsh.mirai.admin.data.*
+import xyz.cssxsh.mirai.admin.mail.*
 import xyz.cssxsh.mirai.spi.*
 import kotlin.collections.*
 import kotlin.coroutines.*
+import kotlin.io.path.*
 
 /**
  * 事件监听及定时器
@@ -452,6 +454,79 @@ public object MiraiAdministrator : SimpleListenerHost() {
                     bot.owner().sendMessage("因为禁言，将自动退群 ${group.render()}")
                 }
                 group.quit()
+            }
+        }
+    }
+
+    @EventHandler
+    internal fun BotOfflineEvent.handle() {
+        if (AdminMailConfig.notify.not()) return
+        if (AdminMailConfig.close.not() && this is BotOfflineEvent.Active) return
+        val session = buildMailSession {
+            AdminMailConfig.properties.inputStream().use {
+                load(it)
+            }
+        }
+        val offline = this
+
+        launch {
+            val mail = buildMailContent(session) {
+                to = AdminMailConfig.offline.ifEmpty { "${AdminSetting.owner}@qq.com" }
+                title = "机器人下线通知 $bot"
+                text {
+                    @OptIn(MiraiInternalApi::class)
+                    when (offline) {
+                        is BotOfflineEvent.Active -> {
+                            append("主动离线")
+                        }
+                        is BotOfflineEvent.Dropped -> {
+                            append("因网络问题而掉线")
+                            if (offline.cause != null) {
+                                append('\n')
+                                append("cause:\n")
+                                append(offline.cause!!.stackTraceToString())
+                            }
+                        }
+                        is BotOfflineEvent.Force -> {
+                            append("被挤下线.")
+                        }
+                        is BotOfflineEvent.MsfOffline -> {
+                            append("被服务器断开.")
+                            if (offline.cause != null) {
+                                append('\n')
+                                append("cause:\n")
+                                append(offline.cause!!.stackTraceToString())
+                            }
+                        }
+                        is BotOfflineEvent.RequireReconnect -> {
+                            append("服务器主动要求更换另一个服务器.")
+                            if (offline.cause != null) {
+                                append('\n')
+                                append("cause:\n")
+                                append(offline.cause!!.stackTraceToString())
+                            }
+                        }
+                    }
+                }
+                file("console.log") {
+                    val logs = java.io.File("logs")
+                    logs.listFiles()?.maxByOrNull { it.lastModified() }
+
+                }
+                file("network.log") {
+                    val logs = java.io.File("bots/${bot.id}/logs")
+                    logs.listFiles()?.maxByOrNull { it.lastModified() }
+                }
+            }
+
+            val oc = Thread.currentThread().contextClassLoader
+            try {
+                Thread.currentThread().contextClassLoader = AdminMailConfig::class.java.classLoader
+                jakarta.mail.Transport.send(mail)
+            } catch (cause: jakarta.mail.MessagingException) {
+                logger.error({ "邮件发送失败" }, cause)
+            } finally {
+                Thread.currentThread().contextClassLoader = oc
             }
         }
     }

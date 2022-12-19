@@ -7,6 +7,9 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.admin.*
+import xyz.cssxsh.mirai.admin.data.*
+import xyz.cssxsh.mirai.admin.mail.*
+import kotlin.io.path.*
 
 /**
  * 发送相关指令
@@ -111,5 +114,54 @@ public object AdminSendCommand : CompositeCommand(
         }
 
         sendMessage(message)
+    }
+
+    /**
+     * 备份日志到邮箱
+     * @param addresses 接收的邮箱
+     */
+    @SubCommand
+    @Description("备份日志到邮箱")
+    public suspend fun CommandSender.log(vararg addresses: String) {
+        val session = buildMailSession {
+            AdminMailConfig.properties.inputStream().use {
+                load(it)
+            }
+        }
+
+        val mail = buildMailContent(session) {
+            to = addresses.joinToString().ifEmpty { AdminMailConfig.log }
+            title = "日志备份"
+            text {
+                val plugins = java.io.File("plugins")
+                append("plugins: \n")
+                for (file in plugins.listFiles().orEmpty()) {
+                    append(file.name).append(" ").append(file.length().div(1024)).append("KB").append('\n')
+                }
+                val libs = java.io.File("libs")
+                append("libs: \n")
+                for (file in libs.listFiles().orEmpty()) {
+                    append(file.name).append(" ").append(file.length().div(1024)).append("KB").append('\n')
+                }
+            }
+            file("console.log") {
+                val logs = java.io.File("logs")
+                logs.listFiles()?.maxByOrNull { it.lastModified() }
+            }
+            file("network.log") {
+                val logs = java.io.File("bots/${bot?.id}/logs")
+                logs.listFiles()?.maxByOrNull { it.lastModified() }
+            }
+        }
+
+        val oc = Thread.currentThread().contextClassLoader
+        try {
+            Thread.currentThread().contextClassLoader = AdminMailConfig::class.java.classLoader
+            jakarta.mail.Transport.send(mail)
+        } catch (cause: jakarta.mail.MessagingException) {
+            sendMessage("邮件发送失败, cause: ${cause.message}")
+        } finally {
+            Thread.currentThread().contextClassLoader = oc
+        }
     }
 }
