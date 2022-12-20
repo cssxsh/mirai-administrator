@@ -9,7 +9,7 @@ import xyz.cssxsh.mirai.admin.*
 @PublishedApi
 internal object AdminOnlineMessageConfig : ReadOnlyPluginConfig("AdminOnlineMessageConfig"), MiraiOnlineMessageConfig {
 
-    public override var permission: Permission = Permission.getRootPermission()
+    override var permission: Permission = Permission.getRootPermission()
         private set
 
     @OptIn(ConsoleExperimentalApi::class)

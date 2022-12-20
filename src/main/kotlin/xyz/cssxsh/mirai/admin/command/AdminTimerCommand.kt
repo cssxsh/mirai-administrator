@@ -135,7 +135,7 @@ public object AdminTimerCommand : CompositeCommand(
     /**
      * 定时发送机器人状态到所有者
      * @param cron 启用的时间点
-     * @param bot 目标机器人
+     * @param from 目标机器人
      */
     @SubCommand
     @Description("定时发送机器人状态")

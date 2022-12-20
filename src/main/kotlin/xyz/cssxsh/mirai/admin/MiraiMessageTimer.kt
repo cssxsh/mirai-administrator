@@ -51,9 +51,7 @@ internal object MiraiMessageTimer : BotTimingMessage {
                     val uuid = "${group.id}/${cron.asString().toByteArray().toUHexString("")}.json"
                     val file = folder.resolve(uuid)
                     if (file.exists().not()) continue
-                    val message = with(MessageChain) {
-                        deserializeFromJsonString(file.readText())
-                    }
+                    val message = MessageChain.deserializeFromJsonString(file.readText())
                     mutex.withLock {
                         if (cache.add(uuid).not()) return@withLock
                         try {

@@ -9,7 +9,7 @@ import xyz.cssxsh.mirai.admin.*
 @PublishedApi
 internal object AdminCommentConfig : ReadOnlyPluginConfig("AdminCommentConfig") {
 
-    public var permission: Permission = Permission.getRootPermission()
+    var permission: Permission = Permission.getRootPermission()
         private set
 
     @OptIn(ConsoleExperimentalApi::class)

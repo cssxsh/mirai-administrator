@@ -5,6 +5,7 @@
 [![Release](https://img.shields.io/github/v/release/cssxsh/mirai-administrator)](https://github.com/cssxsh/mirai-administrator/releases)
 [![Downloads](https://img.shields.io/github/downloads/cssxsh/mirai-administrator/total)](https://repo1.maven.org/maven2/xyz/cssxsh/mirai/mirai-administrator/)
 [![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-administrator)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-administrator)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8be173fe96c74059bfedd6268b8e6f0c)](https://www.codacy.com/gh/cssxsh/mirai-administrator/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cssxsh/mirai-administrator&amp;utm_campaign=Badge_Grade)
 
 **使用前应该查阅的相关文档或项目**
 
@@ -19,7 +20,8 @@
 *   群管理相关 群消息审核，自动宵禁，自动清理不发言，禁言自动退群
 
 本插件提供[服务接口](#服务接口)以供其他插件拓展功能  
-例如使用 [Mirai Content Censor](https://github.com/gnuf0rce/mirai-content-censor) 依靠百度API审查群消息
+例如使用 [Mirai Content Censor](https://github.com/gnuf0rce/mirai-content-censor) 依靠百度API审查群消息  
+例如使用 [Mirai Authenticator](https://github.com/cssxsh/mirai-authenticator) 验证加群请求  
 
 ## MCL 指令安装
 
@@ -102,10 +104,12 @@
 | `/<send> <friends> [bot]? [second]?`      | 发送给所有好友     |
 | `/<send> <to> [contact] [at]?`            | 发送给指定联系人    |
 | `/<send> <nudge> [user]`                  | 戳一戳指定联系人    |
+| `/<send> <log> {addresses}`               | 备份日志到邮箱     |
 
 1.  `bot` 参数在命令行模式下需要指定
 2.  `at` 参数为 `true`, `yes`, `enabled`, `on`, `1` 时表示 `true`, 将附加一个At
 3.  `second` 参数为 延迟的秒数 例如 `/send groups 123456 false 10`
+4.  `addresses` 参数为 邮箱地址
 
 ### AdminTimerCommand
 
@@ -161,9 +165,31 @@
 2.  `censor_types` 可选值 `IMAGE, FLASH, SERVICE, APP, AUDIO, FORWARD, VIP, MARKET, MUSIC, POKE`
 3.  正则词库, 须手动添加，将会加载 censor 文件夹中的 txt 文件，每一行对应一个正则匹配，会监听文件改动，无需重启
 
+### 邮件配置
+
+1.  `AdminMailConfig.yml` 配置一些默认的发送对象
+2.  `admin.mail.properties` 配置邮箱账号等
+
+格式参考
+```properties
+mail.host=smtp.mail.qq.com
+mail.auth=true
+mail.user=xxx
+mail.password=***
+mail.from=cssxsh@qq.com
+mail.store.protocol=smtp
+mail.transport.protocol=smtp
+# smtp
+mail.smtp.starttls.enable=true
+mail.smtp.auth=true
+mail.smtp.timeout=15000
+```
+
+QQ邮箱帮助： https://service.mail.qq.com/cgi-bin/help?subtype=1&&id=28&&no=1001256
+
 ## [爱发电](https://afdian.net/@cssxsh)
 
-![afdian](https://mirai.mamoe.net/assets/uploads/files/1670551864384-8ab9fe4e-37ff-440f-bd1e-c7bda4e1a85e-image.png)
+![afdian](.github/afdian.jpg)
 
 ## 服务接口
 

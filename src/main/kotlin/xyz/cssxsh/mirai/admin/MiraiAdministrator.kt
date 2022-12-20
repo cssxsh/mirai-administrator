@@ -191,6 +191,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     /**
      * 启动一个群定时服务
      */
+    @PublishedApi
     internal fun GroupTimerService<*>.start(target: Group, reset: Boolean = false) {
         if (!reset && target.id in records) return
         records.remove(target.id)?.cancel()
@@ -277,6 +278,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     /**
      * 启动一个定时消息服务
      */
+    @PublishedApi
     internal fun BotTimingMessage.start(from: Bot, reset: Boolean = false) {
         if (!reset && from.id in records) return
         records.remove(from.id)?.cancel()
@@ -304,6 +306,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
     /**
      * 启动一个初始化服务
      */
+    @PublishedApi
     internal fun BotOnlineAction.start(from: Bot) {
         launch(from.coroutineContext) {
             run(bot = from)
@@ -396,9 +399,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
         when {
             sender.id == AdminSetting.owner -> return
             this is UserMessageEvent && AdminCommentConfig.user &&
-                message.findIsInstance<PlainText>()?.content?.getOrNull(0) != '/' -> {}
-            message.findIsInstance<QuoteReply>()?.source?.fromId == bot.id && AdminCommentConfig.quote -> {}
-            message.findIsInstance<At>()?.target == bot.id && AdminCommentConfig.at -> {}
+                message.findIsInstance<PlainText>()?.content?.getOrNull(0) != '/' -> Unit
+            message.findIsInstance<QuoteReply>()?.source?.fromId == bot.id && AdminCommentConfig.quote -> Unit
+            message.findIsInstance<At>()?.target == bot.id && AdminCommentConfig.at -> Unit
             else -> return
         }
 

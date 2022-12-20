@@ -89,10 +89,8 @@ public object AdminSendCommand : CompositeCommand(
     }
 
     /**
-     * 发送消息给所有群
-     * @param bot 操作的机器人
-     * @param at 是否At全体
-     * @param second 发送的间隔
+     * 戳一戳指定用户
+     * @param user 要戳的用户
      */
     @SubCommand
     @Description("戳一戳指定联系人")
