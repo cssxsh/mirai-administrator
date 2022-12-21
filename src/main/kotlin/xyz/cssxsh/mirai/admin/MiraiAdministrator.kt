@@ -522,14 +522,15 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 }
             }
 
-            val oc = Thread.currentThread().contextClassLoader
+            val current = Thread.currentThread()
+            val oc = current.contextClassLoader
             try {
-                Thread.currentThread().contextClassLoader = AdminMailConfig::class.java.classLoader
+                current.contextClassLoader = AdminMailConfig::class.java.classLoader
                 jakarta.mail.Transport.send(mail)
             } catch (cause: jakarta.mail.MessagingException) {
                 logger.error({ "邮件发送失败" }, cause)
             } finally {
-                Thread.currentThread().contextClassLoader = oc
+                current.contextClassLoader = oc
             }
         }
     }

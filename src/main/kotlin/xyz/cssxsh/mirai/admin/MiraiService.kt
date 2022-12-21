@@ -108,13 +108,14 @@ internal fun AdminRequestEventData.render(): String = buildString {
 
 internal fun ComparableService.Loader.reload() {
     instances.clear()
-    val oc = Thread.currentThread().contextClassLoader
+    val current = Thread.currentThread()
+    val oc = current.contextClassLoader
     try {
         for (plugin in PluginManager.plugins) {
             if (plugin !is JvmPlugin) continue
             if (plugin.description.dependencies.none { it.id == "xyz.cssxsh.mirai.plugin.mirai-administrator" }) continue
             val classLoader = plugin::class.java.classLoader
-            Thread.currentThread().contextClassLoader = classLoader
+            current.contextClassLoader = classLoader
             for (provider in ServiceLoader.load(ComparableService::class.java, classLoader).stream()) {
                 try {
                     val service = provider.get()
@@ -125,7 +126,7 @@ internal fun ComparableService.Loader.reload() {
             }
         }
     } finally {
-        Thread.currentThread().contextClassLoader = oc
+        current.contextClassLoader = oc
     }
     instances.add(MiraiAutoApprover)
     instances.add(MiraiOnlineMessage)

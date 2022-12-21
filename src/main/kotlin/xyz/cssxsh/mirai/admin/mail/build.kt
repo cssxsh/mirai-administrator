@@ -12,11 +12,12 @@ import java.util.*
  */
 public fun buildMailSession(block: Properties.() -> Unit): Session {
     val props = Properties(System.getProperties())
-    val oc = Thread.currentThread().contextClassLoader
+    val current = Thread.currentThread()
+    val oc = current.contextClassLoader
     try {
         block.invoke(props)
     } finally {
-        Thread.currentThread().contextClassLoader = oc
+        current.contextClassLoader = oc
     }
 
     if (props.getProperty("mail.smtp.localhost") == null) {
@@ -38,10 +39,10 @@ public fun buildMailSession(block: Properties.() -> Unit): Session {
     }
 
     return try {
-        Thread.currentThread().contextClassLoader = block::class.java.classLoader
+        current.contextClassLoader = block::class.java.classLoader
         Session.getDefaultInstance(props, auth)
     } finally {
-        Thread.currentThread().contextClassLoader = oc
+        current.contextClassLoader = oc
     }
 }
 
@@ -53,9 +54,10 @@ public fun buildMailContent(session: Session, block: MailContentBuilder.(MimeMes
     val message = MimeMessage(session)
     val builder: MailContentBuilder
 
-    val oc = Thread.currentThread().contextClassLoader
+    val current = Thread.currentThread()
+    val oc = current.contextClassLoader
     try {
-        Thread.currentThread().contextClassLoader = block::class.java.classLoader
+        current.contextClassLoader = block::class.java.classLoader
         builder = MailContentBuilder(session)
         block.invoke(builder, message)
 
@@ -70,7 +72,7 @@ public fun buildMailContent(session: Session, block: MailContentBuilder.(MimeMes
         message.setContent(builder.content)
 
     } finally {
-        Thread.currentThread().contextClassLoader = oc
+        current.contextClassLoader = oc
     }
 
     return message
