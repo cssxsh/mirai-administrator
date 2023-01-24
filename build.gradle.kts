@@ -27,9 +27,8 @@ repositories {
 
 dependencies {
     api("com.cronutils:cron-utils:9.2.0")
-    api("jakarta.mail:jakarta.mail-api:2.1.0")
-    implementation("org.eclipse.angus:angus-mail:1.0.0")
-    compileOnly("javax.validation:validation-api:2.0.1.Final")
+    api("jakarta.mail:jakarta.mail-api:2.1.1")
+    implementation("org.eclipse.angus:angus-mail:1.1.0")
     testImplementation(kotlin("test"))
     //
     implementation(platform("net.mamoe:mirai-bom:2.13.2"))

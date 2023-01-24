@@ -1,3 +1,5 @@
+@file:JvmName("BuildKt")
+
 package xyz.cssxsh.mirai.admin.mail
 
 import jakarta.activation.*
@@ -24,19 +26,7 @@ public fun buildMailSession(block: Properties.() -> Unit): Session {
         props.setProperty("mail.smtp.localhost", props.getProperty("mail.host"))
     }
 
-    val auth = object : Authenticator() {
-        override fun getPasswordAuthentication(): PasswordAuthentication {
-            val user = props["mail.${requestingProtocol}.user"]?.toString()
-                ?: props["mail.user"]?.toString()
-                ?: System.getenv("MAIL_USER")
-                ?: throw NoSuchElementException("mail.user")
-            val password = props["mail.${requestingProtocol}.password"]?.toString()
-                ?: props["mail.password"]?.toString()
-                ?: System.getenv("MAIL_PASSWORD")
-                ?: throw NoSuchElementException("mail.password")
-            return PasswordAuthentication(user, password)
-        }
-    }
+    val auth = PropsAuthenticator(props = props)
 
     return try {
         current.contextClassLoader = block::class.java.classLoader
@@ -131,5 +121,20 @@ public class MailContentBuilder(session: Session) {
             else -> throw IllegalArgumentException("file")
         }
         content.addBodyPart(part)
+    }
+}
+
+@PublishedApi
+internal class PropsAuthenticator(private val props: Properties) : Authenticator() {
+    override fun getPasswordAuthentication(): PasswordAuthentication {
+        val user = props["mail.${requestingProtocol}.user"]?.toString()
+            ?: props["mail.user"]?.toString()
+            ?: System.getenv("MAIL_USER")
+            ?: throw NoSuchElementException("mail.user")
+        val password = props["mail.${requestingProtocol}.password"]?.toString()
+            ?: props["mail.password"]?.toString()
+            ?: System.getenv("MAIL_PASSWORD")
+            ?: throw NoSuchElementException("mail.password")
+        return PasswordAuthentication(user, password)
     }
 }
