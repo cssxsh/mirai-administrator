@@ -71,7 +71,7 @@ internal object MiraiBackupService : BackupService {
                             .append(", ")
                             .append(friend.remarkOrNick)
                             .append(", ")
-                            .append(friend.friendGroup.name)
+                            .append(friend.runCatching { friendGroup.name }.getOrElse { "我的好友" })
                             .append('\n')
                     }
                 }
@@ -82,6 +82,7 @@ internal object MiraiBackupService : BackupService {
 
     override fun bot() {
         val backup = File("backup/bot.${System.currentTimeMillis()}.zip")
+        backup.parentFile.mkdirs()
         backup.outputStream().buffered(1 shl 23).use { buffered ->
             val output = ZipOutputStream(buffered)
             val bots = File("bots")
