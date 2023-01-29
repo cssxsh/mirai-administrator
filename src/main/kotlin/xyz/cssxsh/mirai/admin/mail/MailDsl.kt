@@ -87,7 +87,8 @@ public class MailContentBuilder(session: Session) {
     @MailDsl
     public fun text(type: String = "plain", builderAction: StringBuilder.() -> Unit) {
         val part = MimeBodyPart()
-        part.setText(StringBuilder().apply(builderAction).toString(), "UTF-8", type)
+        val text = StringBuilder().apply(builderAction).toString()
+        part.setText(text, "UTF-8", type)
         content.addBodyPart(part)
     }
 

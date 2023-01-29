@@ -510,6 +510,14 @@ public object MiraiAdministrator : SimpleListenerHost() {
                             }
                         }
                     }
+
+                    var start = 0
+                    while (isActive) {
+                        val index = indexOf("\t", start)
+                        if (index == -1) break
+                        replace(index, index + 1, "    ")
+                        start = index + 4
+                    }
                 }
                 file("console.log") {
                     val logs = java.io.File("logs")

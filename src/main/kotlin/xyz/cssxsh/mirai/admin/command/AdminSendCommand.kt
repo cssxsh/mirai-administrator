@@ -134,12 +134,14 @@ public object AdminSendCommand : CompositeCommand(
                 val plugins = java.io.File("plugins")
                 append("plugins: \n")
                 for (file in plugins.listFiles().orEmpty()) {
-                    append(file.name).append(" ").append(file.length().div(1024)).append("KB").append('\n')
+                    append("    ").append(file.name)
+                        .append(" ").append(file.length().div(1024)).append("KB").append('\n')
                 }
                 val libs = java.io.File("libs")
                 append("libs: \n")
                 for (file in libs.listFiles().orEmpty()) {
-                    append(file.name).append(" ").append(file.length().div(1024)).append("KB").append('\n')
+                    append("    ").append(file.name)
+                        .append(" ").append(file.length().div(1024)).append("KB").append('\n')
                 }
             }
             file("console.log") {
