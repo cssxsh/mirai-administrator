@@ -3,6 +3,7 @@ package xyz.cssxsh.mirai.admin.command
 import kotlinx.coroutines.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
+import net.mamoe.mirai.console.util.ContactUtils.render
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
@@ -35,6 +36,10 @@ public object AdminSendCommand : CompositeCommand(
         try {
             val message = request(hint = "请输入要发送的消息")
             for (group in bot.groups) {
+                if (group.isBotMuted) {
+                    logger.warning { "机器人在群 ${group.render()} 中是禁言状态" }
+                    continue
+                }
                 delay(second * 1000)
                 group.sendMessage(message = if (at) message + AtAll else message)
             }
