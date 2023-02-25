@@ -56,7 +56,7 @@ public val CronCommandArgumentContext: CommandArgumentContext = buildCommandArgu
             DefaultCronParser.parse(text)
         } catch (cause: IllegalArgumentException) {
             throw CommandArgumentParserException(
-                message = "Cron 表达式读取错误，建议找在线表达式生成器生成",
+                message = "Cron 表达式读取错误，请检查是否添加了双引号",
                 cause = cause
             )
         }
