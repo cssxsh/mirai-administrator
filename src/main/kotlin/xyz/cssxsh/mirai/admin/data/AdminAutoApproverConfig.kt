@@ -20,9 +20,13 @@ internal object AdminAutoApproverConfig : ReadOnlyPluginConfig("AdminAutoApprove
 
     @ValueName("reply_accept")
     @ValueDescription("回复触发同意请求")
-    override val replyAccept: String by value("同意|OK|没问题")
+    override val replyAccept: String by value("^(?:同意|OK|没问题)")
+
+    @ValueName("reply_reject")
+    @ValueDescription("回复触发拒绝请求")
+    override val replyReject: String by value("^(?:拒绝|不同意)")
 
     @ValueName("reply_black")
     @ValueDescription("回复触发拉黑请求")
-    override val replyBlack: String by value("拉黑|黑名单")
+    override val replyBlack: String by value("^(?:拉黑|黑名单)")
 }

@@ -11,5 +11,7 @@ internal interface MiraiAutoApproverConfig {
 
     val replyAccept: String
 
+    val replyReject: String
+
     val replyBlack: String
 }
