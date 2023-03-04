@@ -52,14 +52,17 @@ public object AdminGroupCommand : CompositeCommand(
     /**
      * 打印群成员
      * @param group 目标群
+     * @param page 第x页, x 从 1 开始
      */
     @SubCommand
     @Description("群成员")
-    public suspend fun CommandSender.member(group: Group) {
+    public suspend fun CommandSender.member(group: Group, page: Int = 1) {
         val message = try {
             buildString {
-                appendLine("--- ${group.render()} ---")
-                for (member in group.members) {
+                appendLine("--- ${group.render()} [${page}] ---")
+                val chunked = group.members.chunked(50)
+                val list = chunked.getOrNull(page - 1).orEmpty()
+                for (member in list) {
                     appendLine("${member.render()}[${member.permission}](${member.joinAt}~${member.lastSpeakAt})")
                 }
             }

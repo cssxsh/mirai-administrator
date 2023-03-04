@@ -27,6 +27,7 @@ public object AdminFriendCommand : CompositeCommand(
                     appendLine("### ${bot.render()} ###")
                     try {
                         for (friendGroup in bot.friendGroups.asCollection()) {
+                            if (friendGroup.count == 0) continue
                             appendLine("--- ${bot.render()}/${friendGroup.name} ---")
                             for (friend in friendGroup.friends) {
                                 appendLine(friend.render())

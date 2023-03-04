@@ -97,7 +97,12 @@ public object AdminContactCommand : CompositeCommand(
         val message = try {
             val args = permitteeIds.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.addAll(args)
-            AdminBlackListData.ids.joinToString("\n") { it.asString() }
+            buildString {
+                appendLine("共新增 ${args.size} 个匹配ID")
+                args.joinTo(this) { id ->
+                    id.asString()
+                }
+            }
         } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
@@ -116,7 +121,36 @@ public object AdminContactCommand : CompositeCommand(
         val message = try {
             val args = permitteeIds.mapTo(HashSet(), AbstractPermitteeId::parseFromString)
             AdminBlackListData.ids.removeAll(args)
-            AdminBlackListData.ids.joinToString("\n") { it.asString() }
+            buildString {
+                appendLine("共减去 ${args.size} 个匹配ID")
+                args.joinTo(this) { id ->
+                    id.asString()
+                }
+            }
+        } catch (cause: IllegalStateException) {
+            logger.warning({ "出现错误" }, cause)
+            "出现错误"
+        }
+
+        sendMessage(message)
+    }
+
+    /**
+     * 列出黑名单
+     * @param page 第x页, x 从 1 开始
+     */
+    @SubCommand
+    @Description("列出黑名单")
+    public suspend fun CommandSender.screen(page: Int = 1) {
+        val message = try {
+            val chunked = AdminBlackListData.ids.chunked(50)
+            val list = chunked.getOrNull(page - 1).orEmpty()
+            buildString {
+                appendLine("第 $page 页 共 ${list.size} 个匹配ID")
+                list.joinTo(this) { id ->
+                    id.asString()
+                }
+            }
         } catch (cause: IllegalStateException) {
             logger.warning({ "出现错误" }, cause)
             "出现错误"
