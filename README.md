@@ -18,6 +18,7 @@
 *   联系人相关 自动审批，指令查看，用户留言
 *   消息相关 发送消息，撤回消息
 *   群管理相关 群消息审核，自动宵禁，自动清理不发言，禁言自动退群
+*   机器人异常下线时发送邮件
 
 本插件提供[服务接口](#服务接口)以供其他插件拓展功能  
 例如使用 [Mirai Content Censor](https://github.com/gnuf0rce/mirai-content-censor) 依靠百度API审查群消息  
@@ -26,7 +27,7 @@
 ## MCL 指令安装
 
 **请确认 mcl.jar 的版本是 2.1.0+**  
-`./mcl --update-package xyz.cssxsh.mirai:mirai-administrator --channel maven-stable --type plugin`
+`./mcl --update-package xyz.cssxsh.mirai:mirai-administrator --channel maven-stable --type plugins`
 
 ## 指令
 
@@ -37,7 +38,8 @@
 本插件指令权限ID 格式为 `xyz.cssxsh.mirai.plugin.mirai-administrator:command.*`, `*` 是指令的第一指令名  
 例如 `/send to 12345` 的权限ID为 `xyz.cssxsh.mirai.plugin.mirai-administrator:command.send`  
 对 机器人发送的**联系人请求**通知消息 回复 `同意` 或 `不同意` 或 `拉黑` 即可处理  
-插件提供黑名单功能，使用指令 `/contact black u12345`, 即可拉黑用户，Bot将不响应用户动作（包括其他插件的功能）
+插件提供黑名单功能，使用指令 `/contact black u12345`, 即可拉黑用户，Bot将不响应用户动作（包括其他插件的功能）  
+发送异常下线邮件通知需要配置邮箱账户和密码
 
 ### AdminContactCommand
 
@@ -48,6 +50,7 @@
 | `/<contact> <request>`                        | 查看申请列表      |
 | `/<contact> <black> {permitteeIds}`           | 拉黑          |
 | `/<contact> <white> {permitteeIds}`           | 取消拉黑        |
+| `/<contact> <screen> [page]?`                 | 列出黑名单       |
 | `/<contact> <backup>`                         | 触发备份功能      |
 
 1.  `id` 是 事件id 或 好友id 或 群id
@@ -68,7 +71,7 @@
 | Command                                       | Description |
 |:----------------------------------------------|:------------|
 | `/<group> <list>`                             | 群列表         |
-| `/<group> <member> [group]`                   | 群成员         |
+| `/<group> <member> [group] [page]?`           | 群成员         |
 | `/<group> <quit> [group]`                     | 退出群聊        |
 | `/<group> <kick> [member] [reason]? [black]?` | 踢出群员        |
 | `/<group> <nick> [member] [nick]`             | 群昵称         |
@@ -131,7 +134,7 @@
 3.  `moment` 为 DURATION 表达式, 由 `PnDTnHnMn.nS` 组成  
     例如 `P1DT2H3M4.5S` 表示 一天二小时三分钟四点五秒，`PT5H` 表示 五小时
 
-4.  mute 指令，moment 小于 `0` 宵禁就会关闭  
+4.  mute 指令，moment 为零 `PT0S` 宵禁就会关闭  
     例如 `/timer mute PT5H "0 0 1 ? * 2-6"`, 将会在 星期一到星期五的凌晨01:00 禁言 5 小时  
     例如 `/timer mute PT0S "0 0 0 1 * ?"`, 将会 取消 禁言定时器  
 
@@ -168,9 +171,11 @@
 ### 邮件配置
 
 1.  `AdminMailConfig.yml` 配置一些默认的发送对象
-2.  `admin.mail.properties` 配置邮箱账号等
+2.  `admin.mail.properties` 配置邮箱账号等，需要自己配置邮箱的 `mail.host`, `mail.user`, `mail.password`, `mail.from`
 
 格式参考
+
+QQ Mail https://service.mail.qq.com/cgi-bin/help?subtype=1&&id=28&&no=1001256  
 ```properties
 mail.host=smtp.mail.qq.com
 mail.auth=true
@@ -185,7 +190,22 @@ mail.smtp.auth=true
 mail.smtp.timeout=15000
 ```
 
-QQ邮箱帮助： https://service.mail.qq.com/cgi-bin/help?subtype=1&&id=28&&no=1001256
+Gmail https://support.google.com/mail/answer/7126229  
+```properties
+mail.host=smtp.gmail.com
+mail.auth=true
+mail.user=xxx
+mail.password=***
+mail.from=cssxsh@gmail.com
+mail.store.protocol=smtp
+mail.transport.protocol=smtp
+# smtp
+mail.smtp.starttls.enable=true
+mail.smtp.starttls.required=true
+mail.smtp.auth=true
+mail.smtp.timeout=15000
+mail.smtp.port=587
+```
 
 ## [爱发电](https://afdian.net/@cssxsh)
 

@@ -164,7 +164,7 @@ public object AdminTimerCommand : CompositeCommand(
     @SubCommand
     @Description("定时发送群消息")
     public suspend fun CommandSender.message(cron: Cron, target: Group, at: Boolean = false) {
-        val message = request(hint = "请输入要发送的消息/或者stop终止定时") + if (at) AtAll else emptyMessageChain()
+        val message = request(hint = "请输入要发送的消息或者‘stop’终止定时") + if (at) AtAll else emptyMessageChain()
         if (message.findIsInstance<PlainText>()?.content == "stop") {
             AdminTimerData.message[target.id] = AdminTimerData.message[target.id].orEmpty()
                 .filterNot { it.asString() == cron.asString() }

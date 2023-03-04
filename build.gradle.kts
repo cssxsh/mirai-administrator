@@ -2,12 +2,12 @@ plugins {
     kotlin("jvm") version "1.7.22"
     kotlin("plugin.serialization") version "1.7.22"
 
-    id("net.mamoe.mirai-console") version "2.13.2"
+    id("net.mamoe.mirai-console") version "2.14.0"
     id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.3.1"
+version = "1.3.2"
 
 mavenCentralPublish {
     useCentralS01()
@@ -31,14 +31,14 @@ dependencies {
     implementation("org.eclipse.angus:angus-mail:1.1.0")
     testImplementation(kotlin("test"))
     //
-    implementation(platform("net.mamoe:mirai-bom:2.13.2"))
+    implementation(platform("net.mamoe:mirai-bom:2.14.0"))
     compileOnly("net.mamoe:mirai-core")
     compileOnly("net.mamoe:mirai-core-utils")
     compileOnly("net.mamoe:mirai-console-compiler-common")
     testImplementation("net.mamoe:mirai-logging-slf4j")
     testImplementation("net.mamoe:mirai-core-utils")
     //
-    implementation(platform("io.ktor:ktor-bom:2.2.1"))
+    implementation(platform("io.ktor:ktor-bom:2.1.3"))
     implementation("io.ktor:ktor-client-okhttp")
     implementation("io.ktor:ktor-client-encoding")
     //
