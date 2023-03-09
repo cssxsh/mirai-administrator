@@ -201,12 +201,17 @@ public object MiraiAdministrator : SimpleListenerHost() {
      * 启动一个群定时服务
      */
     @PublishedApi
-    internal fun GroupTimerService<*>.start(target: Group, reset: Boolean = false) {
-        if (!reset && target.id in records) return
+    internal fun GroupTimerService<*>.start(target: Group) {
         records.remove(target.id)?.cancel()
         val job = launch(target.coroutineContext) service@{
             while (isActive) {
-                delay(wait(contact = target) ?: break)
+                when (val millis = wait(contact = target)) {
+                    null -> break
+                    else -> {
+                        logger.debug { "${target.render()} timer after ${millis}ms" }
+                        delay(millis)
+                    }
+                }
 
                 when (this@start) {
                     is GroupAllowTimer -> launch {
@@ -279,7 +284,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
             }
         }
         job.invokeOnCompletion {
-            records.remove(target.id)
+            records.remove(target.id, job)
         }
         records[target.id] = job
     }
@@ -288,12 +293,17 @@ public object MiraiAdministrator : SimpleListenerHost() {
      * 启动一个定时消息服务
      */
     @PublishedApi
-    internal fun BotTimingMessage.start(from: Bot, reset: Boolean = false) {
-        if (!reset && from.id in records) return
+    internal fun BotTimingMessage.start(from: Bot) {
         records.remove(from.id)?.cancel()
         val job = launch(from.coroutineContext) {
             while (isActive) {
-                delay(wait(contact = from) ?: break)
+                when (val millis = wait(contact = from)) {
+                    null -> break
+                    else -> {
+                        logger.debug { "$${from.render()} timing message after ${millis}ms" }
+                        delay(millis)
+                    }
+                }
 
                 run(contact = from).onCompletion { cause ->
                     if (cause != null) {
@@ -307,7 +317,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
             }
         }
         job.invokeOnCompletion {
-            records.remove(from.id)
+            records.remove(from.id, job)
         }
         records[from.id] = job
     }
