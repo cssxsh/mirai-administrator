@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.3.2"
+version = "1.3.3"
 
 mavenCentralPublish {
     useCentralS01()
@@ -28,7 +28,7 @@ repositories {
 dependencies {
     api("com.cronutils:cron-utils:9.2.0")
     api("jakarta.mail:jakarta.mail-api:2.1.1")
-    implementation("org.eclipse.angus:angus-mail:1.1.0")
+    implementation("org.eclipse.angus:angus-mail:2.0.1")
     testImplementation(kotlin("test"))
     //
     implementation(platform("net.mamoe:mirai-bom:2.14.0"))
