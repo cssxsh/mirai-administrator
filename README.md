@@ -33,7 +33,8 @@
 
 注意: 使用前请确保可以 [在聊天环境执行指令](https://github.com/project-mirai/chat-command)   
 `<...>`中的是指令名  
-`[...]`表示参数，当`[...]`后面带`?`时表示参数可选
+`[...]`表示参数，当`[...]`后面带`?`时表示参数可选  
+代之自身或者群聊可以用 `~`, 例如 `/group quiet ~`  
 
 本插件指令权限ID 格式为 `xyz.cssxsh.mirai.plugin.mirai-administrator:command.*`, `*` 是指令的第一指令名  
 例如 `/send to 12345` 的权限ID为 `xyz.cssxsh.mirai.plugin.mirai-administrator:command.send`  
