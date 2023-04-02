@@ -29,30 +29,30 @@ public object AdminTimerCommand : CompositeCommand(
     public suspend fun CommandSender.config() {
         sendMessage(message = buildMessageChain {
             //
-            appendLine("宵禁:")
+            appendLine("# 宵禁:")
             for ((group, cron) in AdminTimerData.mute) {
-                appendLine("Group($group) - ${AdminTimerData.moments[group]}")
+                appendLine("## Group($group) - ${AdminTimerData.moments[group]}")
                 appendLine(cron.description())
             }
             appendLine()
             //
-            appendLine("清理:")
+            appendLine("# 清理:")
             for ((group, cron) in AdminTimerData.clear) {
-                appendLine("Group($group) - ${AdminTimerData.last[group]} day")
+                appendLine("## Group($group) - ${AdminTimerData.last[group]} day")
                 appendLine(cron.description())
             }
             appendLine()
             //
-            appendLine("状态:")
+            appendLine("# 状态:")
             for ((bot, cron) in AdminTimerData.status) {
-                appendLine("Bot($bot)")
+                appendLine("## Bot($bot)")
                 appendLine(cron.description())
             }
             //
-            appendLine("定时:")
+            appendLine("# 定时:")
             for ((group, list) in AdminTimerData.message) {
                 if (list.isEmpty()) continue
-                appendLine("Group($group)")
+                appendLine("## Group($group)")
                 for (cron in list) {
                     appendLine(cron.description())
                 }
