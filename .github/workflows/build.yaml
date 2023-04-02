@@ -29,5 +29,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: build-$GITHUB_SHA
+          name: build-${{ github.run_id }}
           path: build/mirai/*
