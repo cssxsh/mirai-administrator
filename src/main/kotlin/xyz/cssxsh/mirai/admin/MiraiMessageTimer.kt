@@ -56,14 +56,18 @@ internal object MiraiMessageTimer : BotTimingMessage {
                     }
                     val message = MessageChain.deserializeFromJsonString(file.readText())
                     mutex.withLock {
-                        if (cache.add(uuid).not()) return@withLock
+                        if (cache.add(uuid).not()) {
+                            contact.logger.debug { "$uuid Cached" }
+                            return@withLock
+                        }
                         try {
                             send(group.sendMessage(message))
                             contact.launch {
                                 delay(60_000)
                                 cache.remove(uuid)
                             }
-                        } catch (_: Exception) {
+                        } catch (cause: Exception) {
+                            contact.logger.debug({ "$uuid Exception" }, cause)
                             cache.remove(uuid)
                         }
                     }
