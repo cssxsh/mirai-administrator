@@ -51,15 +51,23 @@ internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiConten
             }
         }
 
-        val watcher = folder.fileSystem.newWatchService()
-        val kinds = arrayOf(
-            StandardWatchEventKinds.ENTRY_CREATE,
-            StandardWatchEventKinds.ENTRY_DELETE,
-            StandardWatchEventKinds.ENTRY_MODIFY
-        )
-        folder.register(watcher, kinds, com.sun.nio.file.SensitivityWatchEventModifier.LOW)
-
         plugin.launch {
+            val watcher = try {
+                runInterruptible(Dispatchers.IO) {
+                    folder.fileSystem.newWatchService()
+                }
+            } catch (cause: IOException) {
+                plugin.logger.warning("正则词库文件监视器创建失败", cause)
+                return@launch
+            }
+            val kinds = arrayOf(
+                StandardWatchEventKinds.ENTRY_CREATE,
+                StandardWatchEventKinds.ENTRY_DELETE,
+                StandardWatchEventKinds.ENTRY_MODIFY
+            )
+            runInterruptible(Dispatchers.IO) {
+                folder.register(watcher, kinds, com.sun.nio.file.SensitivityWatchEventModifier.LOW)
+            }
             while (isActive) {
                 val key = runInterruptible(Dispatchers.IO, watcher::take)
                 for (event in key.pollEvents()) {
