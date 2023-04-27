@@ -20,10 +20,10 @@ public object AdminFriendCommand : CompositeCommand(
      */
     @SubCommand
     @Description("好友列表")
-    public suspend fun CommandSender.list() {
+    public suspend fun CommandSender.list(vararg bots: Bot) {
         val message = try {
             buildString {
-                for (bot in Bot.instances) {
+                for (bot in bots.asList().ifEmpty { Bot.instances }) {
                     appendLine("### ${bot.render()} ###")
                     try {
                         for (friendGroup in bot.friendGroups.asCollection()) {
@@ -61,6 +61,47 @@ public object AdminFriendCommand : CompositeCommand(
         } catch (cause: IllegalStateException) {
             logger.warning({ "删除错误" }, cause)
             "删除错误"
+        }
+
+        sendMessage(message)
+    }
+
+    /**
+     * 更改备注信息
+     * @param friend 操作对象
+     * @param name 备注名字
+     */
+    @SubCommand
+    @Description("备注好友")
+    public suspend fun CommandSender.remark(friend: Friend, name: String) {
+        val message = try {
+            friend.remark = name
+            "更改成功"
+        } catch (cause: IllegalStateException) {
+            logger.warning({ "更改错误" }, cause)
+            "更改错误"
+        }
+
+        sendMessage(message)
+    }
+
+    /**
+     * 移动分组
+     * @param friend 操作对象
+     * @param name 分组名字
+     */
+    @SubCommand
+    @Description("分组好友")
+    public suspend fun CommandSender.group(friend: Friend, name: String) {
+        val message = try {
+            val target = with(friend.bot.friendGroups) {
+                asCollection().find { it.name == name } ?: create(name)
+            }
+            target.moveIn(friend)
+            "分组成功"
+        } catch (cause: IllegalStateException) {
+            logger.warning({ "分组错误" }, cause)
+            "分组错误"
         }
 
         sendMessage(message)
