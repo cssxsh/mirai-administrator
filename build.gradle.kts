@@ -28,13 +28,16 @@ repositories {
 dependencies {
     api("com.cronutils:cron-utils:9.2.0")
     api("jakarta.mail:jakarta.mail-api:2.1.1")
+    api("org.apache.poi:poi:5.2.3")
     implementation("org.eclipse.angus:angus-mail:2.0.1")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
     testImplementation(kotlin("test"))
     //
     implementation(platform("net.mamoe:mirai-bom:2.14.0"))
     compileOnly("net.mamoe:mirai-core")
     compileOnly("net.mamoe:mirai-core-utils")
     compileOnly("net.mamoe:mirai-console-compiler-common")
+    testImplementation("net.mamoe:mirai-core-mock")
     testImplementation("net.mamoe:mirai-logging-slf4j")
     testImplementation("net.mamoe:mirai-core-utils")
     //

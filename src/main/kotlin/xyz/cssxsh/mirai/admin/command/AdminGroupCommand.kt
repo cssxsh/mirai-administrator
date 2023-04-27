@@ -4,6 +4,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import kotlinx.coroutines.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.util.ContactUtils.render
@@ -15,7 +16,10 @@ import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.*
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
+import org.apache.poi.ss.usermodel.*
 import xyz.cssxsh.mirai.admin.*
+import xyz.cssxsh.mirai.admin.poi.*
+import java.nio.file.*
 import java.util.*
 
 /**
@@ -299,5 +303,85 @@ public object AdminGroupCommand : CompositeCommand(
         }
 
         sendMessage(message)
+    }
+
+    /**
+     * 获取表格
+     * @param group 目标群
+     */
+    @SubCommand
+    @Description("备份群组信息")
+    public fun CommandSender.table(group: Group) {
+        val workbook = workbook {
+            sheet(group.render()) {
+                createFreezePane(0, 1,0, 1)
+                val iso = creationHelper.createDataFormat().getFormat("yyyy/MM/ddThh:mm:dd")
+                defaultColumnWidth = 20
+
+                val header = listOf("QQ", "NAME", "PERMISSION", "SPECIAL_TITLE", "TEMPERATURE", "JOIN", "LAST_SPEAK")
+                row(0) {
+                    header.forEachIndexed { index, name ->
+                        cell(index) {
+                            setCellValue(name)
+                            style {
+                                font {
+                                    alignment = HorizontalAlignment.CENTER
+                                }
+                            }
+                        }
+                    }
+                }
+                var line = 1
+                for (member in group.members) {
+                    row(line++) {
+                        var col = 0
+                        // QQ
+                        cell(col++) {
+                            setCellValue("${member.id}")
+                        }
+                        // NAME
+                        cell(col++) {
+                            setCellValue(member.nameCardOrNick)
+                        }
+                        // PERMISSION
+                        cell(col++) {
+                            setCellValue(member.permission.name)
+                        }
+                        // SPECIAL_TITLE
+                        cell(col++) {
+                            setCellValue(member.specialTitle)
+                        }
+                        // TEMPERATURE
+                        cell(col++) {
+                            setCellValue(member.active.temperature.toDouble())
+                        }
+                        // JOIN_AT
+                        cell(col++) {
+                            style {
+                                dataFormat = iso
+                            }
+                            setCellValue(member.joinAt)
+                        }
+                        // LAST_SPEAK_AT
+                        cell(col) {
+                            style {
+                                dataFormat = iso
+                            }
+                            setCellValue(member.lastSpeakAt)
+                        }
+                    }
+                }
+            }
+        }
+        val temp = Files.createTempFile("workbook", ".xlsx").toFile()
+        launch {
+            try {
+                temp.outputStream().use { workbook.write(it) }
+                temp.toExternalResource().use { group.files.uploadNewFile("${group.id}.xlsx", it) }
+            } finally {
+                workbook.close()
+                temp.delete()
+            }
+        }
     }
 }
