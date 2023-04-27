@@ -71,6 +71,7 @@ internal object MiraiAdminPlugin : KotlinPlugin(
             MiraiMessageRecorder.registerTo(globalEventChannel())
         }
 
+        AdminBotCommand.register()
         AdminContactCommand.register()
         AdminFriendCommand.register()
         AdminGroupCommand.register()
