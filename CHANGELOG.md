@@ -1,3 +1,9 @@
+## 1.4.0 (23/05/01)
+
+1.  feat: newWatchService catch
+2.  feat: bot command
+3.  feat: poi
+
 ## 1.3.3 (23/03/16)
 
 1.  fix: timer

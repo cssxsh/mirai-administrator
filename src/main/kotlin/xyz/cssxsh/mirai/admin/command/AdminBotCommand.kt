@@ -14,6 +14,9 @@ public object AdminBotCommand : CompositeCommand(
     primaryName = "bot",
     description = "BOT处理相关操作"
 ) {
+    /**
+     * 打印 BOT 列表
+     */
     @SubCommand
     public suspend fun CommandSender.list() {
         val message = try {
@@ -32,6 +35,10 @@ public object AdminBotCommand : CompositeCommand(
         sendMessage(message)
     }
 
+    /**
+     * 登出 BOT
+     * @param bot 操作对象
+     */
     @SubCommand
     public suspend fun CommandSender.logout(bot: Bot) {
         val message = try {
