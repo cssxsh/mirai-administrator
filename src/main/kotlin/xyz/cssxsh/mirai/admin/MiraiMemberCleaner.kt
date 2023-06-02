@@ -30,7 +30,7 @@ internal object MiraiMemberCleaner : MemberCleaner {
         if (day <= 0) return emptyList()
         val limit = LocalDateTime.now().minusDays(day)
         return contact.members.mapNotNull { member ->
-            if (member.permission == MemberPermission.MEMBER && member.lastSpeakAt > limit) {
+            if (member.permission == MemberPermission.MEMBER && maxOf(member.lastSpeakAt, member.joinAt) > limit) {
                 null
             } else {
                 member to "自 ${member.lastSpeakAt} 起，${day} 天未发言"
