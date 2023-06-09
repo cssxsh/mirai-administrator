@@ -6,11 +6,11 @@ import xyz.cssxsh.mirai.admin.*
 @PublishedApi
 internal object AdminAutoApproverConfig : ReadOnlyPluginConfig("AdminAutoApproverConfig"), MiraiAutoApproverConfig {
 
-    @ValueName("auto_friend_request")
+    @ValueName("auto_friend_accept")
     @ValueDescription("自动同意好友请求")
     override val autoFriendAccept: Boolean by value(false)
 
-    @ValueName("auto_group_request")
+    @ValueName("auto_group_accept")
     @ValueDescription("自动同意加群请求")
     override val autoGroupAccept: Boolean by value(false)
 
@@ -20,15 +20,15 @@ internal object AdminAutoApproverConfig : ReadOnlyPluginConfig("AdminAutoApprove
 
     @ValueName("remind_friend_request")
     @ValueDescription("提醒好友请求")
-    override val remindFriendAccept: Boolean by value(true)
+    override val remindFriendRequest: Boolean by value(true)
 
     @ValueName("remind_group_request")
     @ValueDescription("提醒加群请求")
-    override val remindGroupAccept: Boolean by value(true)
+    override val remindGroupRequest: Boolean by value(true)
 
-    @ValueName("remind_member_accept")
+    @ValueName("remind_member_request")
     @ValueDescription("提醒新成员请求")
-    override val remindMemberAccept: Boolean by value(false)
+    override val remindMemberRequest: Boolean by value(false)
 
     @ValueName("reply_accept")
     @ValueDescription("回复触发同意请求")
