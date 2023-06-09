@@ -13,21 +13,21 @@ internal object MiraiAutoApprover : FriendApprover, GroupApprover, MemberApprove
     override suspend fun approve(event: NewFriendRequestEvent): ApproveResult {
         if (event.fromId == AdminSetting.owner) return ApproveResult.Accept
         AdminRequestEventData += event
-        event.bot.owner().sendMessage(message = event.render(accept = autoFriendAccept))
+        if (remindFriendAccept) event.bot.owner().sendMessage(message = event.render(accept = autoFriendAccept))
         return if (autoFriendAccept) ApproveResult.Accept else ApproveResult.Ignore
     }
 
     override suspend fun approve(event: BotInvitedJoinGroupRequestEvent): ApproveResult {
         if (event.invitorId == AdminSetting.owner) return ApproveResult.Accept
         AdminRequestEventData += event
-        event.bot.owner().sendMessage(message = event.render(accept = autoGroupAccept))
+        if (remindGroupAccept) event.bot.owner().sendMessage(message = event.render(accept = autoGroupAccept))
         return if (autoGroupAccept) ApproveResult.Accept else ApproveResult.Ignore
     }
 
     override suspend fun approve(event: MemberJoinRequestEvent): ApproveResult {
         if (event.fromId == AdminSetting.owner) return ApproveResult.Accept
         AdminRequestEventData += event
-        event.bot.owner().sendMessage(message = event.render(accept = autoMemberAccept))
+        if (remindMemberAccept) event.bot.owner().sendMessage(message = event.render(accept = autoMemberAccept))
         return if (autoMemberAccept) ApproveResult.Accept else ApproveResult.Ignore
     }
 

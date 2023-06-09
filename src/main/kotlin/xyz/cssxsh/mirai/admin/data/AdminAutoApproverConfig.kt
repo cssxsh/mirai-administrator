@@ -18,6 +18,18 @@ internal object AdminAutoApproverConfig : ReadOnlyPluginConfig("AdminAutoApprove
     @ValueDescription("自动同意新成员请求")
     override val autoMemberAccept: Boolean by value(false)
 
+    @ValueName("remind_friend_request")
+    @ValueDescription("提醒好友请求")
+    override val remindFriendAccept: Boolean by value(true)
+
+    @ValueName("remind_group_request")
+    @ValueDescription("提醒加群请求")
+    override val remindGroupAccept: Boolean by value(true)
+
+    @ValueName("remind_member_accept")
+    @ValueDescription("提醒新成员请求")
+    override val remindMemberAccept: Boolean by value(false)
+
     @ValueName("reply_accept")
     @ValueDescription("回复触发同意请求")
     override val replyAccept: String by value("^(?:同意|OK|没问题)")

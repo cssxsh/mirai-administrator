@@ -9,6 +9,12 @@ internal interface MiraiAutoApproverConfig {
 
     val autoMemberAccept: Boolean
 
+    val remindFriendAccept: Boolean
+
+    val remindGroupAccept: Boolean
+
+    val remindMemberAccept: Boolean
+
     val replyAccept: String
 
     val replyReject: String
