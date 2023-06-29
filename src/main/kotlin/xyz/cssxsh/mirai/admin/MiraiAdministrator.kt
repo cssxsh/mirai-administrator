@@ -494,8 +494,9 @@ public object MiraiAdministrator : SimpleListenerHost() {
         launch {
             val mail = buildMailContent(session) {
                 to = AdminMailConfig.offline.ifEmpty { "${AdminSetting.owner}@qq.com" }
-                title = "机器人下线通知 $bot"
+                title = if (reconnect) "机器人掉线通知" else "机器人下线通知"
                 text {
+                    append(bot)
                     @OptIn(MiraiInternalApi::class)
                     when (offline) {
                         is BotOfflineEvent.Active -> {
