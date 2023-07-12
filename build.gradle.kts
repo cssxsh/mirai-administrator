@@ -2,12 +2,12 @@ plugins {
     kotlin("jvm") version "1.8.10"
     kotlin("plugin.serialization") version "1.8.10"
 
-    id("net.mamoe.mirai-console") version "2.15.0-RC"
+    id("net.mamoe.mirai-console") version "2.15.0"
     id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.4.0"
+version = "1.4.1"
 
 mavenCentralPublish {
     useCentralS01()
@@ -33,7 +33,7 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.3")
     testImplementation(kotlin("test"))
     //
-    implementation(platform("net.mamoe:mirai-bom:2.15.0-RC"))
+    implementation(platform("net.mamoe:mirai-bom:2.15.0"))
     compileOnly("net.mamoe:mirai-core")
     compileOnly("net.mamoe:mirai-core-utils")
     compileOnly("net.mamoe:mirai-console-compiler-common")

@@ -300,7 +300,7 @@ public object MiraiAdministrator : SimpleListenerHost() {
                 when (val millis = wait(contact = from)) {
                     null -> break
                     else -> {
-                        logger.debug { "$${from.render()} timing message after ${millis}ms" }
+                        logger.debug { "${from.render()} timing message after ${millis}ms" }
                         delay(millis)
                     }
                 }
