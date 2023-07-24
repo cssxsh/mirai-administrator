@@ -177,9 +177,9 @@
 
 格式参考
 
-QQ Mail https://service.mail.qq.com/cgi-bin/help?subtype=1&&id=28&&no=1001256  
+QQ Mail https://service.mail.qq.com/detail/0/427
 ```properties
-mail.host=smtp.mail.qq.com
+mail.host=smtp.qq.com
 mail.auth=true
 mail.user=xxx
 mail.password=***
