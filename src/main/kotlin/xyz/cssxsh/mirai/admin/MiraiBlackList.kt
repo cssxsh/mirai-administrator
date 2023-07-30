@@ -11,5 +11,9 @@ internal object MiraiBlackList : BlackListService, MiraiBlackListConfig by Admin
     override val level: Int = 0
     override val id: String = "default-blacklist"
 
-    override suspend fun check(user: User): Boolean = ids.any { it.hasChild(user.permitteeId) }
+    override suspend fun check(user: User): Boolean {
+        val target = user.permitteeId
+        // XXX hasChild
+        return ids.any { target.hasChild(it) }
+    }
 }
