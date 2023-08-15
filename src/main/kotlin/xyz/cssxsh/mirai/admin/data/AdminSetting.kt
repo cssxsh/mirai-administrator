@@ -51,7 +51,7 @@ internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiConten
             }
         }
 
-        plugin.launch {
+        plugin.launch(CoroutineName(name = "CENSOR_WATCH")) {
             val watcher = try {
                 runInterruptible(Dispatchers.IO) {
                     folder.fileSystem.newWatchService()
@@ -87,7 +87,7 @@ internal object AdminSetting : ReadOnlyPluginConfig("AdminSetting"), MiraiConten
                             try {
                                 dict[file.name] = file.readLines()
                             } catch (cause: IOException) {
-                                plugin.logger.warning("更新审核库 $file 失败 , ${kind.name()}", cause)
+                                plugin.logger.warning("更新审核库 ${file.toUri()} 失败, ${kind.name()}", cause)
                             }
                         }
                         StandardWatchEventKinds.ENTRY_DELETE -> {

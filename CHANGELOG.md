@@ -1,3 +1,16 @@
+## 1.4.2 (23/08/15)
+
+1.  fix: MiraiBlackList.check, close #26
+2.  fix: mail docs
+3.  fix: timer docs
+
+## 1.4.1 (23/07/13)
+
+1.  fix: MiraiMemberCleaner
+2.  feat: approver remind, close #24
+3.  fix: approver config
+4.  fix: mail title
+
 ## 1.4.0 (23/05/01)
 
 1.  feat: newWatchService catch

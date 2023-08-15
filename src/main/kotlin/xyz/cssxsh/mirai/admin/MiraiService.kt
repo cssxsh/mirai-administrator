@@ -161,7 +161,7 @@ internal fun target(contact: Contact): MessageSource? {
 internal fun from(member: Member): MessageSource? {
     for (handler in ComparableService<MessageSourceHandler>()) {
         return try {
-            handler.from(member) ?: continue
+            handler.from(member = member) ?: continue
         } catch (cause: Exception) {
             logger.warning({ "message source find failure." }, cause)
             continue
