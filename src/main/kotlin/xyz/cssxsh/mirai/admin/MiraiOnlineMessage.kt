@@ -54,6 +54,9 @@ internal object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig b
 
     override suspend fun run(bot: Bot) {
         if (cache.add(bot.id)) return
+        if (bot.groups.isEmpty()) {
+            delay(3_000)
+        }
         for (group in bot.groups) {
             if (!permission.testPermission(group.permitteeId)) continue
 
