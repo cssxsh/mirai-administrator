@@ -21,7 +21,7 @@ internal object AdminOnlineMessageConfig : ReadOnlyPluginConfig("AdminOnlineMess
 
     @ValueName("type")
     @ValueDescription("发送上线消息的类型 XML, PLAIN, CUSTOM")
-    override val type: MiraiOnlineMessageConfig.Type by value(MiraiOnlineMessageConfig.Type.XML)
+    override val type: MiraiOnlineMessageConfig.Type by value(MiraiOnlineMessageConfig.Type.CUSTOM)
 
     @ValueName("custom")
     @ValueDescription("CUSTOM 上线消息的内容")

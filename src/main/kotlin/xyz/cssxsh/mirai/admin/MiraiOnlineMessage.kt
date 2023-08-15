@@ -23,7 +23,7 @@ internal object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig b
     override val level: Int = 0
     override val id: String = "online"
 
-    private val cache: MutableSet<Long> = HashSet()
+    private val cache: MutableSet<Long> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 
     @OptIn(MiraiExperimentalApi::class)
     private suspend fun xml(group: Group) = buildXmlMessage(1) {
@@ -53,7 +53,10 @@ internal object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig b
     private val avatars: MutableMap<String, ByteArray> = WeakHashMap()
 
     override suspend fun run(bot: Bot) {
-        if (cache.add(bot.id)) return
+        if (cache.add(bot.id).not()) return
+        bot.coroutineContext.job.invokeOnCompletion {
+            cache.remove(bot.id)
+        }
         if (bot.groups.isEmpty()) {
             delay(3_000)
         }
