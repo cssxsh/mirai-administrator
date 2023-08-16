@@ -1,3 +1,7 @@
+## 1.4.2 (23/08/16)
+
+1.  fix: online message cache check, close #27
+
 ## 1.4.2 (23/08/15)
 
 1.  fix: MiraiBlackList.check, close #26
