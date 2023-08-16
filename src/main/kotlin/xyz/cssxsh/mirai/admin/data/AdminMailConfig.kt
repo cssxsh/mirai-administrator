@@ -51,7 +51,7 @@ internal object AdminMailConfig : ReadOnlyPluginConfig("AdminMailConfig") {
                     mail.smtp.timeout=15000
                 """.trimIndent()
                 )
-                owner.logger.info { "邮件配置文件已生成，请修改内容以生效 $properties" }
+                owner.logger.info { "邮件配置文件已生成，请修改内容以生效 ${properties.toUri()}" }
             }
         }
     }

@@ -62,6 +62,7 @@ internal object MiraiOnlineMessage : BotOnlineAction, MiraiOnlineMessageConfig b
         }
         for (group in bot.groups) {
             if (!permission.testPermission(group.permitteeId)) continue
+            bot.logger.info("$group online message")
 
             val message = when (type) {
                 MiraiOnlineMessageConfig.Type.XML -> xml(group = group)
