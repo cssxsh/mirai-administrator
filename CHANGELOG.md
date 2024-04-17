@@ -1,4 +1,4 @@
-## 1.4.2 (23/08/16)
+## 1.4.3 (23/08/16)
 
 1.  fix: online message cache check, close #27
 
