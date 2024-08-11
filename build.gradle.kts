@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.4.3"
+version = "1.4.4"
 
 mavenCentralPublish {
     useCentralS01()
@@ -28,10 +28,8 @@ repositories {
 dependencies {
     api("com.cronutils:cron-utils:9.2.1")
     api("jakarta.mail:jakarta.mail-api:2.1.3")
-    // api("org.apache.poi:poi:5.3.0") fix https://github.com/cssxsh/mirai-administrator/issues/32
-    implementation("org.apache.poi:poi:5.3.0")
+    api("org.apache.poi:poi-ooxml:5.3.0") // fix https://github.com/cssxsh/mirai-administrator/issues/32
     implementation("org.eclipse.angus:angus-mail:2.0.3")
-    implementation("org.apache.poi:poi-ooxml:5.3.0")
     testImplementation(kotlin("test"))
     //
     implementation(platform("net.mamoe:mirai-bom:2.16.0"))

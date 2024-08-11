@@ -1,3 +1,11 @@
+## 1.4.4 (24/08/11)
+
+1.  update: kotlin 1.8.22
+2.  update: mirai 2.16.0
+3.  update: jakarta.mail 2.1.3
+4.  update: apache.poi 5.3.0
+5.  fix: POIException #3
+
 ## 1.4.3 (23/08/16)
 
 1.  fix: online message cache check, close #27
